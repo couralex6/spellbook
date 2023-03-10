@@ -1,20 +1,4 @@
- {{
-  config(
-        schema='uniswap_v3_optimism',
-        alias='ovm1_pool_mapping',
-        materialized='table',
-        file_format = 'delta',
-        post_hook='{{ expose_spells(\'["optimism"]\',
-                                    "project",
-                                    "uniswap_v3",
-                                    \'["msilb7", "chuxin"]\') }}'
-  )
-}}
-with ovm1_legacy_pools_raw as (
-  select 
-    explode(
-      from_json(
-        '[
+WITH ovm1_legacy_pools_raw AS (SELECT EXPLODE(FROM_JSON('[
           
           {
             "oldAddress": "0x2e9c575206288f2219409289035facac0b670c2f",
@@ -744,14 +728,4 @@ with ovm1_legacy_pools_raw as (
             "token1": "0xe0BB0D3DE8c10976511e5030cA403dBf4c25165B",
             "fee": 10000
           }
-        ]','array<struct<oldAddress:string,newAddress:string,token0:string, token1:string, fee:int>>'
-      )  
-    )
-)
-select 
-   col.oldAddress
-  ,col.newAddress
-  ,col.token0
-  ,col.token1
-  ,col.fee
-from ovm1_legacy_pools_raw
+        ]', 'array<struct<oldAddress:string,newAddress:string,token0:string, token1:string, fee:int>>'))) SELECT col.oldAddress, col.newAddress, col.token0, col.token1, col.fee FROM ovm1_legacy_pools_raw
