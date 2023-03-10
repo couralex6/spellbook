@@ -35,3 +35,4 @@ select
   , LOWER(token1) AS token1
   , fee
 from uniswap_v3_poolcreated
+WITH uniswap_v3_poolcreated AS (SELECT pool, token0, token1, fee FROM {{ source('uniswap_v3_optimism','factory_evt_poolcreated') }} GROUP BY 1, 2, 3, 4) SELECT newAddress AS pool, LOWER(token0) AS token0, LOWER(token1) AS token1, fee FROM {{ ref('uniswap_optimism_ovm1_pool_mapping') }} UNION SELECT pool, LOWER(token0) AS token0, LOWER(token1) AS token1, fee FROM uniswap_v3_poolcreated
