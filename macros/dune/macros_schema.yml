@@ -46,7 +46,7 @@ macros:
       This enables us to easily get the compiled incremental models. 
       Example usage: dbt compile --vars '{force-incremental: True}'
 
-  - name: ref
+  - name: source
     description: >
-      Overrides the builtin ref macro to force the use of "delta_prod" as the database (or catalog)
+      Overrides the builtin source macro to force the use of "hive" as the database (or catalog)
 
