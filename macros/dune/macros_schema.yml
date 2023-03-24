@@ -49,4 +49,3 @@ macros:
   - name: ref
     description: >
       Overrides the builtin ref macro to force the use of "delta_prod" as the database (or catalog)
-
