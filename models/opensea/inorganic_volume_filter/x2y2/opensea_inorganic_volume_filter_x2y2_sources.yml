@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: looksrare_ethereum
-    database: delta_prod
     description: "looksrare royalty fee for collections"
     tables:
       - name: RoyaltyFeeRegistry_evt_RoyaltyFeeUpdate

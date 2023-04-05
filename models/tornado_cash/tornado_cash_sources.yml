@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: tornado_cash_bnb
-    database: delta_prod
     tables:
       - name: TornadoCashBNB_evt_Deposit
         loaded_at_field: evt_block_time
@@ -28,7 +27,6 @@ sources:
           - name: to
 
   - name: tornado_cash_arbitrum
-    database: delta_prod
     tables:
       - name: ETHTornado_evt_Deposit
         loaded_at_field: evt_block_time
@@ -55,7 +53,6 @@ sources:
           - name: to
 
   - name: tornado_cash_optimism
-    database: delta_prod
     tables:
       - name: ETHTornado_evt_Deposit
         loaded_at_field: evt_block_time
@@ -82,7 +79,6 @@ sources:
           - name: to
 
   - name: tornado_cash_avalanche_c
-    database: delta_prod
     tables:
       - name: ETHTornado_evt_Deposit
         loaded_at_field: evt_block_time
@@ -109,7 +105,6 @@ sources:
           - name: to
 
   - name: tornado_cash_ethereum
-    database: delta_prod
     tables:
       - name: erc20_evt_Deposit
         loaded_at_field: evt_block_time
@@ -179,7 +174,6 @@ sources:
           - name: to
 
   - name: tornado_cash_gnosis
-    database: delta_prod
     tables:
       - name: eth_evt_Deposit
         loaded_at_field: evt_block_time
@@ -204,7 +198,6 @@ sources:
           - name: to
 
   - name: tornado_cash_polygon
-    database: delta_prod
     tables:
       - name: TornadoCashMatic_evt_Deposit
         loaded_at_field: evt_block_time

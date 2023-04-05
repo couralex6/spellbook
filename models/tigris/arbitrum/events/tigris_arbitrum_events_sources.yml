@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: tigristrade_arbitrum
-    database: delta_prod
     description: "tigris trade arbitrum decoded events"
     tables:
       - name: PairsContract_evt_AssetAdded
