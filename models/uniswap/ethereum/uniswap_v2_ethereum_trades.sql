@@ -25,11 +25,11 @@ WITH dexs AS
         CAST(t.evt_block_time AS TIMESTAMP(6) WITH TIME ZONE) AS block_time
         ,t.to AS taker
         ,'' AS maker
-        ,CASE WHEN CAST(amount0Out AS DECIMAL(38,0)) = CAST(0 AS DECIMAL(38,0)) THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw
-        ,CASE WHEN CAST(amount0In AS DECIMAL(38,0)) = CAST(0 AS DECIMAL(38,0)) OR CAST(amount1Out AS DECIMAL(38,0)) = CAST(0 AS DECIMAL(38,0)) THEN amount1In ELSE amount0In END AS token_sold_amount_raw
+        ,CASE WHEN CAST(amount0Out AS DOUBLE) = CAST(0 AS DOUBLE) THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw
+        ,CASE WHEN CAST(amount0In AS DOUBLE) = CAST(0 AS DOUBLE) OR CAST(amount1Out AS DOUBLE) = CAST(0 AS DOUBLE) THEN amount1In ELSE amount0In END AS token_sold_amount_raw
         ,NULL AS amount_usd
-        ,CASE WHEN CAST(amount0Out AS DECIMAL(38,0)) = CAST(0 AS DECIMAL(38,0)) THEN f.token1 ELSE f.token0 END AS token_bought_address
-        ,CASE WHEN CAST(amount0In AS DECIMAL(38,0)) = CAST(0 AS DECIMAL(38,0)) OR CAST(amount1Out AS DECIMAL(38,0)) = CAST(0 AS DECIMAL(38,0)) THEN f.token1 ELSE f.token0 END AS token_sold_address
+        ,CASE WHEN CAST(amount0Out AS DOUBLE) = CAST(0 AS DOUBLE) THEN f.token1 ELSE f.token0 END AS token_bought_address
+        ,CASE WHEN CAST(amount0In AS DOUBLE) = CAST(0 AS DOUBLE) OR CAST(amount1Out AS DOUBLE) = CAST(0 AS DOUBLE) THEN f.token1 ELSE f.token0 END AS token_sold_address
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
         ,CAST('' AS VARCHAR(42)) AS trace_address
@@ -60,8 +60,8 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
         ,(dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price

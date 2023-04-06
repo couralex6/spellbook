@@ -22,11 +22,11 @@ WITH dexs AS
         CAST(t.evt_block_time AS TIMESTAMP(6) WITH TIME ZONE) AS block_time
         ,t.recipient AS taker
         ,'' AS maker
-        ,CASE WHEN amount0 < CAST(0 AS INT256) THEN abs(amount0) ELSE abs(amount1) END AS token_bought_amount_raw -- when amount0 is negative it means trader_a is buying token0 from the pool
-        ,CASE WHEN amount0 < CAST(0 AS INT256) THEN abs(amount1) ELSE abs(amount0) END AS token_sold_amount_raw
+        ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN abs(amount0) ELSE abs(amount1) END AS token_bought_amount_raw -- when amount0 is negative it means trader_a is buying token0 from the pool
+        ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN abs(amount1) ELSE abs(amount0) END AS token_sold_amount_raw
         ,NULL AS amount_usd
-        ,CASE WHEN amount0 < CAST(0 AS INT256) THEN f.token0 ELSE f.token1 END AS token_bought_address
-        ,CASE WHEN amount0 < CAST(0 AS INT256) THEN f.token1 ELSE f.token0 END AS token_sold_address
+        ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN f.token0 ELSE f.token1 END AS token_bought_address
+        ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN f.token1 ELSE f.token0 END AS token_sold_address
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
         ,CAST('' AS VARCHAR(42)) AS trace_address
@@ -53,8 +53,8 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
         ,(dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price

@@ -78,12 +78,12 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
-        ,dexs.token_bought_amount_raw  / power(10, p_bought.decimals) * p_bought.price
-        ,dexs.token_sold_amount_raw  / power(10, p_sold.decimals) * p_sold.price
+        ,(dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
+        ,(dexs.token_sold_amount_raw / power(10, p_sold.decimals)) * p_sold.price
     ) AS amount_usd
     ,dexs.token_bought_address
     ,dexs.token_sold_address
@@ -121,7 +121,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.minute >= CAST(date_trunc("day", now() - interval '1 week') AS TIMESTAMP(6) WITH TIME ZONE)
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
-    ON p_bought.minute = CAST(date_trunc('minute', dexs.block_time) AS TIMESTAMP(6) WITH TIME ZONE)
+    ON p_sold.minute = CAST(date_trunc('minute', dexs.block_time) AS TIMESTAMP(6) WITH TIME ZONE)
     AND from_hex(p_sold.contract_address) = dexs.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
