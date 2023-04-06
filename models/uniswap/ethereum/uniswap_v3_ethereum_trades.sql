@@ -27,7 +27,7 @@ WITH dexs AS
         ,NULL AS amount_usd
         ,CASE WHEN amount0 < CAST(0 AS INT256) THEN f.token0 ELSE f.token1 END AS token_bought_address
         ,CASE WHEN amount0 < CAST(0 AS INT256) THEN f.token1 ELSE f.token0 END AS token_sold_address
-        ,CAST(t.contract_address AS VARCHAR) as project_contract_address
+        ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
         ,CAST('' AS VARCHAR(42)) AS trace_address
         ,t.evt_index
@@ -80,14 +80,14 @@ INNER JOIN {{ source('ethereum', 'transactions') }} tx
     AND tx.block_time >= CAST(date_trunc("day", now() - interval '1 week') AS TIMESTAMP(6) WITH TIME ZONE)
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
-    ON erc20a.contract_address = CAST(dexs.token_bought_address as VARCHAR)
+    ON erc20a.contract_address = dexs.token_bought_address
     AND erc20a.blockchain = 'ethereum'
 LEFT JOIN {{ ref('tokens_erc20') }} erc20b
-    ON erc20b.contract_address = CAST(dexs.token_sold_address as VARCHAR)
+    ON erc20b.contract_address = dexs.token_sold_address
     AND erc20b.blockchain = 'ethereum'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = CAST(date_trunc('minute', dexs.block_time) AS TIMESTAMP(6) WITH TIME ZONE)
-    AND p_bought.contract_address = CAST(dexs.token_bought_address as VARCHAR)
+    AND from_hex(p_bought.contract_address) = dexs.token_bought_address
     AND p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
     AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
@@ -97,7 +97,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = CAST(date_trunc('minute', dexs.block_time) AS TIMESTAMP(6) WITH TIME ZONE)
-    AND p_sold.contract_address = CAST(dexs.token_sold_address as VARCHAR)
+    AND from_hex(p_sold.contract_address) = dexs.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
     AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
