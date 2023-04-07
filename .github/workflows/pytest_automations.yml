@@ -1,11 +1,10 @@
-name: Pytest Automation
+name: Pytest Prices Automation
 
 on:
   pull_request:
     branches: [ main ]
     paths:
       - 'scripts/test_token_checker.py'
-      - 'scripts/test_line_mapper.py'
 
 permissions:
   contents: read
@@ -27,17 +26,8 @@ jobs:
     - name: Install dependencies
       run: |
         pipenv install
-
-    - name: Install pytest
-      run: |
-        pipenv run pip install pytest
         
     - name: Run pytest token checker
       working-directory: scripts
       run: | 
         pipenv run pytest test_token_checker.py
-        
-    - name: Run pytest line mapper
-      working-directory: scripts
-      run: | 
-        pipenv run pytest test_line_mapper.py
