@@ -1,4 +1,4 @@
-name: Pytest Prices Automation
+name: Pytest Automation
 
 on:
   pull_request:
@@ -38,7 +38,12 @@ jobs:
       run: |
         pipenv run pip install pytest
         
-    - name: Run pytest
+    - name: Run pytest token checker
       working-directory: scripts
       run: | 
         pipenv run pytest test_token_checker.py
+        
+    - name: Run pytest line mapper
+      working-directory: scripts
+      run: | 
+        pipenv run pytest test_line_mapper.py
