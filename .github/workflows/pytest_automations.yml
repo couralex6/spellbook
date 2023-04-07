@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'scripts/**'
+      - 'scripts/test_token_checker.py'
 
 permissions:
   contents: read
@@ -19,21 +19,15 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.9"
-    - uses: actions/cache@v3
-      id: cache
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.*') }}
-        restore-keys: | 
-          ${{ runner.os }}-pip-
+
     - name: Install pipenv
       run: |
         pip install pipenv
     - name: Install dependencies
       run: |
         pipenv install
-
-    - name: Run pytest
+        
+    - name: Run pytest token checker
       working-directory: scripts
       run: | 
         pipenv run pytest test_token_checker.py
