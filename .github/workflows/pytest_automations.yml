@@ -4,7 +4,8 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'scripts/**'
+      - 'scripts/test_token_checker.py'
+      - 'scripts/test_line_mapper.py'
 
 permissions:
   contents: read
@@ -33,6 +34,10 @@ jobs:
       run: |
         pipenv install
 
+    - name: Install pytest
+      run: |
+        pipenv run pip install pytest
+        
     - name: Run pytest
       working-directory: scripts
       run: | 
