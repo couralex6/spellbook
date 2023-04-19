@@ -61,8 +61,8 @@ select
     end as token_pair,
     token_bought_amount_raw / power(10, erc20a.decimals) as token_bought_amount,
     token_sold_amount_raw / power(10, erc20b.decimals) as token_sold_amount,
-    CAST(token_bought_amount_raw AS DECIMAL(38,0)) as token_bought_amount_raw,
-    CAST(token_sold_amount_raw AS DECIMAL(38,0)) as token_sold_amount_raw,
+    CAST(token_bought_amount_raw AS DOUBLE) as token_bought_amount_raw,
+    CAST(token_sold_amount_raw AS DOUBLE) as token_sold_amount_raw,
     coalesce(
         (token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price,
         (token_sold_amount_raw / power(10, p_sold.decimals)) * p_sold.price
@@ -70,7 +70,7 @@ select
     token_bought_address,
     token_sold_address,
     tx."from" as taker,
-    cast(null as varchar(5)) as maker,
+    cast(null as VARBINARY) as maker,
     project_contract_address,
     evt_tx_hash as tx_hash,
     tx."from" as tx_from,
@@ -94,7 +94,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'gnosis'
 left join prices p_bought
     ON p_bought.minute = date_trunc('minute', trades.evt_block_time)
-    and p_bought.contract_address = trades.token_bought_address
+    and CAST(p_bought.contract_address AS VARBINARY) = trades.token_bought_address
 left join prices p_sold
     on p_sold.minute = date_trunc('minute', trades.evt_block_time)
-    and p_sold.contract_address = trades.token_sold_address
+    and CAST(p_sold.contract_address AS VARBINARY) = trades.token_sold_address
