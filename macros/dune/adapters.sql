@@ -5,15 +5,15 @@
   {{- local_md5(input_string) -}}
 {%- endmacro %}
 
-
 {% macro properties(properties, relation) %}
 
   {% set s3_bucket = 'trino-dev-datasets-118330671040' %}
-  {%- set unique_location = '_' ~ md5_string() -%}
+  {% set modified_identifier = relation.identifier | replace("__dbt_tmp", "") %}
+  {%- set unique_location = modified_identifier ~ '_' ~ md5_string() -%}
 
   {%- if properties is not none -%}
       WITH (
-          location = 's3a://{{s3_bucket}}/hive/{{relation.schema}}/{{relation.identifier | replace("__dbt_tmp",unique_location)}}'
+          location = 's3a://{{s3_bucket}}/hive/{{relation.schema}}/{{unique_location}}'
           {%- for key, value in properties.items() -%}
             {{ key }} = {{ value }}
             {%- if not loop.last -%}{{ ',\n  ' }}{%- endif -%}
@@ -21,7 +21,7 @@
       )
   {%- else -%}
       WITH (
-          location = 's3a://{{s3_bucket}}/hive/{{relation.schema}}/{{relation.identifier | replace("__dbt_tmp",unique_location)}}'
+          location = 's3a://{{s3_bucket}}/hive/{{relation.schema}}/{{unique_location}}'
       )
   {%- endif -%}
 {%- endmacro -%}
