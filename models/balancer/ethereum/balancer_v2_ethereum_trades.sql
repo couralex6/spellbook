@@ -26,7 +26,7 @@ with v2 as (
     inner join {{ source('balancer_v2_ethereum', 'Vault_evt_PoolRegistered') }} p
     on s.poolId = p.poolId
     {% if not is_incremental() %}
-        where s.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        where s.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
     {% endif %}
     {% if is_incremental() %}
         where s.evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -36,7 +36,7 @@ prices as (
     select * from {{ source('prices', 'usd') }}
     where blockchain = 'ethereum'
     {% if not is_incremental() %}
-        and minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        and minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
     {% endif %}
     {% if is_incremental() %}
         and minute >= date_trunc('day', now() - interval '7' day)
@@ -78,7 +78,7 @@ from v2 trades
 inner join {{ source('ethereum', 'transactions') }} tx
     on trades.evt_tx_hash = tx.hash
     {% if not is_incremental() %}
-    and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
     {% endif %}
     {% if is_incremental() %}
     and tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -91,7 +91,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'ethereum'
 left join prices p_bought
     ON p_bought.minute = date_trunc('minute', trades.evt_block_time)
-    and p_bought.contract_address = trades.token_bought_address
+    and CAST(p_bought.contract_address AS VARBINARY) = trades.token_bought_address
 left join prices p_sold
     on p_sold.minute = date_trunc('minute', trades.evt_block_time)
-    and p_sold.contract_address = trades.token_sold_address
+    and CAST(p_sold.contract_address AS VARBINARY) = trades.token_sold_address
