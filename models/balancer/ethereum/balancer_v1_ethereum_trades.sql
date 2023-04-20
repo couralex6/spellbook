@@ -46,7 +46,7 @@ select
     'ethereum' as blockchain,
     'balancer' as project,
     version,
-    evt_block_time as block_time,
+    CAST(evt_block_time AS TIMESTAMP(6) WITH TIME ZONE) as block_time,
     date_trunc('day', evt_block_time) as block_date,
     erc20a.symbol as token_bought_symbol,
     erc20b.symbol as token_sold_symbol,
@@ -65,7 +65,7 @@ select
     token_bought_address,
     token_sold_address,
     tx."from" as taker,
-    cast(null as varchar(5)) as maker,
+    cast(null as VARBINARY) as maker,
     project_contract_address,
     evt_tx_hash as tx_hash,
     tx."from" as tx_from,
@@ -89,7 +89,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'ethereum'
 left join prices p_bought
     ON p_bought.minute = date_trunc('minute', trades.evt_block_time)
-    and p_bought.contract_address = trades.token_bought_address
+    and from_hex(p_bought.contract_address) = trades.token_bought_address
 left join prices p_sold
     on p_sold.minute = date_trunc('minute', trades.evt_block_time)
-    and p_sold.contract_address = trades.token_sold_address
+    and from_hex(p_sold.contract_address) = trades.token_sold_address

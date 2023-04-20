@@ -51,7 +51,7 @@ select
     'gnosis' as blockchain,
     'balancer' as project,
     version,
-    evt_block_time as block_time,
+    CAST(evt_block_time AS TIMESTAMP(6) WITH TIME ZONE) as block_time,
     date_trunc('day', evt_block_time) as block_date,
     erc20a.symbol as token_bought_symbol,
     erc20b.symbol as token_sold_symbol,
@@ -79,7 +79,7 @@ select
     '' as trace_address
 from v2 trades
 inner join {{ source('gnosis', 'transactions') }} tx
-    on trades.evt_tx_hash = tx.hash
+    on from_hex(trades.evt_tx_hash) = tx.hash
     {% if not is_incremental() %}
     and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
     {% endif %}
@@ -87,10 +87,10 @@ inner join {{ source('gnosis', 'transactions') }} tx
     and tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
 left join {{ ref('tokens_erc20') }} erc20a
-    on trades.token_bought_address = erc20a.contract_address
+    on from_hex(trades.token_bought_address) = erc20a.contract_address
     and erc20a.blockchain = 'gnosis'
 left join {{ ref('tokens_erc20') }} erc20b
-    on trades.token_sold_address = erc20b.contract_address
+    on from_hex(trades.token_sold_address) = erc20b.contract_address
     and erc20b.blockchain = 'gnosis'
 left join prices p_bought
     ON p_bought.minute = date_trunc('minute', trades.evt_block_time)
