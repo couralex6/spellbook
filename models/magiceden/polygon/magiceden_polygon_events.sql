@@ -151,7 +151,7 @@ SELECT
   agg.name AS aggregator_name,
   agg.contract_address AS aggregator_address,
   t.`from` AS tx_from,
-  t.`to` AS tx_to,
+  t."to" AS tx_to,
   s.platform_fee_amount_raw,
   CAST(s.platform_fee_amount_raw / power(10, erc.decimals) AS double) AS platform_fee_amount,
   CAST(s.platform_fee_amount_raw / power(10, erc.decimals) * p.price AS double) AS platform_fee_amount_usd,
@@ -182,4 +182,4 @@ LEFT JOIN {{ source('prices', 'usd') }} p ON p.contract_address = a.currency_con
     {% if is_incremental() %}
     AND minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
-LEFT JOIN {{ ref('nft_aggregators') }} agg ON agg.blockchain = 'polygon' AND agg.contract_address = t.`to`
+LEFT JOIN {{ ref('nft_aggregators') }} agg ON agg.blockchain = 'polygon' AND agg.contract_address = t."to"

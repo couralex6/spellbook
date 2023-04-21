@@ -142,5 +142,5 @@ FROM tfe
                        AND pu.minute >= date_trunc('day', now() - interval '7' day)
                        {% endif %}
          LEFT JOIN {{ ref('nft_aggregators')}} agg
-                   ON agg.contract_address = tx.`to`
+                   ON agg.contract_address = tx."to"
                    AND agg.blockchain = 'arbitrum'

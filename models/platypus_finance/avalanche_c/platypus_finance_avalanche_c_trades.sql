@@ -24,7 +24,7 @@
         a regular swap looks like--	sender <-> pool
         but Platypus allows--		sender -> pool -> receiver
         here, receiver and sender can be identical (resulting in a regular swap), but don't have to be
-    As the receiver (ie the `to` address) ultimately receives the swapped tokens, we designate him/her as taker
+    As the receiver (ie the "to" address) ultimately receives the swapped tokens, we designate him/her as taker
 */
 
 {% set project_start_date = '2021-11-26' %}
@@ -51,7 +51,7 @@ select
     ) as amount_usd	
 	, s.toToken as token_bought_address
 	, s."from"Token as token_sold_address
-    , coalesce(s.`to`, tx."from") AS taker
+    , coalesce(s."to", tx."from") AS taker
 	, '' as maker
 	, cast(s.contract_address as string) as project_contract_address
 	, s.evt_tx_hash as tx_hash

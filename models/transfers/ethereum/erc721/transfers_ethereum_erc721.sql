@@ -2,7 +2,7 @@
 
 with
     received_transfers as (
-        select 'receive' || '-' ||  evt_tx_hash || '-' || evt_index || '-' || `to` as unique_tx_id,
+        select 'receive' || '-' ||  evt_tx_hash || '-' || evt_index || '-' || "to" as unique_tx_id,
             to as wallet_address,
             contract_address as token_address,
             evt_block_time,

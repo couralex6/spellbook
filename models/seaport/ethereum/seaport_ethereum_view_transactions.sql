@@ -235,7 +235,7 @@ with iv_availadv as (
           ,a.tx_hash
           ,a.block_number
           ,tx.`from` as tx_from
-          ,tx.`to` as tx_to
+          ,tx."to" as tx_to
           ,a.evt_index
           ,1 as trade_id
           ,a.fee_receive_address

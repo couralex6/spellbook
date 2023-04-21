@@ -15,7 +15,7 @@
 with
     sent_transfers as (
         select
-            `to` as wallet_address,
+            "to" as wallet_address,
             contract_address as token_address,
             evt_block_time,
             value as amount_raw

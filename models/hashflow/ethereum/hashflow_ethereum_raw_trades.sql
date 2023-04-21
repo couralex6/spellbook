@@ -17,7 +17,7 @@
 with ethereum_traces as (
     select *
     from {{ source('ethereum', 'traces') }}
-    where `to` in (0x455a3b3be6e7c8843f2b03a1ca22a5a5727ef5c4,0x9d4fc735e1a596420d24a266b7b5402fe4ec153c,
+    where "to" in (0x455a3b3be6e7c8843f2b03a1ca22a5a5727ef5c4,0x9d4fc735e1a596420d24a266b7b5402fe4ec153c,
                    0x2405cb057a9baf85daa11ce9832baed839b6871c,0x043389f397ad72619d05946f5f35426a7ace6613,
                    0xa18607ca4a3804cc3cd5730eafefcc47a7641643, 0x6ad3dac99c9a4a480748c566ce7b3503506e3d71)
         and block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
@@ -225,7 +225,7 @@ legacy_routers as (
         t.tx_hash,
         error is null as fill_status,
         substring(input, 1, 4) as method_id,
-        `to` as router_contract,
+        "to" as router_contract,
         substring(input, 17, 20) as pool, --mm
         substring(input, 49, 20) as trader,
         case when substring(input, 1, 4) = '0xc7f6b19d' then substring(input, 81, 20)
@@ -249,7 +249,7 @@ legacy_routers as (
     left join prices_usd p on minute = date_trunc('minute', t.block_time)
     left join erc20_tokens e on e.contract_address = substring(input, 81, 20)
     where cast(trace_address as string) = '{}'  --top level call
-        and `to` in (0x9d4fc735e1a596420d24a266b7b5402fe4ec153c, 0x2405cb057a9baf85daa11ce9832baed839b6871c)
+        and "to" in (0x9d4fc735e1a596420d24a266b7b5402fe4ec153c, 0x2405cb057a9baf85daa11ce9832baed839b6871c)
         and substring(input, 1, 4) in ('0x9ec7605b',  -- token to eth
                                        '0xc7f6b19d') -- eth to token
         and p.symbol = 'WETH'
@@ -261,7 +261,7 @@ legacy_routers as (
             t.tx_hash,
             error is null as fill_status,
             substring(input, 1, 4) as method_id,
-            `to` as router_contract,
+            "to" as router_contract,
             substring(input, 17, 20) as pool,
             substring(input, 49, 20) as trader,
             substring(input, 113, 20) as maker_token,
@@ -277,7 +277,7 @@ legacy_routers as (
     left join prices_usd tp on tp.minute = date_trunc('minute', t.block_time) and tp.contract_address = substring(input, 81, 20)
     left join prices_usd mp on mp.minute = date_trunc('minute', t.block_time) and mp.contract_address = substring(input, 113, 20)
     where cast(trace_address as string) = '{}'
-        and `to` in (0x455a3B3Be6e7C8843f2b03A1cA22A5a5727ef5C4,0x9d4fc735e1a596420d24a266b7b5402fe4ec153c, 0x2405cb057a9baf85daa11ce9832baed839b6871c,0x043389f397ad72619d05946f5f35426a7ace6613)
+        and "to" in (0x455a3B3Be6e7C8843f2b03A1cA22A5a5727ef5C4,0x9d4fc735e1a596420d24a266b7b5402fe4ec153c, 0x2405cb057a9baf85daa11ce9832baed839b6871c,0x043389f397ad72619d05946f5f35426a7ace6613)
         and substring(input, 1, 4) in ('0x064f0410','0x4d0246ad') -- token to token
 
     union all
@@ -287,7 +287,7 @@ legacy_routers as (
         t.tx_hash,
         error is null as fill_status,
         substring(input, 1, 4) as method_id,
-        `to` as router_contract,
+        "to" as router_contract,
         substring(input, 17, 20) as pool,
         substring(input, 49, 20) as trader,
         case when substring(input, 1, 4) = '0xe43d9733' then substring(input, 81, 20)
@@ -311,7 +311,7 @@ legacy_routers as (
     left join prices_usd p on minute = date_trunc('minute', t.block_time)
     left join erc20_tokens e on e.contract_address = substring(input, 81, 20)
     where cast(trace_address as string) = '{}'
-        and `to` in (0x455a3B3Be6e7C8843f2b03A1cA22A5a5727ef5C4,0x043389f397ad72619d05946f5f35426a7ace6613)
+        and "to" in (0x455a3B3Be6e7C8843f2b03A1cA22A5a5727ef5C4,0x043389f397ad72619d05946f5f35426a7ace6613)
         and substring(input, 1, 4) in ('0xd0529c02',  -- token to eth
                                        '0xe43d9733') -- eth to token
         and p.symbol = 'WETH'
