@@ -20,7 +20,7 @@ dexs as (
         SELECT 
             evt_block_time as block_time, 
             account as taker, 
-            CAST('' AS VARBINARY) as maker,
+            0x as maker,
             amountIn as token_sold_amount_raw, 
             amountOut as token_bought_amount_raw, 
             CAST(NULL as double) as amount_usd, 

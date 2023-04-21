@@ -124,7 +124,7 @@ SELECT
     dexs.token_bought_address,
     dexs.token_sold_address,
     dexs.taker,
-    CAST('' AS VARBINARY) as maker,
+    0x as maker,
     dexs.project_contract_address,
     dexs.tx_hash,
     tx."from" as tx_from,

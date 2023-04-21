@@ -22,7 +22,7 @@ WITH dexs AS
          t.evt_block_time AS block_time
         , t.evt_block_number
         ,'toAddress' AS taker
-        ,CAST('' AS VARBINARY) as maker
+        ,0x as maker
         ,t.toAmount AS token_bought_amount_raw 
         ,t."from"Amount AS token_sold_amount_raw
         ,cast(NULL as double) AS amount_usd

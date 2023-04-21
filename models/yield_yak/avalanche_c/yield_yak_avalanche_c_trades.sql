@@ -21,7 +21,7 @@ dexs as (
         SELECT 
             evt_block_time as block_time, 
             -- '' as taker, commenting this as there's no trader in the event 
-            CAST('' AS VARBINARY) as maker,
+            0x as maker,
             _amountIn as token_sold_amount_raw, 
             _amountOut as token_bought_amount_raw, 
             CAST(NULL as double) as amount_usd, 

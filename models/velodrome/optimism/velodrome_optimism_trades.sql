@@ -21,7 +21,7 @@ WITH dexs AS
         t.evt_block_time AS block_time
         ,t.evt_block_number
         ,t.to AS taker
-        ,CAST('' AS VARBINARY) as maker
+        ,0x as maker
         -- logic from ethereum/dex/trades/insert_uniswap_v2
 	    ,CASE WHEN amount0Out = '0' THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw -- when amount0 is negative it means trader_a is buying token0 from the pool
 	    ,CASE WHEN amount0In = '0' OR amount1Out = '0' THEN amount1In ELSE amount0In END AS token_sold_amount_raw

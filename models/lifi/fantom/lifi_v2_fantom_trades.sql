@@ -26,7 +26,7 @@ dexs as (
     {% for trade_tables in trade_event_tables %}
         SELECT 
             evt_block_time as block_time,
-            CAST('' AS VARBINARY) as maker,
+            0x as maker,
             toAmount as token_bought_amount_raw,
             fromAmount as token_sold_amount_raw,
             CAST(NULL as double) as amount_usd,

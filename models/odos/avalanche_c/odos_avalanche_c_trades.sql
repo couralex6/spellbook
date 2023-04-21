@@ -21,7 +21,7 @@ dexs_raw as (
         SELECT 
             evt_block_time as block_time, 
             explode(outputs) as data_value, 
-            CAST('' AS VARBINARY) as maker,
+            0x as maker,
             CAST(amountsIn[0] as double) as token_sold_amount_raw, 
             CAST(amountsOut[0] as double) as token_bought_amount_raw, 
             CAST(NULL as double) as amount_usd, 
