@@ -69,7 +69,7 @@ with events_raw as (
         where evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
     ) as x 
-    where nft_contract_address != lower(0xbe81eabdbd437cba43e4c1c330c63022772c2520) -- --exploit contract
+    where nft_contract_address != 0xbe81eabdbd437cba43e4c1c330c63022772c2520 -- --exploit contract
 )
 ,transfers as (
     -- eth royalities

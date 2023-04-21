@@ -69,7 +69,7 @@ with events_raw as (
         where evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
     ) as x 
-    where nft_contract_address != lower(0xbe81eabdbd437cba43e4c1c330c63022772c2520) -- --exploit contract
+    where nft_contract_address != 0xbe81eabdbd437cba43e4c1c330c63022772c2520 -- --exploit contract
 )
 ,transfers as (
     -- eth royalities
@@ -88,7 +88,7 @@ with events_raw as (
         lower('{{quix_fee_address_address}}') --qx platform fee address
         ,er.seller
         ,er.project_contract_address
-        ,lower(0x0000000000000000000000000000000000000000) -- v3 first few txs misconfigured to send fee to null address
+        ,0x0000000000000000000000000000000000000000 -- v3 first few txs misconfigured to send fee to null address
       )
       {% if not is_incremental() %}
       -- smallest block number for source tables above
@@ -116,7 +116,7 @@ with events_raw as (
         lower('{{quix_fee_address_address}}') --qx platform fee address
         ,er.seller
         ,er.project_contract_address
-        ,lower(0x0000000000000000000000000000000000000000) -- v3 first few txs misconfigured to send fee to null address
+        ,0x0000000000000000000000000000000000000000 -- v3 first few txs misconfigured to send fee to null address
       )
       {% if not is_incremental() %}
       -- smallest block number for source tables above

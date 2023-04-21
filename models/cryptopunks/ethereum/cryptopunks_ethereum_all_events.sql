@@ -72,7 +72,7 @@ from
             , block_number
             , tx_hash
     from {{ ref('nft_trades') }}
-    where nft_contract_address = lower(0xb7f7f6c52f2e2fdb1963eab30438024864c313f6) -- wrapped punk contract
+    where nft_contract_address = 0xb7f7f6c52f2e2fdb1963eab30438024864c313f6 -- wrapped punk contract
         and blockchain = 'ethereum'
 
     union all
@@ -89,7 +89,7 @@ from
             , evt_block_number
             , evt_tx_hash
     from {{ source('rarible_v1_ethereum','ERC721Sale_v2_evt_Buy') }}
-    where token = lower(0xb7f7f6c52f2e2fdb1963eab30438024864c313f6)
+    where token = 0xb7f7f6c52f2e2fdb1963eab30438024864c313f6
 
     union all 
 

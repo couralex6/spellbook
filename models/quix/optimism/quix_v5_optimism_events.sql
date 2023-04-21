@@ -29,7 +29,7 @@ with events_raw as (
         ,price as amount_raw
         ,evt_index
     from {{ source('quixotic_v5_optimism','ExchangeV5_evt_SellOrderFilled') }}
-    where contractAddress != lower(0xbe81eabdbd437cba43e4c1c330c63022772c2520) -- --exploit contract
+    where contractAddress != 0xbe81eabdbd437cba43e4c1c330c63022772c2520 -- --exploit contract
     {% if is_incremental() %} 
     and evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
@@ -54,9 +54,9 @@ with events_raw as (
         lower('{{quix_fee_address_address}}') --qx platform fee address
         ,er.seller
         ,er.project_contract_address
-        ,lower(0x0000000000000000000000000000000000000000) -- v3 first few txs misconfigured to send fee to null address
-        ,lower(0x942f9ce5d9a33a82f88d233aeb3292e680230348) -- v4 there are txs via Ambire Wallet Contract Deployer to be excluded 
-        ,lower(0xdf95dc47753c94771f52444a2517f4bae7c6046d) -- v5 another contract that creates mutiple internal transfers, e.g. https://optimistic.etherscan.io/tx/0x7c7daf30bf3fa829c22428fd275bbe7b30b62f7ccebd2a8e4aaa396904f01b78
+        ,0x0000000000000000000000000000000000000000 -- v3 first few txs misconfigured to send fee to null address
+        ,0x942f9ce5d9a33a82f88d233aeb3292e680230348 -- v4 there are txs via Ambire Wallet Contract Deployer to be excluded 
+        ,0xdf95dc47753c94771f52444a2517f4bae7c6046d -- v5 another contract that creates mutiple internal transfers, e.g. https://optimistic.etherscan.io/tx/0x7c7daf30bf3fa829c22428fd275bbe7b30b62f7ccebd2a8e4aaa396904f01b78
       )
       {% if not is_incremental() %}
       -- smallest block number for source tables above
@@ -87,9 +87,9 @@ with events_raw as (
         lower('{{quix_fee_address_address}}') --qx platform fee address
         ,er.seller
         ,er.project_contract_address
-        ,lower(0x0000000000000000000000000000000000000000) -- v3 first few txs misconfigured to send fee to null address
-        ,lower(0x942f9ce5d9a33a82f88d233aeb3292e680230348) -- v4 there are txs via Ambire Wallet Contract Deployer to be excluded 
-        ,lower(0xdf95dc47753c94771f52444a2517f4bae7c6046d) -- v5 another contract that creates mutiple internal transfers, e.g. https://optimistic.etherscan.io/tx/0x7c7daf30bf3fa829c22428fd275bbe7b30b62f7ccebd2a8e4aaa396904f01b78
+        ,0x0000000000000000000000000000000000000000 -- v3 first few txs misconfigured to send fee to null address
+        ,0x942f9ce5d9a33a82f88d233aeb3292e680230348 -- v4 there are txs via Ambire Wallet Contract Deployer to be excluded 
+        ,0xdf95dc47753c94771f52444a2517f4bae7c6046d -- v5 another contract that creates mutiple internal transfers, e.g. https://optimistic.etherscan.io/tx/0x7c7daf30bf3fa829c22428fd275bbe7b30b62f7ccebd2a8e4aaa396904f01b78
       )
       {% if not is_incremental() %}
       -- smallest block number for source tables above
