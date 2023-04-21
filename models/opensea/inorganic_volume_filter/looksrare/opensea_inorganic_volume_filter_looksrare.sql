@@ -243,7 +243,7 @@ trades_enrich as (
             ON p.minute = date_trunc('minute', t.block_time)
             AND p.contract_address = t.currency_contract 
             AND p.blockchain = 'ethereum'
-            AND p.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND p.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
         LEFT JOIN 
         {{ ref('tokens_erc20') }} erc20 
             ON t.currency_contract = erc20.contract_address

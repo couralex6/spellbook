@@ -26,7 +26,7 @@ with hashflow_trades as (
 ethereum_transactions as (
     select *
     from {{ source('ethereum', 'transactions') }}
-    where block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    where block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
     {% if is_incremental() %}
         and block_time >= date_trunc('day', now() - interval '10 days')
     {% endif %}

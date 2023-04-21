@@ -21,7 +21,7 @@ WITH sharky_txs AS (
         FROM {{ source('solana', 'account_activity') }}
         WHERE tx_success
             {% if not is_incremental() %}
-            AND block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
             {% else %}
             AND block_time >= date_trunc('day', now() - interval '7' day)
             {% endif %}
@@ -35,7 +35,7 @@ WITH sharky_txs AS (
             blockchain IS NULL
             AND symbol = 'SOL'
             {% if not is_incremental() %}
-            AND minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
             {% else %}
             AND minute >= date_trunc('day', now() - interval '7' day)
             {% endif %}
@@ -52,7 +52,7 @@ WITH sharky_txs AS (
                id
         FROM {{ source('solana','transactions') }} tx
         {% if not is_incremental() %}
-        WHERE tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        WHERE tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
         {% else %}
         WHERE tx.block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}

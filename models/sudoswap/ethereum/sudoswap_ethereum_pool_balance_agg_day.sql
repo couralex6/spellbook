@@ -31,7 +31,7 @@ WITH
       INNER JOIN pools p ON p.nft_contract_address = et.contract_address
       AND (et.to = p.pool_address OR et."from" = p.pool_address)
     {% if not is_incremental() %}
-    WHERE et.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE et.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
     {% endif %}
     {% if is_incremental() %}
     WHERE et.evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -62,7 +62,7 @@ WITH
             OR tr.call_type IS null
           )
           {% if not is_incremental() %}
-          AND tr.block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+          AND tr.block_time > CAST('{{project_start_date}}' AS TIMESTAMP(3))
           {% endif %}
           {% if is_incremental() %}
           AND tr.block_time >= date_trunc('day', now() - interval '7' day)
@@ -87,7 +87,7 @@ WITH
             OR tr.call_type IS null
           )
           {% if not is_incremental() %}
-          AND tr.block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+          AND tr.block_time > CAST('{{project_start_date}}' AS TIMESTAMP(3))
           {% endif %}
           {% if is_incremental() %}
           AND tr.block_time >= date_trunc('day', now() - interval '7' day)

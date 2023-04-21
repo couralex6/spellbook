@@ -43,7 +43,7 @@ source_inventory as (
         CAST(bytea2numeric_v3(SUBSTRING(takerAssetData, 77, 64)) as decimal(38)) as taker_id
     FROM
     {{ source('nftrade_bnb', 'NiftyProtocol_evt_Fill') }}
-    WHERE evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
     {% if is_incremental() %}
     AND evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
@@ -142,7 +142,7 @@ source_inventory_enriched as (
         ON btx.block_time = src.evt_block_time
         AND btx.hash = src.evt_tx_hash
         {% if not is_incremental() %}
-        AND btx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND btx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
         {% endif %}
         {% if is_incremental() %}
         AND btx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -156,7 +156,7 @@ source_inventory_enriched as (
         AND p.minute = date_trunc('minute', src.evt_block_time)
         AND p.contract_address = 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
         {% if not is_incremental() %}
-        AND p.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND p.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
         {% endif %}
         {% if is_incremental() %}
         AND p.minute >= date_trunc('day', now() - interval '7' day)
@@ -172,7 +172,7 @@ source_inventory_enriched as (
         AND erc721.tokenId = src.token_id
         AND erc721.to = src.buyer
         {% if not is_incremental() %}
-        AND erc721.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND erc721.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
         {% endif %}
         {% if is_incremental() %}
         AND erc721.evt_block_time >= date_trunc('day', now() - interval '7' day)

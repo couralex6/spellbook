@@ -46,7 +46,7 @@ WITH
       INNER JOIN {{ source('ethereum','transactions') }} tx ON tx.block_time = cre.call_block_time
         AND tx.hash = cre.call_tx_hash
         {% if not is_incremental() %}
-        AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
         {% endif %}
         {% if is_incremental() %}
         AND tx.block_time >= date_trunc('day', now() - interval '7' day)
