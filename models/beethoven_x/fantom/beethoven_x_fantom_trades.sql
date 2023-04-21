@@ -22,7 +22,7 @@ WITH dexs AS
          t.evt_block_time AS block_time
         , t.evt_block_number
         ,'' AS taker --not in the event table, so we rely on the transaction "from"
-        ,CAST('' AS VARBINARY)
+        ,CAST('' AS VARBINARY) as maker
         --tokenIn: what the user receives. So we map this to token bought
         ,t.amountIn AS token_bought_amount_raw
         ,t.amountOut AS token_sold_amount_raw
