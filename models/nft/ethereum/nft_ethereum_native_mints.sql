@@ -39,12 +39,12 @@ SELECT distinct 'ethereum' AS blockchain
 , CASE WHEN nft_mints.amount=1 THEN 'Single Item Mint'
     ELSE 'Bundle Mint'
     END AS trade_type
-, CAST(nft_mints.amount AS DECIMAL(38,0)) AS number_of_items
+, CAST(nft_mints.amount AS DOUBLE) AS number_of_items
 , 'Mint' AS trade_category
 , 'Mint' AS evt_type
 , nft_mints."from" AS seller
 , nft_mints.to AS buyer
-, CAST(COALESCE(SUM(CAST(et.value as DOUBLE)), SUM(CAST(erc20s.value as DOUBLE)), 0)*(nft_mints.amount/nft_count.nfts_minted_in_tx) AS DECIMAL(38,0)) AS amount_raw
+, CAST(COALESCE(SUM(CAST(et.value as DOUBLE)), SUM(CAST(erc20s.value as DOUBLE)), 0)*(nft_mints.amount/nft_count.nfts_minted_in_tx) AS DOUBLE) AS amount_raw
 , COALESCE(SUM(CAST(et.value as DOUBLE))/POWER(10, 18), SUM(CAST(erc20s.value as DOUBLE))/POWER(10, pu_erc20s.decimals))*(nft_mints.amount/nft_count.nfts_minted_in_tx) AS amount_original
 , COALESCE(pu_eth.price*SUM(CAST(et.value as DOUBLE))/POWER(10, 18), pu_erc20s.price*SUM(CAST(erc20s.value as DOUBLE))/POWER(10, pu_erc20s.decimals))*(nft_mints.amount/nft_count.nfts_minted_in_tx) AS amount_usd
 , CASE WHEN et.success THEN 'ETH' ELSE pu_erc20s.symbol END AS currency_symbol

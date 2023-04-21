@@ -18,7 +18,7 @@ SELECT
   CAST(block_slot AS BIGINT) as block_number,
   abs(post_balances[0] / 1e9 - pre_balances[0] / 1e9) * p.price AS amount_usd,
   abs(post_balances[0] / 1e9 - pre_balances[0] / 1e9) AS amount_original,
-  CAST(abs(post_balances[0] - pre_balances[0]) AS DECIMAL(38,0)) AS amount_raw,
+  CAST(abs(post_balances[0] - pre_balances[0]) AS DOUBLE) AS amount_raw,
   p.symbol as currency_symbol,
   p.contract_address as currency_contract,
   'metaplex' as token_standard,

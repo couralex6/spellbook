@@ -74,7 +74,7 @@ SELECT 'bnb'                                 as blockchain
            when tff.bundle_size = 1 then 'Single Item Trade'
            else 'Bundle Trade'
     end                                      as trade_type
-     , CAST(tff.amount AS DECIMAL(38,0))     as number_of_items
+     , CAST(tff.amount AS DOUBLE)     as number_of_items
      , 'Trade'                               as evt_type
      , tfe.seller                            as seller
      , tfe.buyer                             as buyer
@@ -83,7 +83,7 @@ SELECT 'bnb'                                 as blockchain
            when tfe.kind = '2' then 'Sell'
            else 'Auction'
     end                                      as trade_category
-     , CAST(tfe.price AS DECIMAL(38,0))      as amount_raw
+     , CAST(tfe.price AS DOUBLE)      as amount_raw
      , tfe.price / power(10, pu.decimals)    as amount_original
      , pu.price * tfe.price / power(10, pu.decimals) as amount_usd
      , case

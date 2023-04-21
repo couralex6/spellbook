@@ -78,7 +78,7 @@ SELECT
     ae.evt_type, 
     ae.address, 
     ae.amount_raw/POWER(10, collateral_currency.decimals) as amount_original, 
-    CAST(ae.amount_raw as DECIMAL(38,0)) as amount_raw, 
+    CAST(ae.amount_raw as DOUBLE) as amount_raw,
     collateral_currency.symbol as collateral_currency_symbol, 
     ae.collateral_currency_contract, 
     ae.nft_contract_address, 

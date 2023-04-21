@@ -121,8 +121,8 @@ SELECT
     end as token_pair
     ,src.token_bought_amount_raw / power(10, token_bought.decimals) AS token_bought_amount
     ,src.token_sold_amount_raw / power(10, token_sold.decimals) AS token_sold_amount
-    ,CAST(src.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(src.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(src.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(src.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         src.amount_usd
         , (src.token_bought_amount_raw / power(10,

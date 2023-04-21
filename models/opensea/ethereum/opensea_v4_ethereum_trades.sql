@@ -319,7 +319,7 @@ with source_ethereum_transactions as (
         ,tx_hash
         ,evt_index
         ,max(token_contract_address) as token_contract_address
-        ,CAST(sum(case when is_price then original_amount end) AS DECIMAL(38,0)) as price_amount_raw
+        ,CAST(sum(case when is_price then original_amount end) AS DOUBLE) as price_amount_raw
         ,sum(case when is_platform_fee then original_amount end) as platform_fee_amount_raw
         ,max(case when is_platform_fee then receiver end) as platform_fee_receiver
         ,sum(case when is_creator_fee then original_amount end) as creator_fee_amount_raw
@@ -358,7 +358,7 @@ with source_ethereum_transactions as (
         ,a.zone
         ,a.platform_contract_address
         ,b.token_contract_address
-        ,CAST(round(price_amount_raw / nft_cnt) AS DECIMAL(38,0)) as price_amount_raw  -- to truncate the odd number of decimal places
+        ,CAST(round(price_amount_raw / nft_cnt) AS DOUBLE) as price_amount_raw  -- to truncate the odd number of decimal places
         ,round(platform_fee_amount_raw / nft_cnt) as platform_fee_amount_raw
         ,platform_fee_receiver
         ,round(creator_fee_amount_raw / nft_cnt) as creator_fee_amount_raw

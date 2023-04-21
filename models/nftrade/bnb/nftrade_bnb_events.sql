@@ -101,7 +101,7 @@ source_inventory_enriched as (
         src.evt_block_number as block_number,
         src.token_id,
         nft_token.name as collection,
-        CAST(src.amount_raw AS DECIMAL(38,0)) as amount_raw,
+        CAST(src.amount_raw AS DOUBLE) as amount_raw,
         src.amount_original,
         src.amount_original * p.price as amount_usd,
         CASE
@@ -109,7 +109,7 @@ source_inventory_enriched as (
             ELSE 'erc1155'
         END as token_standard,
         'Single Item Trade' as trade_type,
-        CAST(1 AS DECIMAL(38,0)) AS number_of_items,
+        CAST(1 AS DOUBLE) AS number_of_items,
         src.trade_category,
         'Trade' as evt_type,
         src.buyer,

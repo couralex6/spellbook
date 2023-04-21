@@ -97,12 +97,12 @@ SELECT 'ethereum' AS blockchain
 , prof.evt_block_number AS block_number
 , inv.token_id as token_id
 , nft_token.name AS collection
-, CAST(inv.price AS DECIMAL(38,0)) AS amount_raw
+, CAST(inv.price AS DOUBLE) AS amount_raw
 , inv.price/POWER(10, currency_token.decimals) AS amount_original
 , pu.price*(inv.price/POWER(10, currency_token.decimals)) AS amount_usd
 , nft_token.standard as token_standard
 , 'Single Item Trade' AS trade_type
-, CAST(1 AS DECIMAL(38,0)) AS number_of_items
+, CAST(1 AS DOUBLE) AS number_of_items
 , CASE WHEN (inv.fees_0 IS NULL OR inv.fees_0_to != '{{fee_management_addr}}') AND (prof.evt_block_time < '2022-04-01' OR prof.evt_block_time >= '2022-05-01') THEN 'Private Sale'
     WHEN (et."from"=inv.maker or inv.maker = agg.contract_address) THEN 'Offer Accepted'
     ELSE 'Buy'

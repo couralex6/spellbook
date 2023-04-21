@@ -43,8 +43,8 @@ select
     end as token_pair
 	, s.toAmount / power(10, erc20_b.decimals) as token_bought_amount
 	, s."from"Amount / power(10, erc20_s.decimals) as token_sold_amount
-	, CAST(s.toAmount AS DECIMAL(38,0)) as token_bought_amount_raw
-	, CAST(s."from"Amount AS DECIMAL(38,0)) as token_sold_amount_raw
+	, CAST(s.toAmount AS DOUBLE) as token_bought_amount_raw
+	, CAST(s."from"Amount AS DOUBLE) as token_sold_amount_raw
     , coalesce(
         (s.toAmount / power(10, prices_b.decimals)) * prices_b.price
         ,(s."from"Amount / power(10, prices_s.decimals)) * prices_s.price
