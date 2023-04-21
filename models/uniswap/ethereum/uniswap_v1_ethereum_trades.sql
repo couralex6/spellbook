@@ -22,7 +22,7 @@ WITH dexs AS
     SELECT
         t.evt_block_time AS block_time
         ,t.buyer AS taker
-        ,CAST('' AS VARBINARY) as maker
+        ,0x as maker
         ,t.tokens_bought AS token_bought_amount_raw
         ,t.eth_sold AS token_sold_amount_raw
         ,NULL AS amount_usd

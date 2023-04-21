@@ -24,7 +24,7 @@ WITH dexs AS
     SELECT
         t.evt_block_time AS block_time
         ,t.to AS taker
-        ,CAST('' AS VARBINARY) as maker
+        ,0x as maker
         ,CASE WHEN CAST(amount0Out AS DOUBLE) = CAST(0 AS DOUBLE) THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw
         ,CASE WHEN CAST(amount0In AS DOUBLE) = CAST(0 AS DOUBLE) OR CAST(amount1Out AS DOUBLE) = CAST(0 AS DOUBLE) THEN amount1In ELSE amount0In END AS token_sold_amount_raw
         ,NULL AS amount_usd
