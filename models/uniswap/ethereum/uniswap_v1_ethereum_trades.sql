@@ -27,7 +27,7 @@ WITH dexs AS
         ,t.eth_sold AS token_sold_amount_raw
         ,NULL AS amount_usd
         ,f.token AS token_bought_address
-        ,CAST({{weth_address}} AS VARBINARY) AS token_sold_address --Using WETH for easier joining with USD price table
+        ,{{weth_address}} AS token_sold_address --Using WETH for easier joining with USD price table
         ,t.contract_address AS project_contract_address
         ,t.evt_tx_hash AS tx_hash
         ,CAST('' AS VARCHAR(42)) AS trace_address

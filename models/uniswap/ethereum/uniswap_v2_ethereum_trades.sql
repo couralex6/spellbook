@@ -38,10 +38,10 @@ WITH dexs AS
         {{ source('uniswap_v2_ethereum', 'Pair_evt_Swap') }} t
     INNER JOIN {{ source('uniswap_v2_ethereum', 'Factory_evt_PairCreated') }} f
         ON f.pair = t.contract_address
-    WHERE CAST(t.contract_address AS VARCHAR) NOT IN (
-        CAST('{{weth_ubomb_wash_trading_pair}}' AS VARCHAR),
-        CAST('{{weth_weth_wash_trading_pair}}' AS VARCHAR),
-        CAST('{{feg_eth_wash_trading_pair}}' AS VARCHAR) )
+    WHERE t.contract_address NOT IN (
+        {{weth_ubomb_wash_trading_pair}},
+        {{weth_weth_wash_trading_pair}},
+        {{feg_eth_wash_trading_pair}} )
     {% if is_incremental() %}
     AND t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
