@@ -218,7 +218,7 @@ FROM dexs
 INNER JOIN {{ source('ethereum', 'transactions')}} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -234,7 +234,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND from_hex(p_bought.contract_address) = dexs.token_bought_address
     AND p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -244,7 +244,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND from_hex(p_sold.contract_address) = dexs.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
@@ -254,7 +254,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_eth
     AND p_eth.blockchain is null
     AND p_eth.symbol = 'ETH'
     {% if not is_incremental() %}
-    AND p_eth.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_eth.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_eth.minute >= date_trunc('day', now() - interval '7' day)

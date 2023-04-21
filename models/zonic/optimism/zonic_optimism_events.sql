@@ -48,7 +48,7 @@ with source_optimism_transactions as (
     from {{ source('prices', 'usd') }}
     where blockchain = 'optimism'
     {% if not is_incremental() %}
-      and minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))  -- first txn
+      and minute >= TIMESTAMP '{{project_start_date}}'  -- first txn
     {% endif %}
     {% if is_incremental() %}
       and minute >= date_trunc('day', now() - interval '7' day)
@@ -75,7 +75,7 @@ with source_optimism_transactions as (
        ,saleId as sale_id
     from {{ source('zonic_optimism', 'ZonicMarketplace_evt_ZonicBasicOrderFulfilled') }} as o
     {% if not is_incremental() %}
-    where evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))  -- zonic first txn
+    where evt_block_time >= TIMESTAMP '{{project_start_date}}'  -- zonic first txn
     {% endif %}
     {% if is_incremental() %}
     where evt_block_time >= date_trunc('day', now() - interval '7' day)

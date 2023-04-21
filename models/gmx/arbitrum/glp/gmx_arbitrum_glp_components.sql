@@ -58,5 +58,5 @@ FROM {{ref('gmx_arbitrum_glp_components_base')}}
 WHERE minute >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 {% if not is_incremental() %}
-WHERE minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+WHERE minute >= TIMESTAMP '{{project_start_date}}'
 {% endif %}

@@ -80,7 +80,7 @@ INNER JOIN {{ source('optimism', 'transactions') }} tx
     ON tx.hash = dexs.tx_hash
     AND tx.block_number = dexs.evt_block_number
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '1' week)
@@ -96,7 +96,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND from_hex(p_bought.contract_address) = dexs.token_bought_address
     AND p_bought.blockchain = 'optimism'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -106,7 +106,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND from_hex(p_sold.contract_address) = dexs.token_sold_address
     AND p_sold.blockchain = 'optimism'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

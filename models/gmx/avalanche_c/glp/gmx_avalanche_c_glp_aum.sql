@@ -33,5 +33,5 @@ FROM {{ref('gmx_avalanche_c_glp_components')}}
 WHERE minute >= date_trunc('day', now() - INTERVAL '1' week)
 {% endif %}
 {% if not is_incremental() %}
-WHERE minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+WHERE minute >= TIMESTAMP '{{project_start_date}}'
 {% endif %}

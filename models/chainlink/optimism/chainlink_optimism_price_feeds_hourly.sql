@@ -29,7 +29,7 @@ WITH gs AS (
                 sequence(
                     DATE_TRUNC('hour', 
                     {% if not is_incremental() %}
-                        CAST('{{project_start_date}}' AS TIMESTAMP(3))::date
+                        TIMESTAMP '{{project_start_date}}'::date
                     {% endif %}
                     {% if is_incremental() %}
                         date_trunc('hour', now() - interval '7 day')
@@ -97,7 +97,7 @@ FROM
                 AND gs.aggregator_address = f.aggregator_address
             WHERE
                 {% if not is_incremental() %}
-                gs.hr >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+                gs.hr >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 {% if is_incremental() %}
                 gs.hr >= date_trunc('hour', now() - interval '7 day')

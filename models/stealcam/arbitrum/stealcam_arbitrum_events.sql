@@ -59,7 +59,7 @@ INNER JOIN {{ source('arbitrum', 'transactions') }} at ON at.block_number=sc.evt
     AND at.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND at.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND at.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ ref('prices_usd_forward_fill') }} pu ON pu.blockchain = 'ethereum'
     AND pu.contract_address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
@@ -68,7 +68,7 @@ LEFT JOIN {{ ref('prices_usd_forward_fill') }} pu ON pu.blockchain = 'ethereum'
     AND pu.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND pu.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND pu.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 INNER JOIN {{ source('stealcam_arbitrum', 'Stealcam_call_mint') }} m ON m.call_success
     AND m.id=sc.id
@@ -76,7 +76,7 @@ INNER JOIN {{ source('stealcam_arbitrum', 'Stealcam_call_mint') }} m ON m.call_s
     AND m.call_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND m.call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND m.call_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('arbitrum', 'traces') }} roy ON roy.block_number=sc.evt_block_number
     AND roy.tx_hash=sc.evt_tx_hash
@@ -86,7 +86,7 @@ LEFT JOIN {{ source('arbitrum', 'traces') }} roy ON roy.block_number=sc.evt_bloc
     AND roy.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND roy.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND roy.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('arbitrum', 'traces') }} not_fee ON not_fee.block_number=sc.evt_block_number
     AND not_fee.tx_hash=sc.evt_tx_hash
@@ -96,11 +96,11 @@ LEFT JOIN {{ source('arbitrum', 'traces') }} not_fee ON not_fee.block_number=sc.
     AND not_fee.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND not_fee.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND not_fee.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 {% if is_incremental() %}
 WHERE sc.evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 {% if not is_incremental() %}
-WHERE sc.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+WHERE sc.evt_block_time >= TIMESTAMP '{{project_start_date}}'
 {% endif %}

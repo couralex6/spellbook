@@ -35,7 +35,7 @@ WITH clipper AS
         {% if is_incremental() %}
         AND call_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND call_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
             
     UNION ALL
@@ -57,7 +57,7 @@ WITH clipper AS
         {% if is_incremental() %}
         AND call_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND call_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
             
     UNION ALL
@@ -79,7 +79,7 @@ WITH clipper AS
         {% if is_incremental() %}
         AND call_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND call_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
             
     UNION ALL
@@ -101,7 +101,7 @@ WITH clipper AS
         {% if is_incremental() %}
         AND call_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND call_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
             
     UNION ALL
@@ -123,7 +123,7 @@ WITH clipper AS
         {% if is_incremental() %}
         AND call_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND call_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
             
     UNION ALL
@@ -145,7 +145,7 @@ WITH clipper AS
         {% if is_incremental() %}
         AND call_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND call_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
 )
 , oneinch AS
@@ -247,7 +247,7 @@ INNER JOIN {{ source('ethereum', 'transactions') }} as tx
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} as token_bought
     ON token_bought.contract_address = src.token_bought_address
@@ -262,7 +262,7 @@ LEFT JOIN {{ source('prices', 'usd') }} as prices_bought
     {% if is_incremental() %}
     AND prices_bought.minute >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND prices_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND prices_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} as prices_sold
     ON prices_sold.minute = date_trunc('minute', src.block_time)
@@ -271,7 +271,7 @@ LEFT JOIN {{ source('prices', 'usd') }} as prices_sold
     {% if is_incremental() %}
     AND prices_sold.minute >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND prices_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND prices_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} as prices_eth
     ON prices_eth.minute = date_trunc('minute', src.block_time)
@@ -280,5 +280,5 @@ LEFT JOIN {{ source('prices', 'usd') }} as prices_eth
     {% if is_incremental() %}
     AND prices_eth.minute >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND prices_eth.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND prices_eth.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}

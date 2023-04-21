@@ -121,7 +121,7 @@ FROM dexs
 INNER JOIN {{ source('avalanche_c', 'transactions')}} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -137,7 +137,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND from_hex(p_bought.contract_address) = dexs.token_bought_address
     AND p_bought.blockchain = 'avalanche_c'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -147,7 +147,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND from_hex(p_sold.contract_address) = dexs.token_sold_address
     AND p_sold.blockchain = 'avalanche_c'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
@@ -157,7 +157,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_avx
     AND p_avx.blockchain is null
     AND p_avx.symbol = 'AVAX'
     {% if not is_incremental() %}
-    AND p_avx.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+    AND p_avx.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_avx.minute >= date_trunc('day', now() - interval '7' day)

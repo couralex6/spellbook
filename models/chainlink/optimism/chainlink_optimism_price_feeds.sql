@@ -47,7 +47,7 @@ FROM
 	    ON l.contract_address = cfa.aggregator_address
 	WHERE l.topic1 = '{{answer_updated}}'
         {% if not is_incremental() %}
-        AND l.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3))
+        AND l.block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         AND l.block_time >= date_trunc('day', now() - interval '7' day)
