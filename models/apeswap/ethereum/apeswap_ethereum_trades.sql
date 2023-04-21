@@ -20,7 +20,7 @@ with dexs as (
         t.evt_block_time as block_time,
         t.to as taker,
         0x as maker,
-        case when t.amount0Out = 0 then t.amount1Out else t.amount0Out end as token_bought_amount_raw,
+        case when CAST(t.amount0Out AS DOUBLE) = 0 then t.amount1Out else t.amount0Out end as token_bought_amount_raw,
         case when t.amount0In = 0 then t.amount1In else t.amount0In end as token_sold_amount_raw,
         cast(NULL as double) as amount_usd,
         case when t.amount0Out  = 0 then f.token1 else f.token0 end as token_bought_address,
