@@ -36,11 +36,11 @@ jobs:
       - name: dbt dependencies
         run: "dbt deps"
 
-      #- name: dbt compile to create manifest to compare to
-       # run: "dbt compile"
-
-      - name: dbt seed
-        run: "dbt seed --select state:modified --state ."
+#      - name: dbt compile to create manifest to compare to
+#        run: "dbt compile"
+#
+#      - name: dbt seed
+#        run: "dbt seed --select state:modified --state ."
 
       # TODO: to remove
       - name: temp dbt run
