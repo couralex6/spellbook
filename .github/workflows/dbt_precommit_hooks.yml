@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   dbt-precommit-hooks:
-    runs-on: [ self-hosted, linux, spellbook ]
+    runs-on: [ self-hosted, linux, spellbook-trino ]
     timeout-minutes: 60
 
     steps:
