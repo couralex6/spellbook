@@ -27,7 +27,7 @@ SELECT qa.distributor_address
      , r.value            AS rewards_token_value_raw
 FROM {{source('erc20_optimism','evt_Transfer')}} r
 INNER JOIN {{ref('coinbase_wallet_quests_optimism_distributor_addresses')}} qa
-    ON r.`from` = distributor_address
+    ON r."from" = distributor_address
     AND r.contract_address = rewards_token
 
 WHERE evt_block_time >= cast(TIMESTAMP '{{project_start_date}}' as timestamp) --arbitrary

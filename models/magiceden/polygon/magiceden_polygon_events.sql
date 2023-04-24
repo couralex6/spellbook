@@ -150,7 +150,7 @@ SELECT
   nft_contract_address,
   agg.name AS aggregator_name,
   agg.contract_address AS aggregator_address,
-  t.`from` AS tx_from,
+  t."from" AS tx_from,
   t."to" AS tx_to,
   s.platform_fee_amount_raw,
   CAST(s.platform_fee_amount_raw / power(10, erc.decimals) AS double) AS platform_fee_amount,

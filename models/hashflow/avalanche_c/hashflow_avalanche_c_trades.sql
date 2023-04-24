@@ -24,7 +24,7 @@ with dexs AS (
         SELECT
             evt_block_time          AS block_time,
             trader                  AS taker,
-            ''                      AS maker,
+            0x                      AS maker,
             quoteTokenAmount        AS token_bought_amount_raw,
             baseTokenAmount         AS token_sold_amount_raw,
             cast(NULL AS double)    AS amount_usd,
@@ -32,7 +32,7 @@ with dexs AS (
             baseToken               AS token_sold_address,
             contract_address        AS project_contract_address,
             evt_tx_hash             AS tx_hash,
-            ''                      AS trace_address,
+            0x                      AS trace_address,
             evt_index
         FROM
             {{ evt_trade_table }}

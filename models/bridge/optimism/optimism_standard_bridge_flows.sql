@@ -136,7 +136,7 @@ SELECT
 , cid_source.chain_name AS source_chain_name
 , cid_dest.chain_name AS destination_chain_name
 , 1 AS is_native_bridge
-, t.`from` AS tx_from
+, t."from" AS tx_from
 , t."to" AS tx_to
 , tf.transfer_id
 , tf.evt_index

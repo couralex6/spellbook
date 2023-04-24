@@ -21,7 +21,7 @@ WITH dexs AS
     SELECT
         t.evt_block_time                                                                AS block_time,
         t.buyer                                                                         AS taker, 
-        ''                                                                              AS maker,
+        0x                                                                              AS maker,
         tokens_bought                                                                   AS token_bought_amount_raw,
         tokens_sold                                                                     AS token_sold_amount_raw,
         cast(NULL as double)                                                            AS amount_usd,
@@ -29,7 +29,7 @@ WITH dexs AS
         CASE WHEN bought_id = '0' THEN f.tokenB ELSE f.tokenA END                       AS token_sold_address,
         t.contract_address                                                              AS project_contract_address,
         t.evt_tx_hash                                                                   AS tx_hash,
-        ''                                                                              AS trace_address,
+        0x                                                                              AS trace_address,
         t.evt_index
     FROM
         (

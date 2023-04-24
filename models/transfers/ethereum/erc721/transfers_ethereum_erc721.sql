@@ -14,7 +14,7 @@ with
 
     ,
     sent_transfers as (
-        select 'send' || '-' || evt_tx_hash || '-' || evt_index || '-' || `from` as unique_tx_id,
+        select 'send' || '-' || evt_tx_hash || '-' || evt_index || '-' || "from" as unique_tx_id,
             from as wallet_address,
             contract_address as token_address,
             evt_block_time,

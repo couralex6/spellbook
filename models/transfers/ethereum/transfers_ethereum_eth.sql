@@ -26,7 +26,7 @@ with eth_transfers as (
         ,substring(t.data, 1, 10) as tx_method_id
         ,r.tx_hash || '-' || cast(r.trace_address as string) as unique_transfer_id
         ,t.to AS tx_to
-        ,t.`from` AS tx_from
+        ,t."from" AS tx_from
     from {{ source('ethereum', 'traces') }} as r 
     join {{ source('ethereum', 'transactions') }} as t 
         on r.tx_hash = t.hash

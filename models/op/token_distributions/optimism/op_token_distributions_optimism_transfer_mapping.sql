@@ -38,7 +38,7 @@ WITH all_labels AS (
         -- transfers out
             SELECT
                 evt_block_time, evt_block_number, evt_index,
-                tf.`from` AS from_address, tf.to AS to_address, tx.to AS tx_to_address, tx.`from` AS tx_from_address,  evt_tx_hash,
+                tf."from" AS from_address, tf.to AS to_address, tx.to AS tx_to_address, tx."from" AS tx_from_address,  evt_tx_hash,
             
             COALESCE(
                     lbl_from_util_tx.address_descriptor
@@ -85,7 +85,7 @@ WITH all_labels AS (
             FROM {{source('erc20_optimism','evt_transfer') }} tf
             -- We want either the send or receiver to be the foundation or a project
             INNER JOIN all_labels lbl_from
-                ON lbl_from.address = tf.`from`
+                ON lbl_from.address = tf."from"
             -- if the recipient is in this list to, then we track it
             LEFT JOIN all_labels lbl_to
                 ON lbl_to.address = tf.to
@@ -104,7 +104,7 @@ WITH all_labels AS (
                 ON tx.to = dc.address
             
             LEFT JOIN all_labels lbl_from_util_tx
-                ON lbl_from_util_tx.address = tx.`from` --label of the transaction sender
+                ON lbl_from_util_tx.address = tx."from" --label of the transaction sender
                 AND dc.address IS NOT NULL --we have a disperse
                 
             -- LEFT JOIN tx_labels txl
@@ -112,7 +112,7 @@ WITH all_labels AS (
                 
             WHERE tf.contract_address = '{{op_token_address}}'
             --exclude Wintermute funding tfers
-            AND NOT (tf.`from` = 0x2501c477d0a35545a387aa4a3eee4292a9a8b3f0
+            AND NOT (tf."from" = 0x2501c477d0a35545a387aa4a3eee4292a9a8b3f0
                     and tf.to IN (0x4f3a120e72c76c22ae802d129f599bfdbc31cb81
                             ,0x51d3a2f94e60cbecdce05ab41b61d7ce5240b8ff)
                     )

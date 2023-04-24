@@ -34,7 +34,7 @@ with nomad_bridge_domains(domain_id, domain_name, domain_type) as (
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) as original_amount
           ,e1.symbol as original_currency
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) * coalesce(p1.price, 0) as usd_amount
-          ,`from` as sender
+          ,"from" as sender
           ,concat('0x', `right`(toId, 40)) as recipient
           ,toDomain as domain_id
           ,d.domain_name as domain_name
@@ -61,7 +61,7 @@ with nomad_bridge_domains(domain_id, domain_name, domain_type) as (
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) as original_amount
           ,e1.symbol as original_currency
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) * coalesce(p1.price, 0) as usd_amount
-          ,t.`from` as sender
+          ,t."from" as sender
           ,r.recipient
           ,CAST(`left`(originAndNonce, 8) AS BIGINT) as domain_id
           ,d.domain_name as domain_name
