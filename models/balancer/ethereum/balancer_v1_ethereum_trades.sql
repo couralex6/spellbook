@@ -89,7 +89,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'ethereum'
 left join prices p_bought
     ON p_bought.minute = date_trunc('minute', trades.evt_block_time)
-    and CAST(p_bought.contract_address AS VARBINARY) = trades.token_bought_address
+    and p_bought.contract_address = trades.token_bought_address
 left join prices p_sold
     on p_sold.minute = date_trunc('minute', trades.evt_block_time)
-    and CAST(p_sold.contract_address AS VARBINARY) = trades.token_sold_address
+    and p_sold.contract_address = trades.token_sold_address

@@ -21,10 +21,10 @@ with dexs as (
         t.to as taker,
         0x as maker,
         case when CAST(t.amount0Out AS DOUBLE) = 0 then t.amount1Out else t.amount0Out end as token_bought_amount_raw,
-        case when t.amount0In = 0 then t.amount1In else t.amount0In end as token_sold_amount_raw,
+        case when CAST(t.amount0In AS DOUBLE) = 0 then t.amount1In else t.amount0In end as token_sold_amount_raw,
         cast(NULL as double) as amount_usd,
-        case when t.amount0Out  = 0 then f.token1 else f.token0 end as token_bought_address,
-        case when t.amount0In = 0 then f.token1 else f.token0 end as token_sold_address,
+        case when CAST(t.amount0Out AS DOUBLE) = 0 then f.token1 else f.token0 end as token_bought_address,
+        case when CAST(t.amount0In AS DOUBLE) = 0 then f.token1 else f.token0 end as token_sold_address,
         t.contract_address as project_contract_address,
         t.evt_tx_hash as tx_hash,
         '' as trace_address,
@@ -87,7 +87,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'ethereum'
 left join {{ source('prices', 'usd') }} p_bought 
     on p_bought.minute = date_trunc('minute', dexs.block_time)
-    and from_hex(p_bought.contract_address) = dexs.token_bought_address
+    and p_bought.contract_address = dexs.token_bought_address
     and p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
     and p_bought.minute >= TIMESTAMP '{{project_start_date}}'
@@ -97,7 +97,7 @@ left join {{ source('prices', 'usd') }} p_bought
     {% endif %}
 left join {{ source('prices', 'usd') }} p_sold 
     on p_sold.minute = date_trunc('minute', dexs.block_time)
-    and from_hex(p_sold.contract_address) = dexs.token_sold_address
+    and p_sold.contract_address = dexs.token_sold_address
     and p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
     and p_sold.minute >= TIMESTAMP '{{project_start_date}}'

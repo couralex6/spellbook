@@ -22,10 +22,10 @@ fraxswap_dex AS (
         ,t."to"                                                             AS taker
         ,''                                                                 AS maker
         ,CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw
-        ,CASE WHEN t.amount0In = 0 THEN t.amount1In ELSE t.amount0In END    AS token_sold_amount_raw
+        ,CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN t.amount1In ELSE t.amount0In END    AS token_sold_amount_raw
         ,cast(NULL as double)                                               AS amount_usd
         ,CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN p.token1 ELSE p.token0 END         AS token_bought_address
-        ,CASE WHEN t.amount0In = 0 THEN p.token1 ELSE p.token0 END          AS token_sold_address
+        ,CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN p.token1 ELSE p.token0 END          AS token_sold_address
         ,t.contract_address                                                 AS project_contract_address
         ,t.evt_tx_hash                                                      AS tx_hash
         ,''                                                                 AS trace_address
@@ -88,7 +88,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'ethereum'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', fraxswap_dex.block_time)
-    AND from_hex(p_bought.contract_address) = fraxswap_dex.token_bought_address
+    AND p_bought.contract_address = fraxswap_dex.token_bought_address
     AND p_bought.blockchain = 'ethereum'
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -98,7 +98,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', fraxswap_dex.block_time)
-    AND from_hex(p_sold.contract_address) = fraxswap_dex.token_sold_address
+    AND p_sold.contract_address = fraxswap_dex.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

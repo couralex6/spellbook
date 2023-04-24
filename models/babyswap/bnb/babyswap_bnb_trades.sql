@@ -85,7 +85,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'bnb'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', babyswap_dex.block_time)
-    AND from_hex(p_bought.contract_address) = babyswap_dex.token_bought_address
+    AND p_bought.contract_address = babyswap_dex.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -95,7 +95,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', babyswap_dex.block_time)
-    AND from_hex(p_sold.contract_address) = babyswap_dex.token_sold_address
+    AND p_sold.contract_address = babyswap_dex.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

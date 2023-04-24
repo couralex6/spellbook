@@ -53,7 +53,7 @@ select
 	, s."from"Token as token_sold_address
     , coalesce(s."to", tx."from") AS taker
 	, '' as maker
-	, cast(s.contract_address as string) as project_contract_address
+	, s.contract_address as project_contract_address
 	, s.evt_tx_hash as tx_hash
     , tx."from" AS tx_from
     , tx.to AS tx_to

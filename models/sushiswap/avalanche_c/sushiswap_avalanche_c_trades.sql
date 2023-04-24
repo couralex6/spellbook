@@ -80,7 +80,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'avalanche_c'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', sushiswap_dex.block_time)
-    AND from_hex(p_bought.contract_address) = sushiswap_dex.token_bought_address
+    AND p_bought.contract_address = sushiswap_dex.token_bought_address
     AND p_bought.blockchain = 'avalanche_c'
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -89,7 +89,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', sushiswap_dex.block_time)
-    AND from_hex(p_sold.contract_address) = sushiswap_dex.token_sold_address
+    AND p_sold.contract_address = sushiswap_dex.token_sold_address
     AND p_sold.blockchain = 'avalanche_c'
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

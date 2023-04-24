@@ -84,7 +84,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'fantom'
 left join {{ source('prices', 'usd') }} p_bought
     on p_bought.minute = date_trunc('minute', dexs.block_time)
-    and from_hex(p_bought.contract_address) = dexs.token_bought_address
+    and p_bought.contract_address = dexs.token_bought_address
     and p_bought.blockchain = 'fantom'
     {% if not is_incremental() %}
     and p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
@@ -94,7 +94,7 @@ left join {{ source('prices', 'usd') }} p_bought
     {% endif %}
 left join {{ source('prices', 'usd') }} p_sold
     on p_sold.minute = date_trunc('minute', dexs.block_time)
-    and from_hex(p_sold.contract_address) = dexs.token_sold_address
+    and p_sold.contract_address = dexs.token_sold_address
     and p_sold.blockchain = 'fantom'
     {% if not is_incremental() %}
     and p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
