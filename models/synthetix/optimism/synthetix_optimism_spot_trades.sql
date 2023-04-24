@@ -34,7 +34,7 @@ WITH dexs AS
 
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,'' AS trace_address
+        ,0x AS trace_address
         ,t.evt_index
     FROM
         {{ source('synthetix_optimism', 'SNX_evt_SynthExchange') }} t
@@ -92,7 +92,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'optimism'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', dexs.block_time)
-    AND p_bought.contract_address = erc20a.contract_address
+    AND from_hex(p_bought.contract_address) = erc20a.contract_address
     AND p_bought.blockchain = 'optimism'
     {% if not is_incremental() %}
     AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
@@ -102,7 +102,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', dexs.block_time)
-    AND p_sold.contract_address = erc20b.contract_address
+    AND from_hex(p_sold.contract_address) = erc20b.contract_address
     AND p_sold.blockchain = 'optimism'
     {% if not is_incremental() %}
     AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'

@@ -27,9 +27,9 @@ WITH dexs AS
         ,CAST(NULL AS DOUBLE) AS amount_usd
         ,CASE WHEN tokenAIn THEN f.tokenB ELSE f.tokenA END AS token_bought_address
         ,CASE WHEN tokenAIn THEN f.tokenA ELSE f.tokenB END AS token_sold_address
-        ,CAST(t.contract_address as string) as project_contract_address
+        ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,'' AS trace_address
+        ,0x AS trace_address
         ,t.evt_index
     FROM
         {{ source('maverick_v1_ethereum', 'pool_evt_Swap') }} t

@@ -49,7 +49,7 @@ WITH bridge_events AS (
             ,16,10)
         AS bridged_token_amount_raw
         , '0x' || substring(data,27,40) AS recipient_address
-        , '' AS trace_address
+        , 0x AS trace_address
         , l.index AS evt_index
         , l.contract_address AS project_contract_address
         , NULL AS transfer_id
@@ -84,7 +84,7 @@ WITH bridge_events AS (
             ,16,10)
         AS bridged_token_amount_raw
         , '0x' || substring(data,27,40) AS recipient_address
-        , '' AS trace_address
+        , 0x AS trace_address
         , l.index AS evt_index
         , l.contract_address AS project_contract_address
         , NULL AS transfer_id

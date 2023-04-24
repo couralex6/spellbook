@@ -26,7 +26,7 @@ with
       zzmo.makerOrder:user as maker,
       zzmo.takerOrder:user as taker,
       call_tx_hash as tx_hash,
-      '' AS trace_address,
+      0x AS trace_address,
       row_number() OVER(PARTITION BY call_tx_hash ORDER BY zzmo.makerOrder) AS evt_index, --prevent duplicates
       contract_address as project_contract_address
     from

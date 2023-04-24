@@ -32,7 +32,7 @@ WITH dexs AS
         END AS token_sold_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
-        '' AS trace_address,
+        0x AS trace_address,
         cast(NULL as double) AS amount_usd,
         evt_index
     FROM {{ source('mstable_ethereum', 'Masset_evt_Swapped')}} e
@@ -58,7 +58,7 @@ WITH dexs AS
             END AS token_sold_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
-        '' AS trace_address,
+        0x AS trace_address,
         cast(NULL as double) AS amount_usd,
         evt_index
     FROM {{ source('mstable_ethereum', 'FeederPool_evt_Swapped')}} e

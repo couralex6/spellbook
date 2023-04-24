@@ -37,7 +37,7 @@ WITH dexs AS
             toToken AS token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             evt_index
         FROM
             {{ source('dodo_optimism', 'DVM_evt_DODOSwap')}}
@@ -68,7 +68,7 @@ WITH dexs AS
             toToken AS token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             evt_index
         FROM
             {{ source('dodo_optimism', 'DPP_evt_DODOSwap')}}
@@ -99,7 +99,7 @@ WITH dexs AS
             toToken AS token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             evt_index
         FROM
             {{ source('dodo_optimism', 'DSP_evt_DODOSwap')}}

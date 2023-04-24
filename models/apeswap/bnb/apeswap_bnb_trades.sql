@@ -25,7 +25,7 @@ WITH apeswap_dex AS (
             CASE WHEN t.amount0In = 0 THEN f.token1 ELSE f.token0 END AS token_sold_address,
             t.contract_address AS project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             t.evt_index
     FROM {{ source('apeswap_bnb', 'ApePair_evt_Swap') }} t
     INNER JOIN {{ source('apeswap_bnb', 'ApeFactory_evt_PairCreated') }} f
@@ -85,7 +85,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'bnb'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', apeswap_dex.block_time)
-    AND p_bought.contract_address = apeswap_dex.token_bought_address
+    AND from_hex(p_bought.contract_address) = apeswap_dex.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if not is_incremental() %}
     AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
@@ -95,7 +95,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', apeswap_dex.block_time)
-    AND p_sold.contract_address = apeswap_dex.token_sold_address
+    AND from_hex(p_sold.contract_address) = apeswap_dex.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if not is_incremental() %}
     AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'

@@ -16,14 +16,14 @@ WITH event_data as (
         evt_block_time AS block_time,
         evt_block_number as block_number,
         recipient as taker,
-        '' AS maker,
+        0x AS maker,
         inAmount AS token_sold_amount_raw,
         outAmount AS token_bought_amount_raw,
         inAsset as token_sold_address,
         outAsset as token_bought_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
-        '' AS trace_address,
+        0x AS trace_address,
         evt_index
     FROM  {{ source('clipper_ethereum', 'ClipperVerifiedCaravelExchange_evt_Swapped') }}
     WHERE 1=1

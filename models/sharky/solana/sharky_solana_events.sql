@@ -66,7 +66,7 @@ WITH sharky_txs AS (
                CAST(filtered_txs.block_slot AS BIGINT)                                                      AS block_number,
                (abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) / 1e9) * p.price          AS amount_usd,
                (abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) / 1e9)                    AS amount_original,
-               CAST(abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) AS DECIMAL(38, 0))    AS amount_raw,
+               CAST(abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) AS DOUBLE)    AS amount_raw,
                filter(
                            filtered_txs.instructions,
                            x -> x.executing_account = '{{sharky_smart_contract}}'

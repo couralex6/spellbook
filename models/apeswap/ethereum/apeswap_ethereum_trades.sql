@@ -53,8 +53,8 @@ select 'ethereum'                                                as blockchain,
            end                                                   as token_pair,
        dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount,
        dexs.token_sold_amount_raw / power(10, erc20b.decimals)   AS token_sold_amount,
-       CAST(dexs.token_bought_amount_raw AS DECIMAL(38, 0))      AS token_bought_amount_raw,
-       CAST(dexs.token_sold_amount_raw AS DECIMAL(38, 0))        AS token_sold_amount_raw,
+       CAST(dexs.token_bought_amount_raw AS DOUBLE)      AS token_bought_amount_raw,
+       CAST(dexs.token_sold_amount_raw AS DOUBLE)        AS token_sold_amount_raw,
        coalesce(
                dexs.amount_usd
            , (dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
@@ -87,7 +87,7 @@ left join {{ ref('tokens_erc20') }} erc20b
     and erc20b.blockchain = 'ethereum'
 left join {{ source('prices', 'usd') }} p_bought 
     on p_bought.minute = date_trunc('minute', dexs.block_time)
-    and p_bought.contract_address = dexs.token_bought_address
+    and from_hex(p_bought.contract_address) = dexs.token_bought_address
     and p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
     and p_bought.minute >= TIMESTAMP '{{project_start_date}}'
@@ -97,7 +97,7 @@ left join {{ source('prices', 'usd') }} p_bought
     {% endif %}
 left join {{ source('prices', 'usd') }} p_sold 
     on p_sold.minute = date_trunc('minute', dexs.block_time)
-    and p_sold.contract_address = dexs.token_sold_address
+    and from_hex(p_sold.contract_address) = dexs.token_sold_address
     and p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
     and p_sold.minute >= TIMESTAMP '{{project_start_date}}'

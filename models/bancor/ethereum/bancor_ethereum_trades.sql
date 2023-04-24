@@ -115,7 +115,7 @@ SELECT
     '1' AS version,
     t.evt_block_time AS block_time,
     t._trader AS taker,
-    '' AS maker,
+    0x AS maker,
     t._toAmount AS token_bought_amount_raw,
     t._fromAmount AS token_sold_amount_raw,
     CAST(NULL as double) AS amount_usd,
@@ -129,7 +129,7 @@ SELECT
     END AS token_sold_address,
     t.contract_address AS project_contract_address,
     t.evt_tx_hash AS tx_hash,
-    '' AS trace_address,
+    0x AS trace_address,
     t.evt_index
 FROM
     conversions t
@@ -140,7 +140,7 @@ SELECT
     '3' AS version,
     t.evt_block_time AS block_time,
     t.trader AS taker,
-    '' AS maker,
+    0x AS maker,
     t.targetAmount AS token_bought_amount_raw,
     t.sourceAmount AS token_sold_amount_raw,
     CAST(NULL as double) AS amount_usd,
@@ -154,7 +154,7 @@ SELECT
     END AS token_sold_address,
     t.contract_address AS project_contract_address,
     t.evt_tx_hash AS tx_hash,
-    '' AS trace_address,
+    0x AS trace_address,
     t.evt_index
 FROM {{ source('bancor3_ethereum', 'BancorNetwork_evt_TokensTraded') }} t
     {% if is_incremental() %}

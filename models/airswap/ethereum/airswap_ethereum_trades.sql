@@ -28,7 +28,7 @@ WITH dexs AS
         e.signerToken AS token_bought_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
-        '' AS trace_address,
+        0x AS trace_address,
 
 cast(NULL as double) AS amount_usd,
 evt_index
@@ -50,7 +50,7 @@ SELECT
     e.signerToken AS token_bought_address,
     contract_address AS project_contract_address,
     evt_tx_hash AS tx_hash,
-    '' AS trace_address,
+    0x AS trace_address,
     cast(NULL as double) AS amount_usd,
     evt_index
 FROM {{ source('airswap_ethereum', 'Light_v0_evt_Swap')}} e
@@ -71,7 +71,7 @@ SELECT
     e.signerToken AS token_bought_address,
     contract_address AS project_contract_address,
     evt_tx_hash AS tx_hash,
-    '' AS trace_address,
+    0x AS trace_address,
     CAST(NULL AS double) AS amount_usd,
     evt_index
 FROM {{ source('airswap_ethereum', 'swap_evt_Swap') }} e
@@ -93,7 +93,7 @@ SELECT
 
 contract_address AS project_contract_address,
 evt_tx_hash AS tx_hash,
-'' AS trace_address,
+0x AS trace_address,
 CAST(NULL AS double) AS amount_usd,
 evt_index
 FROM {{ source('airswap_ethereum', 'Swap_v3_evt_Swap') }} e

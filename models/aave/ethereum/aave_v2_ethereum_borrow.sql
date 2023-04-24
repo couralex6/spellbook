@@ -65,7 +65,7 @@ SELECT
     CAST(user AS VARCHAR(100)) AS borrower,
     CAST(liquidator AS VARCHAR(100)) AS repayer,
     CAST(liquidator AS VARCHAR(100))  AS liquidator,
-    - CAST(debtToCover AS DECIMAL(38, 0)) AS amount,
+    - CAST(debtToCover AS DOUBLE) AS amount,
     evt_tx_hash,
     evt_index,
     evt_block_time,

@@ -30,7 +30,7 @@ WITH dexs as
             ,toToken AS token_sold_address
             ,contract_address AS project_contract_address
             ,evt_tx_hash AS tx_hash
-            ,'' AS trace_address
+            ,0x AS trace_address
             ,evt_index
         FROM
             {{ source('woofi_bnb', 'WooPP_evt_WooSwap')}}
@@ -57,7 +57,7 @@ WITH dexs as
             ,toToken AS token_sold_address
             ,contract_address AS project_contract_address
             ,evt_tx_hash AS tx_hash
-            ,'' AS trace_address
+            ,0x AS trace_address
             ,evt_index
         FROM
             {{ source('woofi_bnb', 'WooRouter_evt_WooRouterSwap')}}
@@ -81,7 +81,7 @@ WITH dexs as
             ,toToken AS token_sold_address
             ,contract_address AS project_contract_address
             ,evt_tx_hash AS tx_hash
-            ,'' AS trace_address
+            ,0x AS trace_address
             ,evt_index
         FROM
             {{ source('woofi_bnb', 'WooRouterV2_evt_WooRouterSwap')}}

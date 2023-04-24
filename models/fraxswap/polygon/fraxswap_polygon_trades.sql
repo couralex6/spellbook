@@ -88,7 +88,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'polygon'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', fraxswap_dex.block_time)
-    AND p_bought.contract_address = fraxswap_dex.token_bought_address
+    AND from_hex(p_bought.contract_address) = fraxswap_dex.token_bought_address
     AND p_bought.blockchain = 'polygon'
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -98,7 +98,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', fraxswap_dex.block_time)
-    AND p_sold.contract_address = fraxswap_dex.token_sold_address
+    AND from_hex(p_sold.contract_address) = fraxswap_dex.token_sold_address
     AND p_sold.blockchain = 'polygon'
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

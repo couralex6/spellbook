@@ -41,13 +41,13 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number AS block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
             t.contract_address as project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             t.evt_index,
             bought_id,
             sold_id
@@ -64,13 +64,13 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
             t.contract_address as project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             t.evt_index,
             bought_id,
             sold_id
@@ -87,13 +87,13 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
             t.contract_address as project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            '' AS trace_address,
+            0x AS trace_address,
             t.evt_index, 
             bought_id, 
             sold_id

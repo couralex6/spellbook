@@ -28,9 +28,9 @@ WITH dexs AS
         ,NULL AS amount_usd
         ,CASE WHEN amount0Out = '0' THEN token1 ELSE token0 END AS token_bought_address
 	    ,CASE WHEN amount0In = '0' OR amount1Out = '0' THEN token1 ELSE token0 END AS token_sold_address
-        ,CAST(t.contract_address as string) as project_contract_address
+        ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,'' AS trace_address
+        ,0x AS trace_address
         ,t.evt_index
     FROM
         {{ source('velodrome_optimism', 'Pair_evt_Swap') }} t

@@ -28,7 +28,7 @@ WITH dexs AS
         ,CASE WHEN amount0In = '0' OR amount1Out = '0' THEN f.token1 ELSE f.token0 END AS token_sold_address
         ,t.contract_address AS project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,'' AS trace_address
+        ,0x AS trace_address
         ,t.evt_index
     FROM
         {{ source('shibaswap_ethereum', 'UniswapV2Pair_evt_Swap') }} t

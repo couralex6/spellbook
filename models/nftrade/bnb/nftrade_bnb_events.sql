@@ -63,7 +63,7 @@ source_inventory_enriched as (
         CAST((CASE
             WHEN src.maker_id = 0 OR src.maker_id IS NULL THEN src.maker_asset_amount_raw
             ELSE src.taker_asset_amount_raw
-        END) AS DECIMAL(38, 0)) as amount_raw,
+        END) AS DOUBLE) as amount_raw,
         CASE
             WHEN src.maker_id = 0 OR src.maker_id IS NULL THEN src.maker_asset_amount
             ELSE src.taker_asset_amount

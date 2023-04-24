@@ -31,7 +31,7 @@ WITH dexs AS
         ,t.tokenOut AS token_sold_address
         ,t.poolId as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,'' AS trace_address
+        ,0x AS trace_address
         ,t.evt_index
     FROM
         {{ source('beethoven_x_fantom', 'Vault_evt_Swap') }} t
