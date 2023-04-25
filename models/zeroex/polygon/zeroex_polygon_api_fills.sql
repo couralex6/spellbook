@@ -299,13 +299,13 @@ direct_uniswapv3 AS (
             swap.evt_block_time                                                                     AS block_time,
             swap.contract_address                                                                   AS maker,
             LAST_VALUE(swap.recipient) OVER (PARTITION BY swap.evt_tx_hash ORDER BY swap.evt_index) AS taker,
-            CASE WHEN amount0 < '0' THEN pair.token1 ELSE pair.token0 END                           AS taker_token,
-            CASE WHEN amount0 < '0' THEN pair.token0 ELSE pair.token1 END                           AS maker_token,
+            CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN pair.token1 ELSE pair.token0 END                           AS taker_token,
+            CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN pair.token0 ELSE pair.token1 END                           AS maker_token,
             CASE
-                WHEN amount0 < '0' THEN abs(swap.amount1)
+                WHEN CAST(amount0 AS DOUBLE) < 0 THEN abs(swap.amount1)
                 ELSE abs(swap.amount0) END                                                          AS taker_token_amount_raw,
             CASE
-                WHEN amount0 < '0' THEN abs(swap.amount0)
+                WHEN CAST(amount0 AS DOUBLE) < 0 THEN abs(swap.amount0)
                 ELSE abs(swap.amount1) END                                                          AS maker_token_amount_raw,
             'Uniswap V3 Direct'                                                                     AS type,
             zeroex_tx.affiliate_address                                                             AS affiliate_address,
