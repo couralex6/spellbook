@@ -8,8 +8,8 @@ with
     inner join {{ref('dex_trades')}} sell 
         on sell.block_time = buy.block_time
             and sell.tx_hash != buy.tx_hash
-            and buy.`tx_from` = sell.`tx_from`
-            and buy.`tx_to` = sell.`tx_to`
+            and buy."tx_from" = sell."tx_from"
+            and buy."tx_to" = sell."tx_to"
             and buy.project_contract_address = sell.project_contract_address
             and buy.token_bought_address = sell.token_sold_address
             and buy.token_sold_address = sell.token_bought_address

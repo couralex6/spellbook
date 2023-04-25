@@ -316,7 +316,7 @@ WITH
             {% if not is_incremental() %}
             AND pu.minute >= '2022-4-1'
             {% endif %}
-            --add in `pu.contract_address = sc.currency_address` in the future when ERC20 pairs are added in.
+            --add in "pu.contract_address = sc.currency_address" in the future when ERC20 pairs are added in.
         LEFT JOIN {{ ref('nft_aggregators') }} agg
             ON (agg.contract_address = sc.call_from OR agg.contract_address = sc.router_caller) -- aggregator will either call pool directly or call the router
             AND agg.blockchain = 'ethereum'

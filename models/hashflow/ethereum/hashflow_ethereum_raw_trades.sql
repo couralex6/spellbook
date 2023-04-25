@@ -38,10 +38,10 @@ ethereum_transactions as (
 prices_usd as (
     select *
     from {{ source('prices', 'usd') }}
-    where `minute` >= TIMESTAMP '{{project_start_date}}'
+    where "minute" >= TIMESTAMP '{{project_start_date}}'
         and blockchain = 'ethereum'
     {% if is_incremental() %}
-        and `minute` >= date_trunc('day', now() - interval '10 days')
+        and "minute" >= date_trunc('day', now() - interval '10 days')
     {% endif %}
 ),
 
@@ -85,14 +85,14 @@ new_router as (
             else mp.symbol end as maker_symbol,
         case when get_json_object(quote,'$.baseToken') = 0x0000000000000000000000000000000000000000 then 'ETH'
             else tp.symbol end as taker_symbol,
-        case when l.evt_tx_hash is not null then l.`quoteTokenAmount`/power(10, mp.decimals)
+        case when l.evt_tx_hash is not null then l."quoteTokenAmount"/power(10, mp.decimals)
             else cast(get_json_object(quote,'$.maxQuoteTokenAmount') as float)/power(10,mp.decimals) end  as maker_token_amount,
-        case when l.evt_tx_hash is not null then l.`baseTokenAmount`/power(10, tp.decimals)
+        case when l.evt_tx_hash is not null then l."baseTokenAmount"/power(10, tp.decimals)
             else cast(get_json_object(quote,'$.maxBaseTokenAmount') as float)/power(10,tp.decimals) end  as taker_token_amount,
         case when l.evt_tx_hash is not null
             then coalesce(
-                        l.`baseTokenAmount`/power(10, tp.decimals) * tp.price,
-                        `quoteTokenAmount`/power(10, mp.decimals) * mp.price)
+                        l."baseTokenAmount"/power(10, tp.decimals) * tp.price,
+                        "quoteTokenAmount"/power(10, mp.decimals) * mp.price)
             else coalesce(
                     cast(get_json_object(quote,'$.maxBaseTokenAmount') as float)/power(10, tp.decimals) * tp.price,
                     cast(get_json_object(quote,'$.maxQuoteTokenAmount') as float)/power(10, mp.decimals) * mp.price) end as amount_usd
@@ -115,12 +115,12 @@ event_decoding_legacy_router as (
     select
         tx_hash,
         index as evt_index,
-        substring(`data`, 13, 20) as trader,
-        substring(`data`, 33, 32) as tx_id,
-        substring(`data`, 109, 20) as maker_token,
-        substring(`data`, 77, 20) as taker_token,
-        cast(conv(substring(`data`, 173, 20), 16, 10) as decimal) as maker_token_amount,
-        cast(conv(substring(`data`, 141, 20), 16, 10) as decimal) as taker_token_amount
+        substring("data", 13, 20) as trader,
+        substring("data", 33, 32) as tx_id,
+        substring("data", 109, 20) as maker_token,
+        substring("data", 77, 20) as taker_token,
+        cast(conv(substring("data", 173, 20), 16, 10) as decimal) as maker_token_amount,
+        cast(conv(substring("data", 141, 20), 16, 10) as decimal) as taker_token_amount
     from ethereum_logs
     where topic1 ='0x8cf3dec1929508e5677d7db003124e74802bfba7250a572205a9986d86ca9f1e' -- trade0()
 
@@ -129,12 +129,12 @@ event_decoding_legacy_router as (
     select
         tx_hash,
         index as evt_index,
-        substring(`data`, 45, 20) as trader,
-        substring(`data`, 65, 32) as tx_id,
-        substring(`data`, 141, 20) as maker_token,
-        substring(`data`, 109, 20) as taker_token,
-        cast(conv(substring(`data`, 205, 20), 16, 10) as decimal) as maker_token_amount,
-        cast(conv(substring(`data`, 173, 20), 16, 10) as decimal) as taker_token_amount
+        substring("data", 45, 20) as trader,
+        substring("data", 65, 32) as tx_id,
+        substring("data", 141, 20) as maker_token,
+        substring("data", 109, 20) as taker_token,
+        cast(conv(substring("data", 205, 20), 16, 10) as decimal) as maker_token_amount,
+        cast(conv(substring("data", 173, 20), 16, 10) as decimal) as taker_token_amount
     from ethereum_logs l
     where topic1 ='0xb709ddcc6550418e9b89df1f4938071eeaa3f6376309904c77e15d46b16066f5' -- trade()
 ),
@@ -330,27 +330,27 @@ new_pool as (
         tx.to as router_contract, -- taking top level contract called in tx as router, not necessarily HF contract
         l.pool as pool,
         tx."from" as trader,
-        l.`quoteToken` as maker_token,
-        l.`baseToken` as taker_token,
-        case when l.`quoteToken` = 0x0000000000000000000000000000000000000000 then 'ETH'
+        l."quoteToken" as maker_token,
+        l."baseToken" as taker_token,
+        case when l."quoteToken" = 0x0000000000000000000000000000000000000000 then 'ETH'
             else mp.symbol end as maker_symbol,
-        case when l.`baseToken` = 0x0000000000000000000000000000000000000000 then 'ETH'
+        case when l."baseToken" = 0x0000000000000000000000000000000000000000 then 'ETH'
             else tp.symbol end as taker_symbol,
-        l.`quoteTokenAmount`/power(10, mp.decimals) as maker_token_amount,
-        l.`baseTokenAmount`/power(10, tp.decimals) as taker_token_amount,
+        l."quoteTokenAmount"/power(10, mp.decimals) as maker_token_amount,
+        l."baseTokenAmount"/power(10, tp.decimals) as taker_token_amount,
         coalesce(
-                l.`baseTokenAmount`/power(10, tp.decimals) * tp.price,
-                l.`quoteTokenAmount`/power(10, mp.decimals) * mp.price) as amount_usd
+                l."baseTokenAmount"/power(10, tp.decimals) * tp.price,
+                l."quoteTokenAmount"/power(10, mp.decimals) * mp.price) as amount_usd
     from hashflow_pool_evt_trade l
     inner join ethereum_transactions tx on tx.hash = l.evt_tx_hash
     left join prices_usd tp on tp.minute = date_trunc('minute', tx.block_time)
         and tp.contract_address =
-            case when l.`baseToken` = 0x0000000000000000000000000000000000000000
-                then 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 else l.`baseToken` end
+            case when l."baseToken" = 0x0000000000000000000000000000000000000000
+                then 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 else l."baseToken" end
     left join prices_usd mp on mp.minute = date_trunc('minute', tx.block_time)
         and mp.contract_address =
-            case when l.`quoteToken` = 0x0000000000000000000000000000000000000000
-                then 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 else l.`quoteToken` end
+            case when l."quoteToken" = 0x0000000000000000000000000000000000000000
+                then 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 else l."quoteToken" end
     WHERE l.evt_block_time > '2022-04-08' -- necessary filter to only include new trades
 ),
 

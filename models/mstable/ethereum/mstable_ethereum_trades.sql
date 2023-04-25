@@ -22,13 +22,13 @@ WITH dexs AS
         'masset' AS version,
         swapper AS taker,
         cast(NULL as string) AS maker,
-        `outputAmount` AS token_bought_amount_raw,
+        "outputAmount" AS token_bought_amount_raw,
         cast(NULL as double) AS token_sold_amount_raw,
-        CASE WHEN `output` = 0x0000000000000000000000000000000000000000 THEN
-            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE `output`
+        CASE WHEN "output" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "output"
         END AS token_bought_address,
-        CASE WHEN `input` = 0x0000000000000000000000000000000000000000 THEN 
-            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE `input` 
+        CASE WHEN "input" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "input"
         END AS token_sold_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
@@ -48,13 +48,13 @@ WITH dexs AS
         'feederpool' AS version,
         swapper AS taker,
         cast(NULL as string) AS maker,
-        `outputAmount` AS token_bought_amount_raw,
+        "outputAmount" AS token_bought_amount_raw,
         cast(NULL as double) AS token_sold_amount_raw,
-        CASE WHEN `output` = 0x0000000000000000000000000000000000000000 THEN 
-            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE `output`
+        CASE WHEN "output" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "output"
             END AS token_bought_address,
-        CASE WHEN `input` = 0x0000000000000000000000000000000000000000 THEN 
-            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE `input` 
+        CASE WHEN "input" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "input"
             END AS token_sold_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,

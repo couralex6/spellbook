@@ -6,7 +6,7 @@
 WITH job_liquidities AS (
 
     SELECT
-        ad.evt_block_time AS `timestamp`,
+        ad.evt_block_time AS "timestamp",
         ad.evt_tx_hash AS tx_hash,
         ad.evt_index,
         'LiquidityAddition' AS event,
@@ -46,7 +46,7 @@ WITH job_liquidities AS (
         ) ad
     UNION ALL
     SELECT
-        rm.evt_block_time AS `timestamp`,
+        rm.evt_block_time AS "timestamp",
         rm.evt_tx_hash AS tx_hash,
         rm.evt_index,
         'LiquidityWithdrawal' AS event,
@@ -86,7 +86,7 @@ WITH job_liquidities AS (
 ),
 df AS (
     SELECT
-        `timestamp`,
+        "timestamp",
         tx_hash,
         evt_index,
         event,
@@ -102,7 +102,7 @@ df AS (
         migs.evt_index,
         migs.job,
         migs.keep3r,
-        migs.`timestamp`,
+        migs."timestamp",
         migs.tx_hash,
         liqs.token AS token,
         NULL AS amount
@@ -152,7 +152,7 @@ migration_in AS (
         migration_out
 )
 SELECT
-    `timestamp`,
+    "timestamp",
     tx_hash,
     evt_index,
     event,
@@ -167,4 +167,4 @@ SELECT
 FROM
     migration_in
 ORDER BY
-    `timestamp`
+    "timestamp"

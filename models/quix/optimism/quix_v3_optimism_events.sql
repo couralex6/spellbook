@@ -13,7 +13,7 @@
 }}
 {% set quix_fee_address_address = "0xec1557a67d4980c948cd473075293204f4d280fd" %}
 {% set min_block_number = 3387715 %}
-{% set project_start_date = '2022-02-10' %}     -- select time from optimism.blocks where `number` = 3387715
+{% set project_start_date = '2022-02-10' %}     -- select time from optimism.blocks where "number" = 3387715
 
 
 with events_raw as (

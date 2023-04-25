@@ -18,7 +18,7 @@
 
 WITH registered_pools AS (
     SELECT DISTINCT
-        `poolAddress` AS pool_address
+        "poolAddress" AS pool_address
     FROM
         {{ source ('balancer_v2_ethereum', 'Vault_evt_PoolRegistered') }}
 )

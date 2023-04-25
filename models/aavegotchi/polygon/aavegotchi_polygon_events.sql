@@ -32,7 +32,7 @@ WITH trades AS (
         0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7 AS currency_contract, -- All sale are in GHST
         priceInWei AS amount_raw,
         category,
-        `time` AS executed_time
+        "time" AS executed_time
     FROM {{ source ('aavegotchi_polygon', 'aavegotchi_diamond_evt_ERC721ExecutedListing') }}
     WHERE 1 = 1
         {% if not is_incremental() %}
@@ -60,7 +60,7 @@ WITH trades AS (
         0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7 AS currency_contract, -- All sale are in GHST
         priceInWei AS amount_raw,
         category,
-        `time` AS executed_time
+        "time" AS executed_time
     FROM {{ source ('aavegotchi_polygon', 'aavegotchi_diamond_evt_ERC1155ExecutedListing') }}
     WHERE 1 = 1
         {% if not is_incremental() %}

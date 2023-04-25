@@ -124,7 +124,7 @@ FROM dexs
 INNER JOIN {{ source('ethereum', 'transactions') }} tx
     ON tx.hash = dexs.tx_hash
     {% if not is_incremental() %}
-    -- The date below is derrived from `select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange`
+    -- The date below is derrived from "select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange"
     -- If dexs above is changed then this will also need to be changed.
     AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
@@ -137,7 +137,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought ON p_bought.minute = date_trunc
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    -- The date below is derrived from `select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange`
+    -- The date below is derrived from "select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange"
     -- If dexs above is changed then this will also need to be changed.
     AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
@@ -148,7 +148,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold ON p_sold.minute = date_trunc('mi
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    -- The date below is derrived from `select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange`
+    -- The date below is derrived from "select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange"
     -- If dexs above is changed then this will also need to be changed.
     AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}

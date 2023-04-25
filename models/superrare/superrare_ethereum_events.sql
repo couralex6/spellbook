@@ -15,11 +15,11 @@
 -- raw data table with all sales on superrare platform -- both primary and secondary
 with all_superrare_sales as (
     select  evt_block_time
-            , `_originContract` as contract_address
-            , `_tokenId` as tokenId
-            , `_seller` as seller
-            , `_buyer` as buyer
-            , `_amount` as amount
+            ,  "_originContract " as contract_address
+            ,  "_tokenId " as tokenId
+            ,  "_seller " as seller
+            ,  "_buyer " as buyer
+            ,  "_amount " as amount
             , evt_tx_hash
             , '' as currencyAddress
     from {{ source('superrare_ethereum','SuperRareMarketAuction_evt_Sold') }}
@@ -31,10 +31,10 @@ with all_superrare_sales as (
 
     select evt_block_time
             , contract_address
-            , `_tokenId`
-            , `_seller`
-            , `_buyer`
-            , `_amount`
+            ,  "_tokenId "
+            ,  "_seller "
+            ,  "_buyer "
+            ,  "_amount "
             , evt_tx_hash
             , ''
     from {{ source('superrare_ethereum','SuperRare_evt_Sold') }}
@@ -45,11 +45,11 @@ with all_superrare_sales as (
     union all
 
     select evt_block_time
-            , `_originContract` as contract_address
-            , `_tokenId`
-            , `_seller`
-            , `_bidder`
-            , `_amount`
+            ,  "_originContract " as contract_address
+            ,  "_tokenId "
+            ,  "_seller "
+            ,  "_bidder "
+            ,  "_amount "
             , evt_tx_hash
             , ''
     from {{ source('superrare_ethereum','SuperRareMarketAuction_evt_AcceptBid') }}
@@ -61,10 +61,10 @@ with all_superrare_sales as (
 
     select evt_block_time
             , contract_address
-            , `_tokenId`
-            , `_seller`
-            , `_bidder`
-            , `_amount`
+            ,  "_tokenId "
+            ,  "_seller "
+            ,  "_bidder "
+            ,  "_amount "
             , evt_tx_hash
             , ''
     from {{ source('superrare_ethereum','SuperRare_evt_AcceptBid') }}
@@ -75,13 +75,13 @@ with all_superrare_sales as (
     union all
 
     select evt_block_time
-            , `_originContract`
-            , `_tokenId`
-            , `_seller`
-            , `_bidder`
-            , `_amount`
+            ,  "_originContract "
+            ,  "_tokenId "
+            ,  "_seller "
+            ,  "_bidder "
+            ,  "_amount "
             , evt_tx_hash
-            , `_currencyAddress`
+            ,  "_currencyAddress "
     from {{ source('superrare_ethereum','SuperRareBazaar_evt_AcceptOffer') }}
     {% if is_incremental() %}
     where evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -90,13 +90,13 @@ with all_superrare_sales as (
     union all
 
     select evt_block_time
-            , `_contractAddress`
-            , `_tokenId`
-            , `_seller`
-            , `_bidder`
-            , `_amount`
+            ,  "_contractAddress"
+            , "_tokenId"
+            , "_seller"
+            , "_bidder"
+            , "_amount"
             , evt_tx_hash
-            , `_currencyAddress`
+            , "_currencyAddress"
     from {{ source('superrare_ethereum','SuperRareBazaar_evt_AuctionSettled') }}
     {% if is_incremental() %}
     where evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -105,13 +105,13 @@ with all_superrare_sales as (
     union all
 
     select evt_block_time
-            , `_originContract`
-            , `_tokenId`
-            , `_seller`
-            , `_buyer`
-            , `_amount`
+            , "_originContract"
+            , "_tokenId"
+            , "_seller"
+            , "_buyer"
+            , "_amount"
             , evt_tx_hash
-            , `_currencyAddress`
+            , "_currencyAddress"
     from {{ source('superrare_ethereum','SuperRareBazaar_evt_Sold') }}
     {% if is_incremental() %}
     where evt_block_time >= date_trunc('day', now() - interval '7' day)

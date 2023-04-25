@@ -7,7 +7,7 @@
 WITH work_evt AS (
 
     SELECT
-        evt_block_time AS `timestamp`,
+        evt_block_time AS "timestamp",
         evt_tx_hash AS tx_hash,
         evt_index,
         'KeeperWork' AS event,
@@ -56,7 +56,7 @@ reward_evt AS (
         CASE
             WHEN LENGTH(_rewardedAt) = 10 THEN _rewardedAt :: INT :: TIMESTAMP
             ELSE _rewardedAt
-        END AS `timestamp`,
+        END AS "timestamp",
         evt_tx_hash AS tx_hash,
         evt_index,
         'CreditsReward' AS event,
@@ -98,7 +98,7 @@ reward_evt AS (
         ) rewards
 )
 SELECT
-    `timestamp`,
+    "timestamp",
     tx_hash,
     evt_index,
     event,
@@ -112,7 +112,7 @@ FROM
     work_evt
 UNION
 SELECT
-    `timestamp`,
+    "timestamp",
     tx_hash,
     evt_index,
     event,
@@ -126,7 +126,7 @@ FROM
     reward_evt
 UNION
 SELECT
-    `timestamp`,
+    "timestamp",
     tx_hash,
     evt_index,
     event,

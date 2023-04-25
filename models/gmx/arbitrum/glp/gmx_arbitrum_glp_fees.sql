@@ -51,7 +51,7 @@ fglp_balances AS -- This CTE returns the accuals of WETH tokens in the Fee GLP c
                 ((value) / 1e18) AS transfer_value -- WETH 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
             WHERE "to" = 0x4e971a87900b931ff39d1aad67697f49835400b6 -- Fee GLP contract
-                AND `contract_address` = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
+                AND "contract_address" = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
                 {% if not is_incremental() %}
                 AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
