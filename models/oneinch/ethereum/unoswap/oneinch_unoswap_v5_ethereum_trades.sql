@@ -90,7 +90,7 @@ WITH unoswap AS
         , call_trace_address
         , call_block_time
         , contract_address
-        , from as taker
+        , "from" AS taker
     FROM
     (
         SELECT
