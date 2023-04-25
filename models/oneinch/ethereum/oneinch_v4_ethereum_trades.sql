@@ -62,7 +62,7 @@ WITH oneinch_calls AS
         '1inch' AS project,
         '4' as version,
         taker,
-        CAST(NULL as string) AS maker,
+        0x AS maker,
         to_amount AS token_bought_amount_raw,
         from_amount AS token_sold_amount_raw,
         CAST(NULL as double) AS amount_usd,

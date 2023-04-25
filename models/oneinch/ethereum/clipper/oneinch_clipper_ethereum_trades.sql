@@ -156,7 +156,7 @@ WITH clipper AS
         '1inch' AS project,
         'Clipper v1' AS version,
         CAST(NULL as string) as taker,
-        CAST(NULL as string) as maker,
+        0x AS maker,
         output_returnAmount AS token_bought_amount_raw,
         amount AS token_sold_amount_raw,
         CAST(NULL as double) AS amount_usd,

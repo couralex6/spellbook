@@ -68,7 +68,7 @@ WITH unoswap AS
         '1inch' AS project,
         'UNI v2' AS version,
         tx."from" AS taker,
-        CAST(NULL as string) as maker,
+        0x AS maker,
         src.output_returnAmount AS token_bought_amount_raw,
         src.amount AS token_sold_amount_raw,
         CAST(NULL as double) AS amount_usd,
