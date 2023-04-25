@@ -151,7 +151,7 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', dexs.block_time)
     -- TODO: remove cast when we fix the type of contract_address in the prices table
-    AND cast(p_bought.contract_address as varbinary) = dexs.token_bought_address
+    AND p_bought.contract_address = dexs.token_bought_address
     {% if not is_incremental() %}
 
 AND p_bought.minute >= '{{project_start_date}}' AS TIMESTAMP(3)
