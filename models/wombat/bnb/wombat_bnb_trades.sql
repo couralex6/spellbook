@@ -58,7 +58,7 @@ select
         ,(s.fromAmount / power(10, prices_s.decimals)) * prices_s.price
     ) as amount_usd	
 	, s.toToken as token_bought_address
-	, s."from"Token as token_sold_address
+	, s.fromToken as token_sold_address
 	, erc20_b.symbol as token_bought_symbol
 	, erc20_s.symbol as token_sold_symbol
 	, case
@@ -91,7 +91,7 @@ left join {{ ref('tokens_erc20') }} erc20_b
     and erc20_b.blockchain = 'bnb'
 -- sold tokens
 left join {{ ref('tokens_erc20') }} erc20_s
-    on erc20_s.contract_address = s."from"Token
+    on erc20_s.contract_address = s.fromToken
     and erc20_s.blockchain = 'bnb'
 -- price of bought tokens
 left join {{ source('prices', 'usd') }} prices_b
@@ -107,7 +107,7 @@ left join {{ source('prices', 'usd') }} prices_b
 -- price of sold tokens
 left join {{ source('prices', 'usd') }} prices_s
     on prices_s.minute = date_trunc('minute', s.evt_block_time)
-    and prices_s.contract_address = s."from"Token
+    and prices_s.contract_address = s.fromToken
     and prices_s.blockchain = 'bnb'
 	{% if not is_incremental() %}
     and prices_s.minute >= TIMESTAMP '{{project_start_date}}'

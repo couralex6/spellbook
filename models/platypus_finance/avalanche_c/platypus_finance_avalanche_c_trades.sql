@@ -50,7 +50,7 @@ select
         ,(s.fromAmount / power(10, prices_s.decimals)) * prices_s.price
     ) as amount_usd	
 	, s.toToken as token_bought_address
-	, s."from"Token as token_sold_address
+	, s.fromToken as token_sold_address
     , coalesce(s."to", tx."from") AS taker
 	, 0x as maker
 	, s.contract_address as project_contract_address
@@ -75,7 +75,7 @@ left join {{ ref('tokens_erc20') }} erc20_b
     and erc20_b.blockchain = 'avalanche_c'
 -- sold tokens
 left join {{ ref('tokens_erc20') }} erc20_s
-    on erc20_s.contract_address = s."from"Token
+    on erc20_s.contract_address = s.fromToken
     and erc20_s.blockchain = 'avalanche_c'
 -- price of bought tokens
 left join {{ source('prices', 'usd') }} prices_b
@@ -91,7 +91,7 @@ left join {{ source('prices', 'usd') }} prices_b
 -- price of sold tokens
 left join {{ source('prices', 'usd') }} prices_s
     on prices_s.minute = date_trunc('minute', s.evt_block_time)
-    and prices_s.contract_address = s."from"Token
+    and prices_s.contract_address = s.fromToken
     and prices_s.blockchain = 'avalanche_c'
 	{% if not is_incremental() %}
     and prices_s.minute >= TIMESTAMP '{{project_start_date}}'
