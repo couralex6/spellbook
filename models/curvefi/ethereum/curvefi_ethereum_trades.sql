@@ -18,7 +18,7 @@ WITH dexs AS
         l.block_time
         , p.version as version
         , '0x' || substring(l.topic2, 27,40) as taker
-        , '' as maker
+        , 0x as maker
         , case
             when l.topic1 = "0xd013ca23e77a65003c2c659c5442c00c805371b7fc1ebd4c206c41d1536bd90b"
                         AND cast(substring(l.data, 131, 64) as int) = 0
@@ -40,7 +40,7 @@ WITH dexs AS
             end as token_sold_address
         , l.contract_address as project_contract_address --pool address
         , l.tx_hash 
-        , '' as trace_address
+        , 0x as trace_address
         , l.index as evt_index
     FROM {{ source('ethereum', 'logs') }} l
     JOIN  {{ ref('curvefi_ethereum_view_pools') }} p
@@ -65,7 +65,7 @@ WITH dexs AS
         l.block_time
         , p.version as version
         , '0x' || substring(l.topic2, 27,40) as taker
-        , '' as maker
+        , 0x as maker
         , 'normal_exchange' as swap_type
         , bytea2numeric(substring(l.data, 195, 64)) as token_bought_amount_raw
         , bytea2numeric(substring(l.data, 67, 64)) as token_sold_amount_raw
@@ -74,7 +74,7 @@ WITH dexs AS
         , p.coins[cast(substring(l.data, 3, 64) as int)] as token_sold_address
         , l.contract_address as project_contract_address --pool address
         , l.tx_hash 
-        , '' as trace_address
+        , 0x as trace_address
         , l.index as evt_index
     FROM {{ source('ethereum', 'logs') }} l
     JOIN  {{ ref('curvefi_ethereum_view_pools') }} p

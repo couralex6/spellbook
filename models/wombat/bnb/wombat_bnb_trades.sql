@@ -68,12 +68,12 @@ select
 	, s.toAmount / power(10, erc20_b.decimals) as token_bought_amount
 	, s.fromAmount / power(10, erc20_s.decimals) as token_sold_amount
     , coalesce(s.to, tx."from") AS taker
-	, '' as maker
+	, 0x as maker
 	, s.contract_address as project_contract_address
 	, s.evt_tx_hash as tx_hash
     , tx."from" as tx_from
     , tx.to as tx_to
-	, '' as trace_address
+	, 0x as trace_address
 	, s.evt_index as evt_index
 from 
     wombat_swaps_all_pools s

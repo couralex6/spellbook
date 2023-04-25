@@ -52,12 +52,12 @@ select
 	, s.toToken as token_bought_address
 	, s."from"Token as token_sold_address
     , coalesce(s."to", tx."from") AS taker
-	, '' as maker
+	, 0x as maker
 	, s.contract_address as project_contract_address
 	, s.evt_tx_hash as tx_hash
     , tx."from" AS tx_from
     , tx.to AS tx_to
-	, '' as trace_address
+	, 0x as trace_address
 	, s.evt_index as evt_index
 from 
     {{ source('platypus_finance_avalanche_c', 'Pool_evt_Swap') }} s

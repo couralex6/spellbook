@@ -76,7 +76,7 @@ select
     tx."from" as tx_from,
     tx.to as tx_to,
     evt_index,
-    '' as trace_address
+    0x as trace_address
 from v2 trades
 inner join {{ source('polygon', 'transactions') }} tx
     on trades.evt_tx_hash = tx.hash
