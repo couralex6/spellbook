@@ -34,7 +34,7 @@ WITH dexs as
             ,evt_index
         FROM
             {{ source('woofi_bnb', 'WooPP_evt_WooSwap')}}
-        WHERE from NOT IN (0xcef5be73ae943b77f9bc08859367d923c030a269 -- woorouterV2
+        WHERE "from" NOT IN (0xcef5be73ae943b77f9bc08859367d923c030a269 -- woorouterV2
                           ,0x114f84658c99aa6ea62e3160a87a16deaf7efe83) -- woorouterV1
         
 

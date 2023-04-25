@@ -34,7 +34,7 @@ WITH dexs as
             ,evt_index
         FROM
             {{ source('woofi_avalanche_c', 'WooPP_evt_WooSwap')}}
-        WHERE from <> 0x5aa6a4e96a9129562e2fc06660d07feddaaf7854 -- woorouter
+        WHERE "from" <> 0x5aa6a4e96a9129562e2fc06660d07feddaaf7854 -- woorouter
 
         {% if is_incremental() %}
         AND evt_block_time >= date_trunc('day', now() - interval '7' day)
