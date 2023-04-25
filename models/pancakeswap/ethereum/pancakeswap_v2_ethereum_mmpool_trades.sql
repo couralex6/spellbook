@@ -31,7 +31,7 @@ WITH dexs AS
              THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 ELSE basetoken END       AS token_sold_address,     
         t.contract_address                                                              AS project_contract_address,
         t.evt_tx_hash                                                                   AS tx_hash,
-        ''                                                                              AS trace_address,
+        0x                                                                              AS trace_address,
         t.evt_index
     FROM {{ source('pancakeswap_v2_ethereum', 'PancakeSwapMMPool_evt_Swap') }} t
     {% if is_incremental() %}

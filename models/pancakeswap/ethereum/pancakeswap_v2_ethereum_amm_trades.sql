@@ -21,7 +21,7 @@ WITH dexs AS
     SELECT
         t.evt_block_time                                                                AS block_time,
         t.to                                                                            AS taker,
-        ''                                                                              AS maker,
+        0x                                                                              AS maker,
         CASE WHEN CAST(amount1Out AS DOUBLE) = 0 THEN amount1Out ELSE amount0Out END                  AS token_bought_amount_raw,
         CASE WHEN CAST(amount0In AS DOUBLE) = 0 OR CAST(amount1Out AS DOUBLE) = 0 THEN amount1In ELSE amount0In END AS token_sold_amount_raw,
         cast(NULL as double)                                                            AS amount_usd,
@@ -29,7 +29,7 @@ WITH dexs AS
         CASE WHEN CAST(amount0In AS DOUBLE) = 0 OR CAST(amount1Out AS DOUBLE) = 0 THEN f.token1 ELSE f.token0 END   AS token_sold_address,
         t.contract_address                                                              AS project_contract_address,
         t.evt_tx_hash                                                                   AS tx_hash,
-        ''                                                                              AS trace_address,
+        0x                                                                              AS trace_address,
         t.evt_index
     FROM
         {{ source('pancakeswap_v2_ethereum', 'PancakePair_evt_Swap') }} t
