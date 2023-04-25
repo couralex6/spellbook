@@ -50,7 +50,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         LEFT JOIN dodo_view_markets m
             on s.contract_address = m.market_contract_address
         WHERE {% for dodo_proxy in dodo_proxies %}
-        s.seller <> '{{dodo_proxy}}'
+        s.seller <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -82,7 +82,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         LEFT JOIN dodo_view_markets m
             on b.contract_address = m.market_contract_address
         WHERE {% for dodo_proxy in dodo_proxies %}
-        b.buyer <> '{{dodo_proxy}}'
+        b.buyer <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -112,7 +112,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodo_arbitrum', 'dvm_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -142,7 +142,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodo_arbitrum', 'DPPOracle_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -172,7 +172,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodo_arbitrum', 'dsp_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}

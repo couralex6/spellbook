@@ -50,7 +50,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             on s.contract_address = m.market_contract_address
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            s.seller <> '{{dodo_proxy}}'
+            s.seller <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -83,7 +83,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             on b.contract_address = m.market_contract_address
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            b.buyer <> '{{dodo_proxy}}'
+            b.buyer <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -114,7 +114,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DVM_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -145,7 +145,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DPP_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -176,7 +176,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DPPAdvanced_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -207,7 +207,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DPPOracle_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -239,7 +239,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DSP_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}

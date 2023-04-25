@@ -43,7 +43,7 @@ WITH dexs AS
             {{ source('dodo_optimism', 'DVM_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -74,7 +74,7 @@ WITH dexs AS
             {{ source('dodo_optimism', 'DPP_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -105,7 +105,7 @@ WITH dexs AS
             {{ source('dodo_optimism', 'DSP_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
