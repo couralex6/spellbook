@@ -23,11 +23,11 @@ WITH dexs AS
         ,t.to AS taker
         ,0x as maker
         -- logic from ethereum/dex/trades/insert_uniswap_v2
-	    ,CASE WHEN CAST(amount0Out AS DOUBLE) = 0 THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw -- when amount0 is negative it means trader_a is buying token0 from the pool
-	    ,CASE WHEN CAST(amount0In AS DOUBLE) = 0 OR CAST(amount1Out AS DOUBLE) = 0 THEN amount1In ELSE amount0In END AS token_sold_amount_raw
+	    ,CASE WHEN amount0Out = UINT256 0 THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw -- when amount0 is negative it means trader_a is buying token0 from the pool
+	    ,CASE WHEN amount0In = UINT256 0 OR amount1Out = UINT256 0 THEN amount1In ELSE amount0In END AS token_sold_amount_raw
         ,NULL AS amount_usd
-        ,CASE WHEN CAST(amount0Out AS DOUBLE) = 0 THEN token1 ELSE token0 END AS token_bought_address
-	    ,CASE WHEN CAST(amount0In AS DOUBLE) = 0 OR CAST(amount1Out AS DOUBLE) = 0 THEN token1 ELSE token0 END AS token_sold_address
+        ,CASE WHEN amount0Out = UINT256 0 THEN token1 ELSE token0 END AS token_bought_address
+	    ,CASE WHEN amount0In = UINT256 0 OR amount1Out = UINT256 0 THEN token1 ELSE token0 END AS token_sold_address
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
         ,0x AS trace_address

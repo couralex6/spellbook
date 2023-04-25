@@ -24,7 +24,7 @@ WITH dexs AS
         ,'toAddress' AS taker
         ,0x as maker
         ,t.toAmount AS token_bought_amount_raw 
-        ,t."from"Amount AS token_sold_amount_raw
+        ,t.fromAmount AS token_sold_amount_raw
         ,cast(NULL as double) AS amount_usd
         ,'' AS token_bought_address
         ,'' AS token_sold_address
