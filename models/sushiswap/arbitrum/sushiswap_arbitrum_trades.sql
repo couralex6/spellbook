@@ -23,7 +23,7 @@ with dexs as (
         case when CAST(amount0In as DOUBLE) = 0 then f.token1 else f.token0 end as token_sold_address,
         t.contract_address as project_contract_address,
         t.evt_tx_hash as tx_hash,
-        '' as trace_address,
+        0x as trace_address,
         t.evt_index
     FROM
         {{ source('sushi_arbitrum', 'Pair_evt_Swap') }} t

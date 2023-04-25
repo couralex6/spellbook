@@ -162,7 +162,7 @@ AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
 AND p_bought.blockchain = 'ethereum'
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', dexs.block_time)
-    AND cast(p_sold.contract_address as varbinary) = dexs.token_sold_address
+    AND p_sold.contract_address = dexs.token_sold_address
     {% if not is_incremental() %}
     AND p_sold.minute >=  '{{project_start_date}}' AS TIMESTAMP(3)
     {% endif %}

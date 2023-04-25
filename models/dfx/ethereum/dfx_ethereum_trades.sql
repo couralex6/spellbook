@@ -29,7 +29,7 @@ dexs as (
             target as token_bought_address, 
             contract_address as project_contract_address, 
             evt_tx_hash as tx_hash, 
-            '' as trace_address, 
+            0x as trace_address,
             evt_index
         FROM 
         {{ source('dfx_finance_ethereum', 'Curve_evt_Trade') }}
