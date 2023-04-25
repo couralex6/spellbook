@@ -29,7 +29,7 @@ WITH dexs AS
         ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN f.token1 ELSE f.token0 END AS token_sold_address
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,CAST('' AS VARCHAR(42)) AS trace_address
+        ,0x AS trace_address
         ,t.evt_index
     FROM
         {{ source('uniswap_v3_ethereum', 'Pair_evt_Swap') }} t

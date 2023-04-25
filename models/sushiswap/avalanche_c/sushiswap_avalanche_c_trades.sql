@@ -21,7 +21,7 @@ WITH sushiswap_dex AS (
             case when CAST(amount0In as DOUBLE) = 0 then token1 else token0 end as token_sold_address,
             t.contract_address                                           AS project_contract_address,
             t.evt_tx_hash                                                AS tx_hash,
-            ''                                                           AS trace_address,
+            0x                                                           AS trace_address,
             t.evt_index
     FROM {{ source('sushiswap_v2_avalanche_c', 'Pair_evt_Swap') }} t
     INNER JOIN {{ source('sushiswap_v2_avalanche_c', 'SushiV2Factory_evt_PairCreated') }} p
@@ -29,7 +29,7 @@ WITH sushiswap_dex AS (
     {% if is_incremental() %}
     WHERE t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    WHERE t.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
+    WHERE t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 )
 
@@ -70,7 +70,7 @@ INNER JOIN {{ source('avalanche_c', 'transactions') }} tx
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
     ON erc20a.contract_address = sushiswap_dex.token_bought_address
@@ -85,7 +85,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', sushiswap_dex.block_time)
@@ -94,5 +94,5 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}

@@ -74,7 +74,7 @@ WITH base_pools AS (
         AND et.to = et.contract_address
         AND et.evt_block_number = mps.evt_block_number
         {% if not is_incremental() %}
-        AND et.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(3)
+        AND et.evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         AND et.evt_block_time >= date_trunc('day', now() - interval '7' day)
