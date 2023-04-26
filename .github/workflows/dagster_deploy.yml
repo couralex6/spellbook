@@ -6,7 +6,7 @@ on:
       
 jobs:
   commit_manifest:
-    runs-on: [ self-hosted, linux, spellbook ]
+    runs-on: [ self-hosted, linux, spellbook-trino ]
 
     steps:
     - uses: actions/setup-python@v3
@@ -41,7 +41,7 @@ jobs:
       run: "aws s3 cp manifest.json s3://manifest-spellbook/manifest.json"
 
   dispatch:
-    runs-on: [ self-hosted, linux, spellbook ]
+    runs-on: [ self-hosted, linux, spellbook-trino ]
     needs: commit_manifest
     steps:
     - name: Set pat token
