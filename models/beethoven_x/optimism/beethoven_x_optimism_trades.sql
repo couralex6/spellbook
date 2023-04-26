@@ -31,7 +31,7 @@ WITH dexs AS
         ,t.tokenOut AS token_sold_address
         ,t.poolId as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,0x AS trace_address
+        ,'' AS trace_address
         ,t.evt_index
     FROM
         {{ source('balancer_v2_optimism', 'Vault_evt_Swap') }} t

@@ -34,7 +34,7 @@ WITH dexs AS
 
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,0x AS trace_address
+        ,'' AS trace_address
         ,t.evt_index
     FROM
         {{ source('synthetix_optimism', 'SNX_evt_SynthExchange') }} t

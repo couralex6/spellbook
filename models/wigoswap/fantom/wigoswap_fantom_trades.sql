@@ -27,7 +27,7 @@ with dexs as (
         case when amount0In = UINT256 '0' then f.token1 else f.token0 end as token_sold_address,
         t.contract_address as project_contract_address,
         t.evt_tx_hash as tx_hash,
-        0x as trace_address,
+        '' AS trace_address,
         t.evt_index
     FROM
         {{ source('wigoswap_fantom', 'Pair_evt_Swap') }} t

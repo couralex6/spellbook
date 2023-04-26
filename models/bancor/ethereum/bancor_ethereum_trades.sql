@@ -129,7 +129,7 @@ SELECT
     END AS token_sold_address,
     t.contract_address AS project_contract_address,
     t.evt_tx_hash AS tx_hash,
-    0x AS trace_address,
+    '' AS trace_address,
     t.evt_index
 FROM
     conversions t
@@ -154,7 +154,7 @@ SELECT
     END AS token_sold_address,
     t.contract_address AS project_contract_address,
     t.evt_tx_hash AS tx_hash,
-    0x AS trace_address,
+    '' AS trace_address,
     t.evt_index
 FROM {{ source('bancor3_ethereum', 'BancorNetwork_evt_TokensTraded') }} t
     {% if is_incremental() %}

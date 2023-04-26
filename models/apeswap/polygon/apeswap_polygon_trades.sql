@@ -25,7 +25,7 @@ WITH apeswap_dex AS (
             CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN p.token1 ELSE p.token0 END AS token_sold_address,
             t.contract_address AS project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             t.evt_index
     FROM {{ source('apeswap_polygon', 'ApePair_evt_Swap') }} t
     INNER JOIN {{ source('apeswap_polygon', 'ApeFactory_evt_PairCreated') }} p

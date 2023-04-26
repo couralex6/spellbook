@@ -28,7 +28,7 @@ dexs as (
             tokenOut as token_bought_address, 
             contract_address as project_contract_address, 
             evt_tx_hash as tx_hash, 
-            0x as trace_address,
+            '' AS trace_address,
             evt_index
         FROM 
         {{ source('gmx_avalanche_c', 'Router_evt_Swap') }}

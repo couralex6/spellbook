@@ -47,7 +47,7 @@ SELECT
             tokens_sold AS token_sold_amount_raw,
             t.contract_address as project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             t.evt_index,
             bought_id,
             sold_id
@@ -70,7 +70,7 @@ SELECT
             tokens_sold AS token_sold_amount_raw,
             t.contract_address as project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             t.evt_index,
             bought_id,
             sold_id
@@ -93,7 +93,7 @@ SELECT
             tokens_sold AS token_sold_amount_raw,
             t.contract_address as project_contract_address,
             t.evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             t.evt_index, 
             bought_id, 
             sold_id

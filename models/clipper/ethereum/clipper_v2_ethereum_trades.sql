@@ -23,7 +23,7 @@ WITH event_data as (
         outAsset as token_bought_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
-        0x AS trace_address,
+        '' AS trace_address,
         evt_index
     FROM  {{ source('clipper_ethereum', 'ClipperCaravelExchange_evt_Swapped') }}
     WHERE 1=1

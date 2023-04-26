@@ -34,7 +34,7 @@ WITH dexs AS
         ,t.buy_gem AS token_sold_address
         ,t.contract_address as project_contract_address
         ,t.evt_tx_hash AS tx_hash
-        ,0x AS trace_address
+        ,'' AS trace_address
         ,t.evt_index
     FROM
         {{ source('rubicon_optimism', 'RubiconMarket_evt_LogTake') }} t

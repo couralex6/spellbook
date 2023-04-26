@@ -125,7 +125,7 @@ SELECT
     dexs.tx_hash,
     tx."from" as tx_from,
     tx.to AS tx_to,
-    0x as trace_address,
+    '' AS trace_address,
     dexs.evt_index
 FROM enriched_evt_all dexs
 INNER JOIN {{ source('fantom', 'transactions') }} tx

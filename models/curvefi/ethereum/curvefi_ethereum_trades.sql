@@ -40,7 +40,7 @@ WITH dexs AS
             end as token_sold_address
         , l.contract_address as project_contract_address --pool address
         , l.tx_hash 
-        , 0x as trace_address
+        , '' AS trace_address
         , l.index as evt_index
     FROM {{ source('ethereum', 'logs') }} l
     JOIN  {{ ref('curvefi_ethereum_view_pools') }} p
@@ -74,7 +74,7 @@ WITH dexs AS
         , p.coins[cast(substring(l.data, 3, 64) as int)] as token_sold_address
         , l.contract_address as project_contract_address --pool address
         , l.tx_hash 
-        , 0x as trace_address
+        , '' AS trace_address
         , l.index as evt_index
     FROM {{ source('ethereum', 'logs') }} l
     JOIN  {{ ref('curvefi_ethereum_view_pools') }} p

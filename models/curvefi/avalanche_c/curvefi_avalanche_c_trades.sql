@@ -80,7 +80,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM "{{ source('curvefi_avalanche_c', '3pool_evt_TokenExchange') }}"
             {% if is_incremental() %}
@@ -110,7 +110,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', '3poolV2_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -140,7 +140,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'AavePool_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -170,7 +170,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'AavePool_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -200,7 +200,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'aave_v3_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -228,7 +228,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'agEURjEUR_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -258,7 +258,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'arUSD_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -288,7 +288,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'ATriCryptoPool_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -318,7 +318,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'avax3pool_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -346,7 +346,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'axlUSDCUSDC_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -374,7 +374,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'axlUSDC_USDC_e_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -404,7 +404,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'Blizz_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -432,7 +432,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'Curve_DD2_Pool_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -464,7 +464,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'deBridge_USDC_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -492,7 +492,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'DefrostH2O_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -524,7 +524,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'DefrostH2O_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -552,7 +552,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'eEURjEUR_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -580,7 +580,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'frax_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -612,7 +612,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'frax_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -640,7 +640,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'FUSD_MIM_Factory_Pool_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -668,7 +668,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'FUSDUSDC_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -696,7 +696,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'L2StableSwap_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -724,7 +724,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'MAI_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -756,7 +756,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'MAI_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -784,7 +784,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'MIM_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -816,7 +816,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'MIM_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -844,7 +844,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'MoreMoney_USD_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -876,7 +876,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'MoreMoney_USD_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -908,7 +908,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'NXUSDaV3CRV_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -936,7 +936,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'ren_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -964,7 +964,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'ren_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -996,7 +996,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'Topshelf_USDL_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -1024,7 +1024,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'USDCe_UST_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -1052,7 +1052,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'USD_coin_evt_TokenExchange') }}
             {% if is_incremental() %}
@@ -1084,7 +1084,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'USDS_evt_TokenExchangeUnderlying') }}
             {% if is_incremental() %}
@@ -1114,7 +1114,7 @@ WITH dexs AS (
             END as token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
             FROM {{ source('curvefi_avalanche_c', 'YUSDPOOL_evt_TokenExchange') }}
             {% if is_incremental() %}

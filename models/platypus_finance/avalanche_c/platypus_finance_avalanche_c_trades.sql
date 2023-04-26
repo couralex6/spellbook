@@ -57,7 +57,7 @@ select
 	, s.evt_tx_hash as tx_hash
     , tx."from" AS tx_from
     , tx.to AS tx_to
-	, 0x as trace_address
+	, '' AS trace_address
 	, s.evt_index as evt_index
 from 
     {{ source('platypus_finance_avalanche_c', 'Pool_evt_Swap') }} s

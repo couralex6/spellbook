@@ -58,7 +58,7 @@ select
 	, s.evt_tx_hash as tx_hash
     , tx."from" as tx_from
     , tx.to as tx_to
-	, 0x as trace_address
+	, '' AS trace_address
 	, s.evt_index as evt_index
 from 
     iziswap_swaps s

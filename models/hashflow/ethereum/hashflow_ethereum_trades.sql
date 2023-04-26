@@ -62,7 +62,7 @@ select
     hashflow_trades.tx_hash,
     tx."from" as tx_from,
     tx.to as tx_to,
-    0x as trace_address,
+    '' AS trace_address,
     case when hashflow_trades.composite_index <> -1 then hashflow_trades.composite_index end as evt_index
 from hashflow_trades
 inner join ethereum_transactions tx

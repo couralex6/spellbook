@@ -24,7 +24,7 @@ with dexs as (
         tokenIn as token_sold_address,
         t.contract_address as project_contract_address,
         t.evt_tx_hash as tx_hash,
-        0x as trace_address,
+        '' AS trace_address,
         t.evt_index
     FROM
         {{ source('sushi_optimism', 'ConstantProductPool_evt_Swap') }} t
@@ -48,7 +48,7 @@ with dexs as (
         tokenIn as token_sold_address,
         t.contract_address as project_contract_address,
         t.evt_tx_hash as tx_hash,
-        0x as trace_address,
+        '' AS trace_address,
         t.evt_index
     FROM
         {{ source('sushi_optimism', 'StablePool_evt_Swap') }} t

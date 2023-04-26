@@ -60,7 +60,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             m.quote_token_address AS token_sold_address,
             s.contract_address AS project_contract_address,
             s.evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             s.evt_index
         FROM
             {{ source('dodo_ethereum', 'DODO_evt_SellBaseToken')}} s
@@ -92,7 +92,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             m.quote_token_address AS token_sold_address,
             b.contract_address AS project_contract_address,
             b.evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             b.evt_index
         FROM
             {{ source('dodo_ethereum','DODO_evt_BuyBaseToken')}} b
@@ -124,7 +124,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             toToken AS token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
         FROM
             {{ source('dodo_ethereum', 'DVM_evt_DODOSwap')}}
@@ -154,7 +154,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             toToken AS token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
         FROM
             {{ source('dodo_ethereum', 'DPP_evt_DODOSwap')}}
@@ -184,7 +184,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             toToken AS token_sold_address,
             contract_address AS project_contract_address,
             evt_tx_hash AS tx_hash,
-            0x AS trace_address,
+            '' AS trace_address,
             evt_index
         FROM
             {{ source('dodo_ethereum', 'DSP_evt_DODOSwap')}}
