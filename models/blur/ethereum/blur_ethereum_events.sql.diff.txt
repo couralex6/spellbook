@@ -80,7 +80,7 @@
 +    AND et.block_time >= timestamp '{{project_start_date}}'
      {% endif %}
      {% if is_incremental() %}
-     AND et.block_time >= date_trunc('day', now() - interval '1' week)
+     AND et.block_time >= date_trunc('day', now() - interval '7' day)
      {% endif %}
  LEFT JOIN {{ ref('nft_ethereum_aggregators') }} agg ON agg.contract_address=et.to
  LEFT JOIN {{ ref('nft_ethereum_aggregators_markers') }} agg_m
@@ -95,7 +95,7 @@
 -    AND pu.minute >= '{{project_start_date}}'
 -    {% endif %}
 -    {% if is_incremental() %}
--    AND pu.minute >= date_trunc('day', now() - interval '1' week)
+-    AND pu.minute >= date_trunc('day', now() - interval '7' day)
 -    {% endif %}
 +    AND pu.minute >= timestamp '{{project_start_date}}'
 +{% endif %}
@@ -103,11 +103,11 @@
 +
 +{% endif %}
 +{% if is_incremental() %}
-+AND pu.minute >= date_trunc('day', now() - interval '1' week)
++AND pu.minute >= date_trunc('day', now() - interval '7' day)
 +{% endif %}
  LEFT JOIN {{ ref('tokens_ethereum_nft') }} nft ON json_extract_scalar(bm.buy, '$.collection') = nft.contract_address
  {% if is_incremental() %}
- WHERE bm.evt_block_time >= date_trunc('day', now() - interval '1' week)
+ WHERE bm.evt_block_time >= date_trunc('day', now() - interval '7' day)
 @@ -128,33 +135,34 @@     , 'Trade' AS evt_type
      , s.offerer AS seller
      , s.recipient AS buyer
@@ -169,7 +169,7 @@
  FROM {{ source('seaport_ethereum','Seaport_evt_OrderFulfilled') }} s
  INNER JOIN {{ source('ethereum', 'transactions') }} tx ON tx.block_number=s.evt_block_number
      AND tx.hash=s.evt_tx_hash
-@@ -162,7 +170,7 @@     AND tx.block_time >= date_trunc('day', now() - INTERVAL '1' week)
+@@ -162,7 +170,7 @@     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
      {% endif %}
      {% if not is_incremental() %}
 -    AND tx.block_time >= '{{seaport_usage_start_date}}'
@@ -177,7 +177,7 @@
      {% endif %}
  LEFT JOIN {{ ref('tokens_ethereum_nft') }} nft_tok ON nft_tok.contract_address=JSON_EXTRACT_SCALAR(s.offer[0], '$.token')
  LEFT JOIN {{ ref('tokens_ethereum_erc20') }} currency_tok ON currency_tok.contract_address=JSON_EXTRACT_SCALAR(s.consideration[0], '$.token')
-@@ -173,13 +181,13 @@     AND pu.minute >= date_trunc('day', now() - INTERVAL '1' week)
+@@ -173,13 +181,13 @@     AND pu.minute >= date_trunc('day', now() - interval '7' day)
      {% endif %}
      {% if not is_incremental() %}
 -    AND pu.minute >= '{{seaport_usage_start_date}}'
@@ -185,7 +185,7 @@
      {% endif %}
  WHERE s.zone='0x0000000000d80cfcb8dfcd8b2c4fd9c813482938'
  {% if is_incremental() %}
- AND s.evt_block_time >= date_trunc('day', now() - INTERVAL '1' week)
+ AND s.evt_block_time >= date_trunc('day', now() - interval '7' day)
  {% endif %}
  {% if not is_incremental() %}
 -AND s.evt_block_time >= '{{seaport_usage_start_date}}'

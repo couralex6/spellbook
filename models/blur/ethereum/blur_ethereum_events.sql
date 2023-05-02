@@ -91,7 +91,7 @@ JOIN {{ source('ethereum','transactions') }} et ON et.block_number=bm.evt_block_
     AND et.block_time >= timestamp TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
-    AND et.block_time >= date_trunc('day', now() - interval '1' week)
+    AND et.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
 LEFT JOIN {{ ref('nft_ethereum_aggregators') }} agg ON agg.contract_address=et.to
 LEFT JOIN {{ ref('nft_ethereum_aggregators_markers') }} agg_m
@@ -105,11 +105,11 @@ LEFT JOIN {{ source('prices','usd') }} pu ON pu.blockchain='ethereum'
     AND pu.minute >= timestamp TIMESTAMP '{{project_start_date}}'
 {% endif %}
 {% if is_incremental() %}
-AND pu.minute >= date_trunc('day', now() - interval '1' week)
+AND pu.minute >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 LEFT JOIN {{ ref('tokens_ethereum_nft') }} nft ON json_extract_scalar(bm.buy, '$.collection') = nft.contract_address
 {% if is_incremental() %}
-WHERE bm.evt_block_time >= date_trunc('day', now() - interval '1' week)
+WHERE bm.evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 
 UNION ALL
