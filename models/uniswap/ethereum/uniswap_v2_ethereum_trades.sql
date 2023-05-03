@@ -18,9 +18,6 @@
 {% set weth_weth_wash_trading_pair = '0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92' %}
 {% set feg_eth_wash_trading_pair = '0x854373387e41371ac6e307a1f29603c6fa10d872' %}
 
--- TEST TEST GH ACTIONS
-
-
 WITH dexs AS
 (
     -- Uniswap v2
