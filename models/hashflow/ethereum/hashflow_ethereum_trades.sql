@@ -17,7 +17,7 @@
 with hashflow_trades as (
     select *
     from {{ ref('hashflow_ethereum_raw_trades') }}
-    where fill_status is true -- successful trade
+    where fill_status = true -- successful trade
     {% if is_incremental() %}
         and block_time >= date_trunc('day', now() - interval '10 days')
     {% endif %}

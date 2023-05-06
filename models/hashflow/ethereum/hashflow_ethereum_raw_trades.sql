@@ -415,4 +415,4 @@ select
     tx_hash,
     amount_usd
 from all_trades
-where fill_status is true
+where fill_status = true

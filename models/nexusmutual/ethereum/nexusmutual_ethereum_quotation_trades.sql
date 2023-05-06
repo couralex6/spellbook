@@ -69,7 +69,7 @@ SELECT quo_evt.cid,
 FROM quo_evt
 INNER JOIN {{ source('ethereum','transactions') }} tx
     ON quo_evt.evt_tx_hash = tx.hash
-    AND tx.success is TRUE
+    AND tx.success = TRUE
     {% if not is_incremental() %}
     AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
