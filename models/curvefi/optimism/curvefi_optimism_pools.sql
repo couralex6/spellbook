@@ -55,7 +55,7 @@ WITH base_pools AS (
 
         SELECT
             mp.evt_tx_hash
-            , 0 AS tokenid
+            , UINT256 '0' AS tokenid
             , mp.coin AS token
             , mp.evt_block_number
         FROM {{ source('curvefi_optimism', 'PoolFactory_evt_MetaPoolDeployed') }} mp
