@@ -316,7 +316,7 @@ WITH
             {% if not is_incremental() %}
             AND pu.minute >= '2022-4-1'
             {% endif %}
-            --add in `pu.contract_address = sc.currency_address` in the future when ERC20 pairs are added in.
+            --add in "pu.contract_address = sc.currency_address" in the future when ERC20 pairs are added in.
         LEFT JOIN {{ ref('nft_aggregators') }} agg
             ON (agg.contract_address = sc.call_from OR agg.contract_address = sc.router_caller) -- aggregator will either call pool directly or call the router
             AND agg.blockchain = 'ethereum'
@@ -335,13 +335,13 @@ WITH
             , block_number
             , explode(token_id) as token_id --nft.trades prefers each token id be its own row
             , token_standard
-            , CAST(number_of_items/number_of_items AS DECIMAL(38,0)) as number_of_items
+            , CAST(number_of_items/number_of_items AS DOUBLE) as number_of_items
             , trade_type
             , trade_category
             , evt_type
             , seller
             , buyer
-            , cast(amount_raw/number_of_items as DECIMAL(38,0)) as amount_raw
+            , cast(amount_raw/number_of_items as DOUBLE) as amount_raw
             , amount_original/number_of_items as amount_original
             , amount_usd/number_of_items as amount_usd
             , currency_symbol
@@ -388,7 +388,7 @@ SELECT
     , evt_type
     , seller
     , buyer
-    , CAST(amount_raw AS DECIMAL(38,0)) AS amount_raw
+    , CAST(amount_raw AS DOUBLE) AS amount_raw
     , amount_original
     , amount_usd
     , currency_symbol

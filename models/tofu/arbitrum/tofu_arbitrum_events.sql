@@ -75,7 +75,7 @@ SELECT 'arbitrum'                                 as blockchain
            when tff.bundle_size = 1 then 'Single Item Trade'
            else 'Bundle Trade'
     end                                      as trade_type
-     , CAST(tff.amount AS DECIMAL(38,0))     as number_of_items
+     , CAST(tff.amount AS DOUBLE)     as number_of_items
      , 'Trade'                               as evt_type
      , tfe.seller                            as seller
      , tfe.buyer                             as buyer
@@ -84,7 +84,7 @@ SELECT 'arbitrum'                                 as blockchain
            when tfe.kind = '2' then 'Sell'
            else 'Auction'
     end                                      as trade_category
-     , CAST(tfe.price AS DECIMAL(38,0))      as amount_raw
+     , CAST(tfe.price AS DOUBLE)      as amount_raw
      , tfe.price / power(10, pu.decimals)    as amount_original
      , pu.price * tfe.price / power(10, pu.decimals) as amount_usd
      , case
@@ -123,7 +123,7 @@ FROM tfe
                    ON tx.block_time = tfe.evt_block_time
                        AND tx.hash = tfe.evt_tx_hash
                        {% if not is_incremental() %}
-                       AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                       AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
                        {% endif %}
                        {% if is_incremental() %}
                        and tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -136,11 +136,11 @@ FROM tfe
                        AND pu.minute = date_trunc('minute', tfe.evt_block_time)
                        AND pu.contract_address = tfe.currency
                        {% if not is_incremental() %}
-                       AND pu.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                       AND pu.minute >= TIMESTAMP '{{project_start_date}}'
                        {% endif %}
                        {% if is_incremental() %}
                        AND pu.minute >= date_trunc('day', now() - interval '7' day)
                        {% endif %}
          LEFT JOIN {{ ref('nft_aggregators')}} agg
-                   ON agg.contract_address = tx.`to`
+                   ON agg.contract_address = tx."to"
                    AND agg.blockchain = 'arbitrum'

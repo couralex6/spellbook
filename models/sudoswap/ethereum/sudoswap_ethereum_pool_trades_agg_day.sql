@@ -41,7 +41,7 @@ SELECT
     ) AS nft_change_trading
 FROM {{ ref('sudoswap_ethereum_events') }}
     {% if not is_incremental() %}
-    WHERE block_date >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE block_date >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     WHERE block_date >= date_trunc('day', now() - interval '7' day)

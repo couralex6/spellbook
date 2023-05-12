@@ -31,7 +31,7 @@ WITH quo_evt AS (
     FROM
         {{ source('nexusmutual_ethereum', 'QuotationData_evt_CoverDetailsEvent') }}
     {% if not is_incremental() %}
-    WHERE evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -69,9 +69,9 @@ SELECT quo_evt.cid,
 FROM quo_evt
 INNER JOIN {{ source('ethereum','transactions') }} tx
     ON quo_evt.evt_tx_hash = tx.hash
-    AND tx.success is TRUE
+    AND tx.success = TRUE
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)

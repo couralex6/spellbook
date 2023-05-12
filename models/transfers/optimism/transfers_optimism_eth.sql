@@ -16,7 +16,7 @@ with eth_transfers as (
         r."from"
         ,r.to
         --Using the ETH deposit placeholder address to match with prices tables
-        ,lower(0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000) as contract_address
+        ,0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000 as contract_address
         ,cast(r.value as double) AS value
         ,cast(r.value as double)/1e18 as value_decimal
         ,r.tx_hash
@@ -26,7 +26,7 @@ with eth_transfers as (
         ,substring(t.data, 1, 10) as tx_method_id
         ,r.tx_hash || '-' || cast(r.trace_address as string) as unique_transfer_id
         ,t.to AS tx_to
-        ,t.`from` AS tx_from
+        ,t."from" AS tx_from
     from {{ source('optimism', 'traces') }} as r 
     join {{ source('optimism', 'transactions') }} as t 
         on r.tx_hash = t.hash
@@ -48,7 +48,7 @@ with eth_transfers as (
         r."from"
         ,r.to
         --Using the ETH deposit placeholder address to match with prices tables
-        ,lower(0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000) as contract_address
+        ,0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000 as contract_address
         ,cast(r.value as double) AS value
         ,cast(r.value as double)/1e18 as value_decimal
         ,r.evt_tx_hash as tx_hash
@@ -58,13 +58,13 @@ with eth_transfers as (
         ,substring(t.data, 1, 10) as tx_method_id
         ,r.evt_tx_hash || '-' || cast(array(r.evt_index) as string) as unique_transfer_id
         ,t.to AS tx_to
-        ,t.`from` AS tx_from
+        ,t."from" AS tx_from
     from {{ source('erc20_optimism', 'evt_transfer') }} as r
     join {{ source('optimism', 'transactions') }} as t 
         on r.evt_tx_hash = t.hash
         and r.evt_block_number = t.block_number
     where 
-        r.contract_address = lower(0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000)
+        r.contract_address = 0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000
         and t.success
         and r.value > '0'
         {% if is_incremental() %} -- this filter will only be applied on an incremental run 

@@ -24,7 +24,7 @@ with v1 as (
         evt_index
     from {{ source('balancer_v1_ethereum', 'BPool_evt_LOG_SWAP') }}
     {% if not is_incremental() %}
-        where evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        where evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
         where evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -34,7 +34,7 @@ prices as (
     select * from {{ source('prices', 'usd') }}
     where blockchain = 'ethereum'
     {% if not is_incremental() %}
-        and minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        and minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
         and minute >= date_trunc('day', now() - interval '7' day)
@@ -56,8 +56,8 @@ select
     end as token_pair,
     token_bought_amount_raw / power(10, erc20a.decimals) as token_bought_amount,
     token_sold_amount_raw / power(10, erc20b.decimals) as token_sold_amount,
-    CAST(token_bought_amount_raw AS DECIMAL(38,0)) as token_bought_amount_raw,
-    CAST(token_sold_amount_raw AS DECIMAL(38,0)) as token_sold_amount_raw,
+    CAST(token_bought_amount_raw AS DOUBLE) as token_bought_amount_raw,
+    CAST(token_sold_amount_raw AS DOUBLE) as token_sold_amount_raw,
     coalesce(
         (token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price,
         (token_sold_amount_raw / power(10, p_sold.decimals)) * p_sold.price
@@ -71,12 +71,12 @@ select
     tx."from" as tx_from,
     tx.to as tx_to,
     evt_index,
-    '' as trace_address
+    '' AS trace_address
 from v1 trades
 inner join {{ source('ethereum', 'transactions') }} tx
     on trades.evt_tx_hash = tx.hash
     {% if not is_incremental() %}
-    and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and tx.block_time >= date_trunc('day', now() - interval '7' day)

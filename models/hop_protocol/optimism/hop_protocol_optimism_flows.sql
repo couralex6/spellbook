@@ -31,14 +31,14 @@ SELECT
 , bridged_fee_amount_raw / POWER(10,erc.decimals) AS fee_amount
 , p.price*( bridged_fee_amount_raw / POWER(10,erc.decimals) ) AS fee_amount_usd
 , bridged_fee_amount_raw as fee_amount_raw
-, hba.`l2CanonicalToken` AS token_address
-, hba.`l2CanonicalToken` AS fee_address
+, hba."l2CanonicalToken" AS token_address
+, hba."l2CanonicalToken" AS fee_address
 , source_chain_id
 , destination_chain_id
 , cid_source.chain_name AS source_chain_name
 , cid_dest.chain_name AS destination_chain_name
-, t.`from` AS tx_from
-, t.`to` AS tx_to
+, t."from" AS tx_from
+, t."to" AS tx_to
 , tf.transfer_id
 , tf.evt_index
 , tf.trace_address
@@ -52,14 +52,14 @@ FROM (
      ts.evt_block_time AS block_time
     ,ts.evt_block_number AS block_number
     ,ts.evt_tx_hash AS tx_hash
-    , ts.`amount` AS bridged_token_amount_raw
-    , ts.`bonderFee` AS bridged_fee_amount_raw
+    , ts."amount" AS bridged_token_amount_raw
+    , ts."bonderFee" AS bridged_fee_amount_raw
     , '' as sender_address
     , ts.recipient AS recipient_address
     ,'' AS trace_address
     ,ts.evt_index
     ,ts.contract_address AS project_contract_address
-    , ts.`transferId` AS transfer_id
+    , ts."transferId" AS transfer_id
     , (SELECT chain_id FROM {{ ref('chain_ids') }} WHERE lower(chain_name) = 'optimism') AS source_chain_id
     ,chainId AS destination_chain_id
     
@@ -74,8 +74,8 @@ FROM (
      tl.evt_block_time AS block_time
     ,tl.evt_block_number AS block_number
     ,tl.evt_tx_hash AS tx_hash
-    , tl.`amount` AS bridged_token_amount_raw
-    , tl.`relayerFee` AS bridged_fee_amount_raw
+    , tl."amount" AS bridged_token_amount_raw
+    , tl."relayerFee" AS bridged_fee_amount_raw
     , '' as sender_address
     , tl.recipient AS recipient_address
     ,'' AS trace_address
@@ -96,7 +96,7 @@ FROM (
      wb.evt_block_time AS block_time
     ,wb.evt_block_number AS block_number
     ,wb.evt_tx_hash AS tx_hash
-    , wb.`amount` AS bridged_token_amount_raw
+    , wb."amount" AS bridged_token_amount_raw
     , 0 AS bridged_fee_amount_raw
     , '' as sender_address
     , COALESCE(arb.recipient,poly.recipient,gno.recipient) AS recipient_address
@@ -137,7 +137,7 @@ FROM (
 
     ) tf
 LEFT JOIN {{ ref('hop_protocol_addresses') }} hba
-            ON tf.project_contract_address = hba.`l2Bridge`
+            ON tf.project_contract_address = hba."l2Bridge"
             AND tf.block_number >= hba.bridgeDeployedBlockNumber
             AND hba.blockchain = 'optimism'
 LEFT JOIN {{ source('optimism', 'transactions') }} t
@@ -148,11 +148,11 @@ LEFT JOIN {{ source('optimism', 'transactions') }} t
         {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc
     ON erc.blockchain = hba.blockchain
-    AND erc.contract_address = hba.`l2CanonicalToken`
+    AND erc.contract_address = hba."l2CanonicalToken"
     
 LEFT JOIN {{ source('prices', 'usd') }} p
     ON p.minute = DATE_TRUNC('minute',tf.block_time)
-    AND p.contract_address = hba.`l2CanonicalToken`
+    AND p.contract_address = hba."l2CanonicalToken"
     AND p.blockchain = hba.blockchain
     {% if is_incremental() %}
     AND p.minute >= (NOW() - interval '14 days')

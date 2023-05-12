@@ -20,7 +20,7 @@ WITH minute AS  -- This CTE generates a series of minute values
     FROM
         (
         {% if not is_incremental() %}
-        SELECT explode(sequence(TIMESTAMP CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE), CURRENT_TIMESTAMP, INTERVAL 1 minute)) AS minute -- 2021-08-31 08:13 is the timestamp of the first vault transaction
+        SELECT explode(sequence(TIMESTAMP TIMESTAMP '{{project_start_date}}', CURRENT_TIMESTAMP, INTERVAL 1 minute)) AS minute -- 2021-08-31 08:13 is the timestamp of the first vault transaction
         {% endif %}
         {% if is_incremental() %}
         SELECT explode(sequence(date_trunc('day', now() - interval '7' day), CURRENT_TIMESTAMP, INTERVAL 1 minute)) AS minute
@@ -50,10 +50,10 @@ fglp_balances AS -- This CTE returns the accuals of WETH tokens in the Fee GLP c
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value) / 1e18) AS transfer_value -- WETH 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x4e971a87900b931ff39d1aad67697f49835400b6 -- Fee GLP contract
-                AND `contract_address` = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
+            WHERE "to" = 0x4e971a87900b931ff39d1aad67697f49835400b6 -- Fee GLP contract
+                AND "contract_address" = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
                 {% if not is_incremental() %}
-                AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 {% if is_incremental() %}
                 AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -87,7 +87,7 @@ FROM
         FROM fglp_balances
         -- excess time filter
         {% if not is_incremental() %}
-        WHERE minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        WHERE minute >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         WHERE minute >= date_trunc('day', now() - interval '7' day)
@@ -102,7 +102,7 @@ FROM
         FROM {{ref('gmx_arbitrum_glp_components')}}
         -- excess time filter
         {% if not is_incremental() %}
-        WHERE minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        WHERE minute >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         WHERE minute >= date_trunc('day', now() - interval '7' day)

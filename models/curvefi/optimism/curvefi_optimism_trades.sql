@@ -41,7 +41,7 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number AS block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
@@ -64,7 +64,7 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
@@ -87,7 +87,7 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
@@ -139,8 +139,8 @@ SELECT DISTINCT
     --On Buy: Metapools seem to always use the curve pool token's decimals (18) if bought_id = 0
     dexs.token_bought_amount_raw / POWER(10 , (CASE WHEN pool_type = 'meta' AND bought_id = 0 THEN 18 ELSE COALESCE(erc20a.decimals,p_bought.decimals) END) ) AS token_bought_amount,
     dexs.token_sold_amount_raw / POWER(10 , (CASE WHEN pool_type = 'meta' AND bought_id = 0 THEN COALESCE(erc20a.decimals,p_bought.decimals) ELSE COALESCE(erc20b.decimals,p_sold.decimals) END) )  AS token_sold_amount,
-    CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw,
-    CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw,
+    CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw,
+    CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw,
     coalesce(
 	    --On Sell: Metapools seem to always use the added coin's decimals if it's the one that's bought - even if the other token has less decimals (i.e. USDC)
 	    --On Buy: Metapools seem to always use the curve pool token's decimals (18) if bought_id = 0
@@ -163,10 +163,10 @@ INNER JOIN {{ source('optimism', 'transactions') }} tx
     ON dexs.tx_hash = tx.hash
     AND dexs.block_number = tx.block_number
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
-    AND tx.block_time >= date_trunc('day', now() - interval '1' week)
+    AND tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
     ON erc20a.contract_address = dexs.token_bought_address
@@ -179,7 +179,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'optimism'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -189,7 +189,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'optimism'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

@@ -27,10 +27,10 @@ SELECT qa.distributor_address
      , r.value            AS rewards_token_value_raw
 FROM {{source('erc20_optimism','evt_Transfer')}} r
 INNER JOIN {{ref('coinbase_wallet_quests_optimism_distributor_addresses')}} qa
-    ON r.`from` = distributor_address
+    ON r."from" = distributor_address
     AND r.contract_address = rewards_token
 
-WHERE evt_block_time >= cast(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) as timestamp) --arbitrary
+WHERE evt_block_time >= cast(TIMESTAMP '{{project_start_date}}' as timestamp) --arbitrary
 {% if is_incremental() %}
 -- for quest addresses we've seen before, pull incremental, else pull everything (controls for if we first see a distributor address later)
 AND 1 = (

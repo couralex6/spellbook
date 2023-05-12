@@ -30,7 +30,7 @@ inner join {{ ref('safe_optimism_safes') }} s on et."from" = s.address
     and (lower(et.call_type) not in ('delegatecall', 'callcode', 'staticcall') or et.call_type is null)
     and et.value > '0' -- value is of type string. exclude 0 value traces
 {% if not is_incremental() %}
-where et.block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) -- for initial query optimisation
+where et.block_time > TIMESTAMP '{{project_start_date}}' -- for initial query optimisation
 {% endif %}
 {% if is_incremental() %}
 -- to prevent potential counterfactual safe deployment issues we take a bigger interval
@@ -53,7 +53,7 @@ inner join {{ ref('safe_optimism_safes') }} s on et.to = s.address
     and (lower(et.call_type) not in ('delegatecall', 'callcode', 'staticcall') or et.call_type is null)
     and et.value > '0' -- value is of type string. exclude 0 value traces
 {% if not is_incremental() %}
-where et.block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) -- for initial query optimisation
+where et.block_time > TIMESTAMP '{{project_start_date}}' -- for initial query optimisation
 {% endif %}
 {% if is_incremental() %}
 -- to prevent potential counterfactual safe deployment issues we take a bigger interval
@@ -74,10 +74,10 @@ from {{ source('erc20_optimism', 'evt_Transfer') }} r
 inner join {{ ref('safe_optimism_safes') }} s
     on r.to = s.address
 where 
-    r.contract_address = lower(0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000)
+    r.contract_address = 0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000
     and r.value > '0'
     {% if not is_incremental() %}
-    and r.evt_block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) -- for initial query optimisation
+    and r.evt_block_time > TIMESTAMP '{{project_start_date}}' -- for initial query optimisation
     {% endif %}
     {% if is_incremental() %} 
     -- to prevent potential counterfactual safe deployment issues we take a bigger interval
@@ -97,10 +97,10 @@ from {{ source('erc20_optimism', 'evt_Transfer') }} r
 inner join {{ ref('safe_optimism_safes') }} s
     on r."from" = s.address
 where 
-    r.contract_address = lower(0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000)
+    r.contract_address = 0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000
     and r.value > '0'
     {% if not is_incremental() %}
-    and r.evt_block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) -- for initial query optimisation
+    and r.evt_block_time > TIMESTAMP '{{project_start_date}}' -- for initial query optimisation
     {% endif %}
     {% if is_incremental() %} 
     -- to prevent potential counterfactual safe deployment issues we take a bigger interval

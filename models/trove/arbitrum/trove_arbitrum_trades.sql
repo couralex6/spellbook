@@ -49,7 +49,7 @@ with marketplace as (
         {% if is_incremental() %}
         where evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        where evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        where evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         union all
         select evt_block_time,
@@ -68,7 +68,7 @@ with marketplace as (
         {% if is_incremental() %}
         where evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% else %}
-        where evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        where evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
     )
 )
@@ -100,7 +100,7 @@ select
     cast(null as varchar(5)) as aggregator_address,
     mp.tx_hash,
     mp.block_number,
-    tx.`from` as tx_from,
+    tx."from" as tx_from,
     tx.to as tx_to,
     mp.block_number || '-' || mp.tx_hash || '-' || mp.evt_index as unique_trade_id
 from marketplace mp
@@ -110,7 +110,7 @@ inner join {{ source('arbitrum', 'transactions') }} tx
     {% if is_incremental() %}
     and tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 left join {{ ref('tokens_arbitrum_erc20') }} erc20
     on erc20.contract_address = mp.currency_contract
@@ -123,5 +123,5 @@ left join {{ source('prices', 'usd') }} as prices
     {% if is_incremental() %}
     and prices.minute >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    and prices.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and prices.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}

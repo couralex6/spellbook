@@ -19,15 +19,15 @@ with dexs as (
     select
         t.evt_block_time as block_time,
         t.to as taker,
-        CAST('' AS VARBINARY) as maker,
-        case when t.amount0Out = 0 then t.amount1Out else t.amount0Out end as token_bought_amount_raw,
-        case when t.amount0In = 0 then t.amount1In else t.amount0In end as token_sold_amount_raw,
+        0x as maker,
+        case when CAST(t.amount0Out AS DOUBLE) = 0 then t.amount1Out else t.amount0Out end as token_bought_amount_raw,
+        case when CAST(t.amount0In AS DOUBLE) = 0 then t.amount1In else t.amount0In end as token_sold_amount_raw,
         cast(NULL as double) as amount_usd,
-        case when t.amount0Out  = 0 then f.token1 else f.token0 end as token_bought_address,
-        case when t.amount0In = 0 then f.token1 else f.token0 end as token_sold_address,
+        case when CAST(t.amount0Out AS DOUBLE) = 0 then f.token1 else f.token0 end as token_bought_address,
+        case when CAST(t.amount0In AS DOUBLE) = 0 then f.token1 else f.token0 end as token_sold_address,
         t.contract_address as project_contract_address,
         t.evt_tx_hash as tx_hash,
-        '' as trace_address,
+        '' AS trace_address,
         t.evt_index
     from
         {{ source('apeswap_ethereum', 'ApePair_evt_Swap') }} t
@@ -37,7 +37,7 @@ with dexs as (
     where t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    where t.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    where t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 )
 select 'ethereum'                                                as blockchain,
@@ -53,8 +53,8 @@ select 'ethereum'                                                as blockchain,
            end                                                   as token_pair,
        dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount,
        dexs.token_sold_amount_raw / power(10, erc20b.decimals)   AS token_sold_amount,
-       CAST(dexs.token_bought_amount_raw AS DECIMAL(38, 0))      AS token_bought_amount_raw,
-       CAST(dexs.token_sold_amount_raw AS DECIMAL(38, 0))        AS token_sold_amount_raw,
+       CAST(dexs.token_bought_amount_raw AS DOUBLE)      AS token_bought_amount_raw,
+       CAST(dexs.token_sold_amount_raw AS DOUBLE)        AS token_sold_amount_raw,
        coalesce(
                dexs.amount_usd
            , (dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
@@ -74,7 +74,7 @@ from dexs
 inner join {{ source('ethereum', 'transactions') }} tx
     on dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -90,7 +90,7 @@ left join {{ source('prices', 'usd') }} p_bought
     and p_bought.contract_address = dexs.token_bought_address
     and p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    and p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -100,7 +100,7 @@ left join {{ source('prices', 'usd') }} p_sold
     and p_sold.contract_address = dexs.token_sold_address
     and p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    and p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and p_sold.minute >= date_trunc('day', now() - interval '7' day)

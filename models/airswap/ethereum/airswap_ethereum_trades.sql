@@ -18,7 +18,7 @@
 WITH dexs AS
 (
     SELECT
-        CAST(evt_block_time AS timestamp(6) with time zone) AS block_time,
+        evt_block_time AS block_time,
         'light' AS version,
         e.senderWallet AS taker,
         e.signerWallet AS maker,
@@ -34,13 +34,13 @@ cast(NULL as double) AS amount_usd,
 evt_index
 FROM {{ source('airswap_ethereum', 'Light_evt_Swap')}} e
 {% if is_incremental() %}
-WHERE evt_block_time >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 
 UNION ALL
 
 SELECT
-    CAST(evt_block_time AS timestamp(6) with time zone) AS block_time,
+    evt_block_time AS block_time,
     'light_v0' AS version,
     e.senderWallet AS taker,
     e.signerWallet AS maker,
@@ -55,13 +55,13 @@ SELECT
     evt_index
 FROM {{ source('airswap_ethereum', 'Light_v0_evt_Swap')}} e
 {% if is_incremental() %}
-WHERE evt_block_time >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 
 UNION ALL
 
 SELECT
-    CAST(evt_block_time AS timestamp(6) with time zone) AS block_time,
+    evt_block_time AS block_time,
     'swap' AS version,
     e.senderWallet AS taker,
     e.signerWallet AS maker,
@@ -76,13 +76,13 @@ SELECT
     evt_index
 FROM {{ source('airswap_ethereum', 'swap_evt_Swap') }} e
 {% if is_incremental() %}
-WHERE evt_block_time >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 
 UNION ALL
 
 SELECT
-    CAST(evt_block_time AS timestamp(6) with time zone) AS block_time,
+    evt_block_time AS block_time,
     'swap_v3' AS version,
     e.senderWallet AS taker,
     e.signerWallet AS maker,
@@ -98,7 +98,7 @@ CAST(NULL AS double) AS amount_usd,
 evt_index
 FROM {{ source('airswap_ethereum', 'Swap_v3_evt_Swap') }} e
 {% if is_incremental() %}
-WHERE evt_block_time >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 )
 SELECT
@@ -116,8 +116,8 @@ SELECT
 END as token_pair
 ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
 ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
 ,coalesce(
     dexs.amount_usd
     ,(dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
@@ -137,10 +137,10 @@ FROM dexs
 INNER JOIN {{ source('ethereum', 'transactions') }} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >=  CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS timestamp(6) with time zone)
+    AND tx.block_time >=  TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
-    AND tx.block_time >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
     ON erc20a.contract_address = dexs.token_bought_address
@@ -151,22 +151,22 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', dexs.block_time)
     -- TODO: remove cast when we fix the type of contract_address in the prices table
-    AND cast(p_bought.contract_address as varbinary) = dexs.token_bought_address
+    AND p_bought.contract_address = dexs.token_bought_address
     {% if not is_incremental() %}
 
-AND p_bought.minute >= CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS timestamp(6) with time zone)
+AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
 {% endif %}
 {% if is_incremental() %}
-AND p_bought.minute >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 AND p_bought.blockchain = 'ethereum'
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', dexs.block_time)
-    AND cast(p_sold.contract_address as varbinary) = dexs.token_sold_address
+    AND p_sold.contract_address = dexs.token_sold_address
     {% if not is_incremental() %}
-    AND p_sold.minute >=  CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS timestamp(6) with time zone)
+    AND p_sold.minute >=  TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
-    AND p_sold.minute >= CAST(date_trunc('day', now() - interval '7' day) AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     AND p_sold.blockchain = 'ethereum'

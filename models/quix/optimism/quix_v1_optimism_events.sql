@@ -13,7 +13,7 @@
 }}
 {% set quix_fee_address_address = "0xec1557a67d4980c948cd473075293204f4d280fd" %}
 {% set min_block_number = 1327197 %}
-{% set project_start_date = '2021-12-18' %}     -- select time from optimism.blocks where `number` = 1327197
+{% set project_start_date = '2021-12-18' %}     -- select time from optimism.blocks where "number" = 1327197
 
 
 with events_raw as (
@@ -28,7 +28,7 @@ with events_raw as (
         ,erc721address as nft_contract_address
         ,price as amount_raw
     from {{ source('quixotic_optimism','Exchange_evt_SellOrderFilled') }}
-    where erc721address != lower(0xbe81eabdbd437cba43e4c1c330c63022772c2520) -- --exploit contract
+    where erc721address != 0xbe81eabdbd437cba43e4c1c330c63022772c2520 -- --exploit contract
     {% if is_incremental() %} -- this filter will only be applied on an incremental run
     and evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
@@ -200,7 +200,7 @@ with events_raw as (
         and p1.minute >= date_trunc('day', now() - interval '7' day)
         {% endif %}
         {% if not is_incremental() %}
-        and p1.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        and p1.minute >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
     left join transfers as tr 
         on tr.tx_hash = er.tx_hash 

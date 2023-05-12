@@ -32,7 +32,7 @@ WITH trades AS (
         0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7 AS currency_contract, -- All sale are in GHST
         priceInWei AS amount_raw,
         category,
-        `time` AS executed_time
+        "time" AS executed_time
     FROM {{ source ('aavegotchi_polygon', 'aavegotchi_diamond_evt_ERC721ExecutedListing') }}
     WHERE 1 = 1
         {% if not is_incremental() %}
@@ -60,7 +60,7 @@ WITH trades AS (
         0x385eeac5cb85a38a9a07a70c73e0a3271cfb54a7 AS currency_contract, -- All sale are in GHST
         priceInWei AS amount_raw,
         category,
-        `time` AS executed_time
+        "time" AS executed_time
     FROM {{ source ('aavegotchi_polygon', 'aavegotchi_diamond_evt_ERC1155ExecutedListing') }}
     WHERE 1 = 1
         {% if not is_incremental() %}
@@ -98,8 +98,8 @@ SELECT
     a.nft_contract_address,
     agg.name AS aggregator_name,
     agg.contract_address AS aggregator_address,
-    t.`from` AS tx_from,
-    t.`to` AS tx_to,
+    t."from" AS tx_from,
+    t."to" AS tx_to,
     CAST(2 * amount_raw / 100 AS double) AS platform_fee_amount_raw,
     CAST(2 * amount_raw / power(10, erc.decimals) / 100 AS double) AS platform_fee_amount,
     CAST(2 * amount_raw / power(10, erc.decimals) * p.price / 100 AS double) AS platform_fee_amount_usd,
@@ -131,4 +131,4 @@ LEFT JOIN {{ source('prices', 'usd') }} p
     AND p.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     AND p.minute = date_trunc('minute', a.evt_block_time)
-LEFT JOIN {{ ref('nft_aggregators') }} agg ON agg.blockchain = 'polygon' AND agg.contract_address = t.`to`
+LEFT JOIN {{ ref('nft_aggregators') }} agg ON agg.blockchain = 'polygon' AND agg.contract_address = t."to"

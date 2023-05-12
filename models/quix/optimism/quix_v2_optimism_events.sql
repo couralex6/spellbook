@@ -13,7 +13,7 @@
 }}
 {% set quix_fee_address_address = "0xec1557a67d4980c948cd473075293204f4d280fd" %}
 {% set min_block_number = 2753614 %}
-{% set project_start_date = '2022-01-24' %}     -- select time from optimism.blocks where `number` = 2753614
+{% set project_start_date = '2022-01-24' %}     -- select time from optimism.blocks where "number" = 2753614
 
 
 with events_raw as (
@@ -69,7 +69,7 @@ with events_raw as (
         where evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
     ) as x 
-    where nft_contract_address != lower(0xbe81eabdbd437cba43e4c1c330c63022772c2520) -- --exploit contract
+    where nft_contract_address != 0xbe81eabdbd437cba43e4c1c330c63022772c2520 -- --exploit contract
 )
 ,transfers as (
     -- eth royalities
@@ -238,7 +238,7 @@ with events_raw as (
         and p1.minute >= date_trunc('day', now() - interval '7' day)
         {% endif %}
         {% if not is_incremental() %}
-        and p1.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        and p1.minute >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
     left join transfers as tr 
         on tr.tx_hash = er.tx_hash 

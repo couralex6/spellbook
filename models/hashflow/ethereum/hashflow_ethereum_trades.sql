@@ -17,7 +17,7 @@
 with hashflow_trades as (
     select *
     from {{ ref('hashflow_ethereum_raw_trades') }}
-    where fill_status is true -- successful trade
+    where fill_status = true -- successful trade
     {% if is_incremental() %}
         and block_time >= date_trunc('day', now() - interval '10 days')
     {% endif %}
@@ -26,7 +26,7 @@ with hashflow_trades as (
 ethereum_transactions as (
     select *
     from {{ source('ethereum', 'transactions') }}
-    where block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    where block_time >= TIMESTAMP '{{project_start_date}}'
     {% if is_incremental() %}
         and block_time >= date_trunc('day', now() - interval '10 days')
     {% endif %}
@@ -51,8 +51,8 @@ select
         else concat(hashflow_trades.maker_symbol, '-', hashflow_trades.taker_symbol) end as token_pair,
     hashflow_trades.maker_token_amount as token_bought_amount,
     hashflow_trades.taker_token_amount as token_sold_amount,
-    CAST(hashflow_trades.maker_token_amount * power(10, erc20a.decimals) AS DECIMAL(38,0)) as token_bought_amount_raw,
-    CAST(hashflow_trades.taker_token_amount * power(10, erc20b.decimals) AS DECIMAL(38,0)) as token_sold_amount_raw,
+    CAST(hashflow_trades.maker_token_amount * power(10, erc20a.decimals) AS DOUBLE) as token_bought_amount_raw,
+    CAST(hashflow_trades.taker_token_amount * power(10, erc20b.decimals) AS DOUBLE) as token_sold_amount_raw,
     hashflow_trades.amount_usd,
     hashflow_trades.maker_token as token_bought_address,
     hashflow_trades.taker_token as token_sold_address,
@@ -62,7 +62,7 @@ select
     hashflow_trades.tx_hash,
     tx."from" as tx_from,
     tx.to as tx_to,
-    '' as trace_address,
+    '' AS trace_address,
     case when hashflow_trades.composite_index <> -1 then hashflow_trades.composite_index end as evt_index
 from hashflow_trades
 inner join ethereum_transactions tx

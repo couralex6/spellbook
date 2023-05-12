@@ -142,13 +142,13 @@ SELECT t.blockchain
 , CASE WHEN agg.contract_address IS NOT NULL THEN 'Bundle Trade'
     ELSE 'Single Item Purchase'
     END AS trade_type
-, CAST(t.number_of_items AS DECIMAL(38,0)) AS number_of_items
+, CAST(t.number_of_items AS DOUBLE) AS number_of_items
 , t.trade_category
 , t.evt_type
 , t.seller
 , t.buyer
 , t.amount_original
-, CAST(t.amount_raw AS DECIMAL(38,0)) AS amount_raw
+, CAST(t.amount_raw AS DOUBLE) AS amount_raw
 , t.currency_symbol
 , t.currency_contract
 , t.project_contract_address

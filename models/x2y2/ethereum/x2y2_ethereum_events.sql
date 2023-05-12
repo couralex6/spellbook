@@ -24,7 +24,7 @@ src_evt_profit as (
      , CASE WHEN currency=0x0000000000000000000000000000000000000000
         THEN true ELSE false END as is_native_eth
     FROM {{ source('x2y2_ethereum','X2Y2_r1_evt_EvProfit') }}
-    WHERE evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% if is_incremental() %}
         AND evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
@@ -57,7 +57,7 @@ src_evt_inventory as (
         +COALESCE(get_json_object(get_json_object(inv.detail, '$.fees[3]'), '$.percentage'), 0)
       as all_fee_percentage
     FROM {{ source('x2y2_ethereum','X2Y2_r1_evt_EvInventory') }} inv
-    WHERE evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% if is_incremental() %}
         AND evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
@@ -66,7 +66,7 @@ src_evt_inventory as (
 src_eth_transactions as  (
     SELECT *
     FROM {{ source('ethereum','transactions') }}
-    WHERE block_time > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE block_time > TIMESTAMP '{{project_start_date}}'
         {% if is_incremental() %}
         AND block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
@@ -76,7 +76,7 @@ src_prices_usd as (
     SELECT *
     FROM {{ source('prices','usd') }}
     WHERE blockchain = 'ethereum'
-        AND minute > CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND minute > TIMESTAMP '{{project_start_date}}'
         {% if is_incremental() %}
         AND minute >= date_trunc('day', now() - interval '7' day)
         {% endif %}
@@ -97,12 +97,12 @@ SELECT 'ethereum' AS blockchain
 , prof.evt_block_number AS block_number
 , inv.token_id as token_id
 , nft_token.name AS collection
-, CAST(inv.price AS DECIMAL(38,0)) AS amount_raw
+, CAST(inv.price AS DOUBLE) AS amount_raw
 , inv.price/POWER(10, currency_token.decimals) AS amount_original
 , pu.price*(inv.price/POWER(10, currency_token.decimals)) AS amount_usd
 , nft_token.standard as token_standard
 , 'Single Item Trade' AS trade_type
-, CAST(1 AS DECIMAL(38,0)) AS number_of_items
+, CAST(1 AS DOUBLE) AS number_of_items
 , CASE WHEN (inv.fees_0 IS NULL OR inv.fees_0_to != '{{fee_management_addr}}') AND (prof.evt_block_time < '2022-04-01' OR prof.evt_block_time >= '2022-05-01') THEN 'Private Sale'
     WHEN (et."from"=inv.maker or inv.maker = agg.contract_address) THEN 'Offer Accepted'
     ELSE 'Buy'

@@ -10,7 +10,7 @@ SELECT
 l.evt_block_number AS block_number,
 l.evt_block_time AS block_time,
 l.evt_tx_hash AS tx_hash,
-l.evt_index AS `index`,
+l.evt_index AS "index",
 CAST(l.contract_address AS VARCHAR(100)) AS contract_address,
 l.borrower,
 i.symbol,

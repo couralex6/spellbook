@@ -75,7 +75,7 @@ erc20_tfers as (
         {% if is_incremental() %}
         WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
-        AND `from` IN (SELECT contract_address FROM all_bridges)
+        AND "from" IN (SELECT contract_address FROM all_bridges)
         
         UNION 
         
@@ -89,7 +89,7 @@ erc20_tfers as (
         {% if is_incremental() %}
         WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
-        AND `to` IN (SELECT contract_address FROM all_bridges)
+        AND "to" IN (SELECT contract_address FROM all_bridges)
 ),
 
 eth_tfers as (
@@ -103,7 +103,7 @@ eth_tfers as (
         {% if is_incremental() %}
         WHERE block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
-        AND `from` IN (SELECT contract_address FROM all_bridges)
+        AND "from" IN (SELECT contract_address FROM all_bridges)
         AND (LOWER(call_type) NOT IN ('delegatecall', 'callcode', 'staticcall') or call_type IS NULL)
         AND success = true 
         
@@ -119,15 +119,15 @@ eth_tfers as (
         {% if is_incremental() %}
         WHERE block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
-        AND `to` IN (SELECT contract_address FROM all_bridges)
+        AND "to" IN (SELECT contract_address FROM all_bridges)
         AND (LOWER(call_type) NOT IN ('delegatecall', 'callcode', 'staticcall') or call_type IS NULL)
         AND success = true 
 ), 
 
 tfers_raw as (
         SELECT 
-            er.`from` as tx_from, 
-            er.`to` as tx_to, 
+            er."from" as tx_from,
+            er."to" as tx_to,
             er.value, 
             er.contract_address, 
             er.evt_tx_hash, 
@@ -141,8 +141,8 @@ tfers_raw as (
         UNION ALL 
         
         SELECT 
-            et.`from` as tx_from,
-            et.`to` as tx_to, 
+            et."from" as tx_from,
+            et."to" as tx_to,
             et.value, 
             0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee as contract_address,
             et.tx_hash as evt_tx_hash,

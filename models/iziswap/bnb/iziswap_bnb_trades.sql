@@ -36,8 +36,8 @@ select
 	, '1' as version
 	, date_trunc('DAY', s.evt_block_time) as block_date
 	, s.evt_block_time as block_time
-    , CAST(s.token_bought_amount_raw  AS DECIMAL(38,0)) AS token_bought_amount_raw
-    , CAST(s.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    , CAST(s.token_bought_amount_raw  AS DOUBLE) AS token_bought_amount_raw
+    , CAST(s.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     , coalesce(
         (s.token_bought_amount_raw / power(10, prices_b.decimals)) * prices_b.price
         ,(s.token_sold_amount_raw / power(10, prices_s.decimals)) * prices_s.price
@@ -53,19 +53,19 @@ select
 	, s.token_bought_amount_raw / power(10, erc20_b.decimals) as token_bought_amount
 	, s.token_sold_amount_raw / power(10, erc20_s.decimals) as token_sold_amount
     , tx."from" as taker
-	, '' as maker
-	, cast(s.contract_address as string) as project_contract_address
+	, 0x as maker
+	, s.contract_address as project_contract_address
 	, s.evt_tx_hash as tx_hash
     , tx."from" as tx_from
     , tx.to as tx_to
-	, '' as trace_address
+	, '' AS trace_address
 	, s.evt_index as evt_index
 from 
     iziswap_swaps s
 inner join {{ source('bnb', 'transactions') }} tx
     on tx.hash = s.evt_tx_hash
     {% if not is_incremental() %}
-    and tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -84,7 +84,7 @@ left join {{ source('prices', 'usd') }} prices_b
     and prices_b.contract_address = s.token_bought_address
     and prices_b.blockchain = 'bnb'
 	{% if not is_incremental() %}
-    and prices_b.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and prices_b.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and prices_b.minute >= date_trunc('day', now() - interval '7' day)
@@ -95,7 +95,7 @@ left join {{ source('prices', 'usd') }} prices_s
     and prices_s.contract_address = s.token_sold_address
     and prices_s.blockchain = 'bnb'
 	{% if not is_incremental() %}
-    and prices_s.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and prices_s.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and prices_s.minute >= date_trunc('day', now() - interval '7' day)

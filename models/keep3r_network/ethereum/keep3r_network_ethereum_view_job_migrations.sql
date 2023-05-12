@@ -4,7 +4,7 @@
 ) }}
 
 SELECT
-    evt_block_time AS `timestamp`,
+    evt_block_time AS "timestamp",
     evt_tx_hash AS tx_hash,
     evt_index + s.step AS evt_index,
     CASE

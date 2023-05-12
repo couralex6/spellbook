@@ -3,7 +3,7 @@ WITH vasa_contracts as (
     SELECT distinct
     address AS contract_address
     FROM {{ source('ethereum','creation_traces') }}
-    WHERE from = 0x073ab1c0cad3677cde9bdb0cdeedc2085c029579
+    WHERE "from" = 0x073ab1c0cad3677cde9bdb0cdeedc2085c029579
     and block_time >= '2021-10-12'
 )
 

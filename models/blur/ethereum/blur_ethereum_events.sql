@@ -24,10 +24,10 @@ SELECT
     , CAST(json_extract_scalar(bm.sell, '$.tokenId') AS varchar) AS token_id
     , nft.standard AS token_standard
     , nft.name AS collection
-    , CASE WHEN CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.amount') AS DECIMAL(38,0)) = 1 THEN 'Single Item Trade'
+    , CASE WHEN CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.amount') AS DOUBLE) = 1 THEN 'Single Item Trade'
             ELSE 'Bundle Trade'
             END AS trade_type
-    , CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.amount') AS DECIMAL(38,0)) AS number_of_items
+    , CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.amount') AS DOUBLE) AS number_of_items
     , 'Trade' AS evt_type
     , CASE WHEN JSON_EXTRACT_SCALAR(bm.sell, '$.trader') = agg.contract_address THEN et."from" ELSE JSON_EXTRACT_SCALAR(bm.sell, '$.trader') END AS seller
     , CASE WHEN JSON_EXTRACT_SCALAR(bm.buy, '$.trader') = agg.contract_address THEN et."from" ELSE JSON_EXTRACT_SCALAR(bm.buy, '$.trader') END AS buyer
@@ -37,7 +37,7 @@ SELECT
         WHEN et."from" = JSON_EXTRACT_SCALAR(bm.sell, '$.trader') THEN 'Offer Accepted'
         ELSE 'Unknown'
         END AS trade_category
-    , CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.price') AS DECIMAL(38,0)) AS amount_raw
+    , CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.price') AS DOUBLE) AS amount_raw
     , CASE WHEN JSON_EXTRACT_SCALAR(bm.buy, '$.paymentToken') IN (0x0000000000000000000000000000000000000000, 0x0000000000a39bb272e79075ade125fd351887ac) THEN CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.price') / POWER(10, 18) AS double)
         ELSE CAST(JSON_EXTRACT_SCALAR(bm.buy, '$.price') / POWER(10, pu.decimals) AS double)
         END AS amount_original
@@ -88,10 +88,10 @@ FROM {{ source('blur_ethereum','BlurExchange_evt_OrdersMatched') }} bm
 JOIN {{ source('ethereum','transactions') }} et ON et.block_number=bm.evt_block_number
     AND et.hash=bm.evt_tx_hash
     {% if not is_incremental() %}
-    AND et.block_time >= timestamp CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND et.block_time >= timestamp TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
-    AND et.block_time >= date_trunc('day', now() - interval '1' week)
+    AND et.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
 LEFT JOIN {{ ref('nft_ethereum_aggregators') }} agg ON agg.contract_address=et.to
 LEFT JOIN {{ ref('nft_ethereum_aggregators_markers') }} agg_m
@@ -102,14 +102,14 @@ LEFT JOIN {{ source('prices','usd') }} pu ON pu.blockchain='ethereum'
         OR (pu.contract_address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 AND JSON_EXTRACT_SCALAR(bm.buy, '$.paymentToken')=0x0000000000000000000000000000000000000000)
         OR (pu.contract_address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 AND JSON_EXTRACT_SCALAR(bm.buy, '$.paymentToken')=0x0000000000a39bb272e79075ade125fd351887ac))
     {% if not is_incremental() %}
-    AND pu.minute >= timestamp CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND pu.minute >= timestamp TIMESTAMP '{{project_start_date}}'
 {% endif %}
 {% if is_incremental() %}
-AND pu.minute >= date_trunc('day', now() - interval '1' week)
+AND pu.minute >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 LEFT JOIN {{ ref('tokens_ethereum_nft') }} nft ON json_extract_scalar(bm.buy, '$.collection') = nft.contract_address
 {% if is_incremental() %}
-WHERE bm.evt_block_time >= date_trunc('day', now() - interval '1' week)
+WHERE bm.evt_block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 
 UNION ALL
@@ -125,12 +125,12 @@ SELECT
     , nft_tok.standard AS token_standard
     , nft_tok.name AS collection
     , CASE WHEN json_extract_scalar(s.offer[0], '$.amount') = '1' THEN 'Single Item Trade' ELSE 'Bundle Trade' END AS trade_type
-    , CAST(json_extract_scalar(s.offer[0], '$.amount') AS DECIMAL(38,0)) AS number_of_items
+    , CAST(json_extract_scalar(s.offer[0], '$.amount') AS DOUBLE) AS number_of_items
     , 'Trade' AS evt_type
     , s.offerer AS seller
     , s.recipient AS buyer
     , 'Buy' AS trade_category
-    , CAST(json_extract_scalar(s.consideration[0], '$.amount') + json_extract_scalar(s.consideration[1], '$.amount') AS DECIMAL(38,0)) AS amount_raw
+    , CAST(json_extract_scalar(s.consideration[0], '$.amount') + json_extract_scalar(s.consideration[1], '$.amount') AS DOUBLE) AS amount_raw
     , CAST((json_extract_scalar(s.consideration[0], '$.amount')+json_extract_scalar(s.consideration[1], '$.amount'))/POWER(10, 18) AS double) AS amount_original
     , CAST(pu.price*(json_extract_scalar(s.consideration[0], '$.amount')+json_extract_scalar(s.consideration[1], '$.amount'))/POWER(10, 18) AS double) AS amount_usd
     , CASE WHEN json_extract_scalar(s.consideration[0], '$.token')=0x0000000000000000000000000000000000000000 THEN 'ETH' ELSE currency_tok.symbol END AS currency_symbol
@@ -150,7 +150,7 @@ SELECT
     , LEAST(CAST(json_extract_scalar(s.consideration[0], '$.amount') AS DOUBLE), CAST(json_extract_scalar(s.consideration[1], '$.amount') AS DOUBLE))/POWER(10, 18) AS royalty_fee_amount
     , pu.price*LEAST(CAST(json_extract_scalar(s.consideration[0], '$.amount') AS DOUBLE), CAST(json_extract_scalar(s.consideration[1], '$.amount') AS DOUBLE))/POWER(10, 18) AS royalty_fee_amount_usd
     , 100.0*LEAST(CAST(json_extract_scalar(s.consideration[0], '$.amount') AS DOUBLE), CAST(json_extract_scalar(s.consideration[1], '$.amount') AS DOUBLE))
-        /CAST(CAST(json_extract_scalar(s.consideration[0], '$.amount') AS DOUBLE)+CAST(json_extract_scalar(s.consideration[1], '$.amount') AS DOUBLE) AS DECIMAL(38,0)) AS royalty_fee_percentage
+        /CAST(CAST(json_extract_scalar(s.consideration[0], '$.amount') AS DOUBLE)+CAST(json_extract_scalar(s.consideration[1], '$.amount') AS DOUBLE) AS DOUBLE) AS royalty_fee_percentage
     , CASE WHEN json_extract_scalar(s.consideration[0], '$.token')=0x0000000000000000000000000000000000000000 THEN 'ETH' ELSE currency_tok.symbol END AS royalty_fee_currency_symbol
     , CASE WHEN json_extract_scalar(s.consideration[0], '$.recipient')!=s.recipient THEN json_extract_scalar(s.consideration[0], '$.recipient')
         ELSE json_extract_scalar(s.consideration[1], '$.recipient')

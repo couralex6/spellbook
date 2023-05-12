@@ -20,7 +20,7 @@ get_colony_wallets as ( -- getting colonies created through colony
         FROM 
         {{ source('gnosis', 'logs') }}
         {% if not is_incremental() %}
-        WHERE block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        WHERE block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         WHERE block_time >= date_trunc('day', now() - interval '7' day)

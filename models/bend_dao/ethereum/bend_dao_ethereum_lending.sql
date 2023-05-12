@@ -78,7 +78,7 @@ SELECT
     ae.evt_type, 
     ae.address, 
     ae.amount_raw/POWER(10, collateral_currency.decimals) as amount_original, 
-    CAST(ae.amount_raw as DECIMAL(38,0)) as amount_raw, 
+    CAST(ae.amount_raw as DOUBLE) as amount_raw,
     collateral_currency.symbol as collateral_currency_symbol, 
     ae.collateral_currency_contract, 
     ae.nft_contract_address, 
@@ -94,7 +94,7 @@ INNER JOIN
     ON et.block_time = ae.evt_block_time
     AND et.hash = ae.evt_tx_hash
     {% if not is_incremental() %}
-    AND et.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND et.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND et.block_time >= date_trunc('day', now() - interval '7' day)
@@ -111,7 +111,7 @@ LEFT JOIN
     AND p.contract_address = ae.collateral_currency_contract
     AND p.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p.minute >= date_trunc('day', now() - interval '7' day)

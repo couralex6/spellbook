@@ -25,15 +25,15 @@
 WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_symbol, base_token_address, quote_token_address) AS 
 (
     VALUES
-    (lower(0x327134dE48fcDD75320f4c32498D1980470249ae), 'WBNB', 'BUSD', lower(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c), lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56)),
-    (lower(0x5BDCf4962FDED6B7156E710400F4C4c031f600dC), 'KOGE', 'WBNB', lower(0xe6DF05CE8C8301223373CF5B969AFCb1498c5528), lower(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c)),
-    (lower(0xBe60d4c4250438344bEC816Ec2deC99925dEb4c7), 'BUSD', 'USDT', lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56), lower(0x55d398326f99059fF775485246999027B3197955)),
-    (lower(0xC64a1d5C819B3c9113cE3DB32B66D5D2b05B4CEf), 'BTCB', 'BUSD', lower(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c), lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56)),
-    (lower(0x89E5015ff12E4536691aBfe5f115B1cB37a35465), 'ETH', 'BUSD', lower(0x2170Ed0880ac9A755fd29B2688956BD959F933F8), lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56)),
-    (lower(0x6064DBD0fF10BFeD5a797807042e9f63F18Cfe10), 'USDC', 'BUSD', lower(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d), lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56)),
-    (lower(0xb1327B6402ddbA34584Ab59fbe8Ac7cbF43f6353), 'DOT', 'BUSD', lower(0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402), lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56)),
-    (lower(0x8d078451a63D118bACC9Cc46698cc416f81C93E2), 'LINK', 'BUSD', lower(0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD), lower(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56)),
-    (lower(0x82AfF931d74F0645Ce80e8f419b94c8F93952686), 'WBNB', 'USDT', lower(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c), lower(0x55d398326f99059fF775485246999027B3197955))
+    (0x327134dE48fcDD75320f4c32498D1980470249ae, 'WBNB', 'BUSD', 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56),
+    (0x5BDCf4962FDED6B7156E710400F4C4c031f600dC, 'KOGE', 'WBNB', 0xe6DF05CE8C8301223373CF5B969AFCb1498c5528, 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c),
+    (0xBe60d4c4250438344bEC816Ec2deC99925dEb4c7, 'BUSD', 'USDT', 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56, 0x55d398326f99059fF775485246999027B3197955),
+    (0xC64a1d5C819B3c9113cE3DB32B66D5D2b05B4CEf, 'BTCB', 'BUSD', 0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56),
+    (0x89E5015ff12E4536691aBfe5f115B1cB37a35465, 'ETH', 'BUSD', 0x2170Ed0880ac9A755fd29B2688956BD959F933F8, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56),
+    (0x6064DBD0fF10BFeD5a797807042e9f63F18Cfe10, 'USDC', 'BUSD', 0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56),
+    (0xb1327B6402ddbA34584Ab59fbe8Ac7cbF43f6353, 'DOT', 'BUSD', 0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56),
+    (0x8d078451a63D118bACC9Cc46698cc416f81C93E2, 'LINK', 'BUSD', 0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56),
+    (0x82AfF931d74F0645Ce80e8f419b94c8F93952686, 'WBNB', 'USDT', 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c, 0x55d398326f99059fF775485246999027B3197955)
 )
 , dexs AS 
 (
@@ -43,7 +43,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             'DODO' AS project,
             '1' AS version,
             s.seller AS taker,
-            '' AS maker,
+            0x AS maker,
             s.payBase AS token_bought_amount_raw,
             s.receiveQuote AS token_sold_amount_raw,
             cast(NULL as double) AS amount_usd,
@@ -58,7 +58,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         LEFT JOIN dodo_view_markets m
             on s.contract_address = m.market_contract_address
         WHERE {% for dodo_proxy in dodo_proxies %}
-        s.seller <> '{{dodo_proxy}}'
+        s.seller <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -75,7 +75,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             'DODO' AS project,
             '1' AS version,
             b.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             b.receiveBase AS token_bought_amount_raw,
             b.payQuote AS token_sold_amount_raw,
             cast(NULL as double) AS amount_usd,
@@ -90,7 +90,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         LEFT JOIN dodo_view_markets m
             on b.contract_address = m.market_contract_address
         WHERE {% for dodo_proxy in dodo_proxies %}
-        b.buyer <> '{{dodo_proxy}}'
+        b.buyer <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -120,7 +120,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodoex_bnb', 'DVM_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -150,7 +150,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodoex_bnb', 'DPP_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -180,7 +180,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodoex_bnb', 'DPPAdvanced_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -210,7 +210,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodoex_bnb', 'DPPOracle_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -241,7 +241,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
         FROM
             {{ source('dodoex_bnb', 'DSP_evt_DODOSwap')}}
         WHERE {% for dodo_proxy in dodo_proxies %}
-        trader <> '{{dodo_proxy}}'
+        trader <> from_hex('{{dodo_proxy}}')
         {% if not loop.last %}
         and
         {% endif %}
@@ -264,8 +264,8 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
         ,(dexs.token_bought_amount_raw / power(10, (CASE dexs.token_bought_address WHEN 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 18 ELSE p_bought.decimals END))) * (CASE dexs.token_bought_address WHEN 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN  p_eth.price ELSE p_bought.price END)
@@ -285,7 +285,7 @@ FROM dexs
 INNER JOIN {{ source('bnb', 'transactions')}} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -301,7 +301,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -311,7 +311,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
@@ -321,7 +321,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_eth
     AND p_eth.blockchain is null
     AND p_eth.symbol = 'BNB'
     {% if not is_incremental() %}
-    AND p_eth.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_eth.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_eth.minute >= date_trunc('day', now() - interval '7' day)

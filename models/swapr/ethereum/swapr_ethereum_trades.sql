@@ -19,13 +19,13 @@ WITH dexs AS
     -- Swapr
     SELECT
         t.evt_block_time AS block_time,
-        t.`to` AS taker,
-        '' AS maker,
-        CASE WHEN amount0Out = 0 THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw,
-        CASE WHEN amount0In = 0 OR amount1Out = 0 THEN amount1In ELSE amount0In END AS token_sold_amount_raw,
+        t."to" AS taker,
+        0x AS maker,
+        CASE WHEN amount0Out = UINT256 '0' THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw,
+        CASE WHEN amount0In = UINT256 '0' OR amount1Out = UINT256 '0' THEN amount1In ELSE amount0In END AS token_sold_amount_raw,
         NULL AS amount_usd,
-        CASE WHEN amount0Out = 0 THEN f.token1 ELSE f.token0 END AS token_bought_address,
-        CASE WHEN amount0In = 0 OR amount1Out = 0 THEN f.token1 ELSE f.token0 END AS token_sold_address,
+        CASE WHEN amount0Out = UINT256 '0' THEN f.token1 ELSE f.token0 END AS token_bought_address,
+        CASE WHEN amount0In = UINT256 '0' OR amount1Out = UINT256 '0' THEN f.token1 ELSE f.token0 END AS token_sold_address,
         t.contract_address AS project_contract_address,
         t.evt_tx_hash AS tx_hash,
         '' AS trace_address,
@@ -53,8 +53,8 @@ SELECT
     end as token_pair,
     dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount,
     dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount,
-    CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw,
-    CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw,
+    CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw,
+    CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw,
     coalesce(
         dexs.amount_usd,
         dexs.token_bought_amount_raw / power(10, erc20a.decimals) * pa.price,
@@ -66,15 +66,15 @@ SELECT
     dexs.maker,
     dexs.project_contract_address,
     dexs.tx_hash,
-    tx.`from` AS tx_from,
-    tx.`to` AS tx_to,
+    tx."from" AS tx_from,
+    tx."to" AS tx_to,
     dexs.trace_address,
     dexs.evt_index
 FROM dexs
 INNER JOIN {{ source('ethereum', 'transactions') }} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -90,7 +90,7 @@ LEFT JOIN {{ source('prices', 'usd') }} pa
     AND pa.contract_address = dexs.token_bought_address
     AND pa.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND pa.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND pa.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND pa.minute >= date_trunc('day', now() - interval '7' day)
@@ -100,7 +100,7 @@ LEFT JOIN {{ source('prices', 'usd') }} pb
     AND pb.contract_address = dexs.token_sold_address
     AND pb.blockchain = 'ethereum' 
     {% if not is_incremental() %}
-    AND pb.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND pb.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND pb.minute >= date_trunc('day', now() - interval '7' day)

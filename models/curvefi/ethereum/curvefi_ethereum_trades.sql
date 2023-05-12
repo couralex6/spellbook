@@ -18,7 +18,7 @@ WITH dexs AS
         l.block_time
         , p.version as version
         , '0x' || substring(l.topic2, 27,40) as taker
-        , '' as maker
+        , 0x as maker
         , case
             when l.topic1 = "0xd013ca23e77a65003c2c659c5442c00c805371b7fc1ebd4c206c41d1536bd90b"
                         AND cast(substring(l.data, 131, 64) as int) = 0
@@ -40,7 +40,7 @@ WITH dexs AS
             end as token_sold_address
         , l.contract_address as project_contract_address --pool address
         , l.tx_hash 
-        , '' as trace_address
+        , '' AS trace_address
         , l.index as evt_index
     FROM {{ source('ethereum', 'logs') }} l
     JOIN  {{ ref('curvefi_ethereum_view_pools') }} p
@@ -52,7 +52,7 @@ WITH dexs AS
             , "0x8b3e96f2b889fa771c53c981b40daf005f63f637f1869f707052d15a3dd97140" -- TokenExchange
         )
         {% if not is_incremental() %}
-        AND l.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND l.block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         AND l.block_time >= date_trunc('day', now() - interval '7' day)
@@ -65,7 +65,7 @@ WITH dexs AS
         l.block_time
         , p.version as version
         , '0x' || substring(l.topic2, 27,40) as taker
-        , '' as maker
+        , 0x as maker
         , 'normal_exchange' as swap_type
         , bytea2numeric(substring(l.data, 195, 64)) as token_bought_amount_raw
         , bytea2numeric(substring(l.data, 67, 64)) as token_sold_amount_raw
@@ -74,7 +74,7 @@ WITH dexs AS
         , p.coins[cast(substring(l.data, 3, 64) as int)] as token_sold_address
         , l.contract_address as project_contract_address --pool address
         , l.tx_hash 
-        , '' as trace_address
+        , '' AS trace_address
         , l.index as evt_index
     FROM {{ source('ethereum', 'logs') }} l
     JOIN  {{ ref('curvefi_ethereum_view_pools') }} p
@@ -82,7 +82,7 @@ WITH dexs AS
         AND p.version = 'Factory V2'
     WHERE l.topic1 = "0xb2e76ae99761dc136e598d4a629bb347eccb9532a5f8bbd72e18467c3c34cc98" --TokenExchange
         {% if not is_incremental() %}
-        AND l.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        AND l.block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         and l.block_time >= date_trunc('day', now() - interval '7' day)
@@ -103,8 +103,8 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, case when swap_type = 'underlying_exchange_base' then 18 else erc20b.decimals end) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
         ,(dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
@@ -124,9 +124,9 @@ FROM dexs
 INNER JOIN {{ source('ethereum', 'transactions') }} tx
     ON tx.hash = dexs.tx_hash
     {% if not is_incremental() %}
-    -- The date below is derrived from `select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange`
+    -- The date below is derrived from "select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange"
     -- If dexs above is changed then this will also need to be changed.
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -137,9 +137,9 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought ON p_bought.minute = date_trunc
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    -- The date below is derrived from `select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange`
+    -- The date below is derrived from "select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange"
     -- If dexs above is changed then this will also need to be changed.
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -148,9 +148,9 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold ON p_sold.minute = date_trunc('mi
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    -- The date below is derrived from `select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange`
+    -- The date below is derrived from "select min(evt_block_time) from uniswap_ethereum.Factory_evt_NewExchange"
     -- If dexs above is changed then this will also need to be changed.
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

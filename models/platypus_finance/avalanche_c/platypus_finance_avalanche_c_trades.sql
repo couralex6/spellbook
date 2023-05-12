@@ -24,7 +24,7 @@
         a regular swap looks like--	sender <-> pool
         but Platypus allows--		sender -> pool -> receiver
         here, receiver and sender can be identical (resulting in a regular swap), but don't have to be
-    As the receiver (ie the `to` address) ultimately receives the swapped tokens, we designate him/her as taker
+    As the receiver (ie the "to" address) ultimately receives the swapped tokens, we designate him/her as taker
 */
 
 {% set project_start_date = '2021-11-26' %}
@@ -42,29 +42,29 @@ select
         else concat(erc20_b.symbol, '-', erc20_s.symbol)
     end as token_pair
 	, s.toAmount / power(10, erc20_b.decimals) as token_bought_amount
-	, s."from"Amount / power(10, erc20_s.decimals) as token_sold_amount
-	, CAST(s.toAmount AS DECIMAL(38,0)) as token_bought_amount_raw
-	, CAST(s."from"Amount AS DECIMAL(38,0)) as token_sold_amount_raw
+	, s.fromAmount / power(10, erc20_s.decimals) as token_sold_amount
+	, CAST(s.toAmount AS DOUBLE) as token_bought_amount_raw
+	, CAST(s.fromAmount AS DOUBLE) as token_sold_amount_raw
     , coalesce(
         (s.toAmount / power(10, prices_b.decimals)) * prices_b.price
-        ,(s."from"Amount / power(10, prices_s.decimals)) * prices_s.price
+        ,(s.fromAmount / power(10, prices_s.decimals)) * prices_s.price
     ) as amount_usd	
 	, s.toToken as token_bought_address
-	, s."from"Token as token_sold_address
-    , coalesce(s.`to`, tx."from") AS taker
-	, '' as maker
-	, cast(s.contract_address as string) as project_contract_address
+	, s.fromToken as token_sold_address
+    , coalesce(s."to", tx."from") AS taker
+	, 0x as maker
+	, s.contract_address as project_contract_address
 	, s.evt_tx_hash as tx_hash
     , tx."from" AS tx_from
     , tx.to AS tx_to
-	, '' as trace_address
+	, '' AS trace_address
 	, s.evt_index as evt_index
 from 
     {{ source('platypus_finance_avalanche_c', 'Pool_evt_Swap') }} s
 inner join {{ source('avalanche_c', 'transactions') }} tx
     ON tx.hash = s.evt_tx_hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -75,7 +75,7 @@ left join {{ ref('tokens_erc20') }} erc20_b
     and erc20_b.blockchain = 'avalanche_c'
 -- sold tokens
 left join {{ ref('tokens_erc20') }} erc20_s
-    on erc20_s.contract_address = s."from"Token
+    on erc20_s.contract_address = s.fromToken
     and erc20_s.blockchain = 'avalanche_c'
 -- price of bought tokens
 left join {{ source('prices', 'usd') }} prices_b
@@ -83,7 +83,7 @@ left join {{ source('prices', 'usd') }} prices_b
     and prices_b.contract_address = s.toToken
     and prices_b.blockchain = 'avalanche_c'
 	{% if not is_incremental() %}
-    and prices_b.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and prices_b.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and prices_b.minute >= date_trunc('day', now() - interval '7' day)
@@ -91,10 +91,10 @@ left join {{ source('prices', 'usd') }} prices_b
 -- price of sold tokens
 left join {{ source('prices', 'usd') }} prices_s
     on prices_s.minute = date_trunc('minute', s.evt_block_time)
-    and prices_s.contract_address = s."from"Token
+    and prices_s.contract_address = s.fromToken
     and prices_s.blockchain = 'avalanche_c'
 	{% if not is_incremental() %}
-    and prices_s.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    and prices_s.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and prices_s.minute >= date_trunc('day', now() - interval '7' day)

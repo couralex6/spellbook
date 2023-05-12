@@ -18,11 +18,11 @@ WITH apeswap_dex AS (
     SELECT  t.evt_block_time AS block_time,
             t.to AS taker,
             t.sender AS maker,
-            CASE WHEN t.amount0Out = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw,
-            CASE WHEN t.amount0In = 0 THEN t.amount1In ELSE t.amount0In END AS token_sold_amount_raw,
+            CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw,
+            CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN t.amount1In ELSE t.amount0In END AS token_sold_amount_raw,
             cast(NULL as double) AS amount_usd,
-            CASE WHEN t.amount0Out = 0 THEN f.token1 ELSE f.token0 END AS token_bought_address,
-            CASE WHEN t.amount0In = 0 THEN f.token1 ELSE f.token0 END AS token_sold_address,
+            CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN f.token1 ELSE f.token0 END AS token_bought_address,
+            CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN f.token1 ELSE f.token0 END AS token_sold_address,
             t.contract_address AS project_contract_address,
             t.evt_tx_hash AS tx_hash,
             '' AS trace_address,
@@ -34,7 +34,7 @@ WITH apeswap_dex AS (
     WHERE t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    WHERE t.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 )
 
@@ -51,8 +51,8 @@ SELECT 'bnb'                                                            AS block
            END                                                          AS token_pair,
        apeswap_dex.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount,
        apeswap_dex.token_sold_amount_raw / power(10, erc20b.decimals)   AS token_sold_amount,
-       CAST(apeswap_dex.token_bought_amount_raw AS DECIMAL(38,0))       AS token_bought_amount_raw,
-       CAST(apeswap_dex.token_sold_amount_raw AS DECIMAL(38,0))         AS token_sold_amount_raw,
+       CAST(apeswap_dex.token_bought_amount_raw AS DOUBLE)       AS token_bought_amount_raw,
+       CAST(apeswap_dex.token_sold_amount_raw AS DOUBLE)         AS token_sold_amount_raw,
        coalesce(
                apeswap_dex.amount_usd
            , (apeswap_dex.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
@@ -72,7 +72,7 @@ FROM apeswap_dex
 INNER JOIN {{ source('bnb', 'transactions') }} tx
     ON apeswap_dex.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -88,7 +88,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = apeswap_dex.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -98,7 +98,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = apeswap_dex.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

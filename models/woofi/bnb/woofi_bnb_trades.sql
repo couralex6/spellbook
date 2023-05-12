@@ -21,7 +21,7 @@ WITH dexs as
             evt_block_time AS block_time
             ,'woofi' AS project
             ,'1' AS version
-            ,from AS taker
+            ,"from" AS taker
             ,to AS maker
             ,fromAmount AS token_bought_amount_raw
             ,toAmount AS token_sold_amount_raw
@@ -34,7 +34,7 @@ WITH dexs as
             ,evt_index
         FROM
             {{ source('woofi_bnb', 'WooPP_evt_WooSwap')}}
-        WHERE from NOT IN (0xcef5be73ae943b77f9bc08859367d923c030a269 -- woorouterV2
+        WHERE "from" NOT IN (0xcef5be73ae943b77f9bc08859367d923c030a269 -- woorouterV2
                           ,0x114f84658c99aa6ea62e3160a87a16deaf7efe83) -- woorouterV1
         
 
@@ -48,7 +48,7 @@ WITH dexs as
             evt_block_time AS block_time
             ,'woofi' AS project
             ,'1' AS version
-            ,from AS taker
+            ,"from" AS taker
             ,to AS maker
             ,fromAmount AS token_bought_amount_raw
             ,toAmount AS token_sold_amount_raw
@@ -72,7 +72,7 @@ WITH dexs as
             evt_block_time AS block_time
             ,'woofi' AS project
             ,'2' AS version
-            ,from AS taker
+            ,"from" AS taker
             ,to AS maker
             ,fromAmount AS token_bought_amount_raw
             ,toAmount AS token_sold_amount_raw
@@ -144,7 +144,7 @@ FROM dexs
 INNER JOIN {{ source('bnb', 'transactions')}} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -160,7 +160,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -170,7 +170,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
@@ -180,7 +180,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bnb
     AND p_bnb.blockchain is null
     AND p_bnb.symbol = 'BNB'
     {% if not is_incremental() %}
-    AND p_bnb.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bnb.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bnb.minute >= date_trunc('day', now() - interval '7' day)

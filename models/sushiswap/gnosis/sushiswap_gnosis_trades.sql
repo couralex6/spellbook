@@ -11,14 +11,14 @@
 {% set project_start_date = '2021-03-03' %}
 
 WITH sushiswap_dex AS (
-    SELECT  CAST(t.evt_block_time AS TIMESTAMP(6) WITH TIME ZONE)         AS block_time,
+    SELECT  t.evt_block_time         AS block_time,
             to                                                           AS taker,
             sender                                                       AS maker,
-            case when CAST(amount0Out as DOUBLE)  = 0 then amount1Out else amount0Out end as token_bought_amount_raw,
-            case when CAST(amount0In as DOUBLE) = 0 then amount1In else amount0In end as token_sold_amount_raw,
+            case when amount0Out = UINT256 '0' then amount1Out else amount0Out end as token_bought_amount_raw,
+            case when amount0In = UINT256 '0' then amount1In else amount0In end as token_sold_amount_raw,
             null as amount_usd,
-            case when CAST(amount0Out as DOUBLE)  = 0 then token1 else token0 end as token_bought_address,
-            case when CAST(amount0In as DOUBLE) = 0 then token1 else token0 end as token_sold_address,
+            case when amount0Out = UINT256 '0' then token1 else token0 end as token_bought_address,
+            case when amount0In = UINT256 '0' then token1 else token0 end as token_sold_address,
             t.contract_address                                           AS project_contract_address,
             t.evt_tx_hash                                                AS tx_hash,
             ''                                                           AS trace_address,
@@ -29,7 +29,7 @@ WITH sushiswap_dex AS (
     {% if is_incremental() %}
     WHERE t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% else %}
-    WHERE t.evt_block_time >= CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 )
 
@@ -68,7 +68,7 @@ FROM sushiswap_dex
 INNER JOIN {{ source('gnosis', 'transactions') }} tx
     ON sushiswap_dex.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% else %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
@@ -80,19 +80,19 @@ LEFT JOIN {{ ref('tokens_erc20') }} erc20b
     AND erc20b.blockchain = 'gnosis'
 LEFT JOIN {{ source('prices', 'usd') }} p_bought
     ON p_bought.minute = date_trunc('minute', sushiswap_dex.block_time)
-    AND from_hex(p_bought.contract_address) = sushiswap_dex.token_bought_address
+    AND p_bought.contract_address = sushiswap_dex.token_bought_address
     AND p_bought.blockchain = 'gnosis'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% else %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', sushiswap_dex.block_time)
-    AND from_hex(p_sold.contract_address) = sushiswap_dex.token_sold_address
+    AND p_sold.contract_address = sushiswap_dex.token_sold_address
     AND p_sold.blockchain = 'gnosis'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST(CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE) AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% else %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}

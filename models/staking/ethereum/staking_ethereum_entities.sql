@@ -154,7 +154,7 @@ FROM
         UNION ALL
         SELECT distinct to AS address
         FROM {{ source('ethereum', 'transactions') }}
-        WHERE from=0xf17aced3c7a8daa29ebb90db8d1b6efd8c364a18
+        WHERE "from"=0xf17aced3c7a8daa29ebb90db8d1b6efd8c364a18
             AND to !=0x00000000219ab540356cbb839cbe05303d7705fa
             {% if not is_incremental() %}
             AND block_time >= '2020-10-14'

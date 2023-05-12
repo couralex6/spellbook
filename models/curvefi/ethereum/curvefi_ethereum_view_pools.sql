@@ -37,13 +37,13 @@ regular_pools_deployed AS (
         symbol,
         pool_address,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS A,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS mid_fee,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS out_fee,
         token_address,
         deposit_contract,
@@ -92,16 +92,16 @@ plain_pools_deployed AS (
         _coins [2] AS coin2,
         _coins [3] AS coin3,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin0,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin1,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin2,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin3
     FROM
         plain_calls
@@ -138,10 +138,10 @@ meta_pools_deployed AS (
         _coin AS coin0,
         r.token_address as coin1, --reference the token address of the base pool as coin1. meta pools swap into the base pool token, and then another swap is conducted.
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS coin2,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS coin3,
         _coin AS undercoin0,
         --Listing underlying coins for the ExchangeUnderlying function
@@ -180,16 +180,16 @@ v2_pools_deployed AS (
         coins [2] AS coin2,
         coins [3] AS coin3,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin0,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin1,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin2,
         CAST(
-            NULL AS VARBINARY
+            0x
         ) AS undercoin3
     FROM
         {{ source(

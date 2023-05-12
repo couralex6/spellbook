@@ -21,14 +21,14 @@ WITH dexs AS
         'mstable' AS project,
         'masset' AS version,
         swapper AS taker,
-        cast(NULL as string) AS maker,
-        `outputAmount` AS token_bought_amount_raw,
+        0x AS maker,
+        "outputAmount" AS token_bought_amount_raw,
         cast(NULL as double) AS token_sold_amount_raw,
-        CASE WHEN `output` = lower(0x0000000000000000000000000000000000000000) THEN
-            lower(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2) ELSE `output`
+        CASE WHEN "output" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "output"
         END AS token_bought_address,
-        CASE WHEN `input` = lower(0x0000000000000000000000000000000000000000) THEN 
-            lower(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2) ELSE `input` 
+        CASE WHEN "input" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "input"
         END AS token_sold_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
@@ -47,14 +47,14 @@ WITH dexs AS
         'mstable' AS project,
         'feederpool' AS version,
         swapper AS taker,
-        cast(NULL as string) AS maker,
-        `outputAmount` AS token_bought_amount_raw,
+        0x AS maker,
+        "outputAmount" AS token_bought_amount_raw,
         cast(NULL as double) AS token_sold_amount_raw,
-        CASE WHEN `output` = lower(0x0000000000000000000000000000000000000000) THEN 
-            lower(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2) ELSE `output`
+        CASE WHEN "output" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "output"
             END AS token_bought_address,
-        CASE WHEN `input` = lower(0x0000000000000000000000000000000000000000) THEN 
-            lower(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2) ELSE `input` 
+        CASE WHEN "input" = 0x0000000000000000000000000000000000000000 THEN
+            0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 ELSE "input"
             END AS token_sold_address,
         contract_address AS project_contract_address,
         evt_tx_hash AS tx_hash,
@@ -80,8 +80,8 @@ SELECT
     end as token_pair,
     dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount,
     dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount,
-    CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw,
-    CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw,
+    CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw,
+    CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw,
     coalesce(
         dexs.amount_usd,
         dexs.token_bought_amount_raw / power(10, p_bought.decimals) * p_bought.price,
@@ -89,19 +89,19 @@ SELECT
     ) AS amount_usd,
     dexs.token_bought_address,
     dexs.token_sold_address,
-    coalesce(dexs.taker, tx.`from`) AS taker, -- subqueries rely on this COALESCE to avoid redundant joins with the transactions table
+    coalesce(dexs.taker, tx."from") AS taker, -- subqueries rely on this COALESCE to avoid redundant joins with the transactions table
     dexs.maker,
     dexs.project_contract_address,
     dexs.tx_hash,
-    tx.`from` AS tx_from,
-    tx.`to` AS tx_to,
+    tx."from" AS tx_from,
+    tx."to" AS tx_to,
     dexs.trace_address,
     dexs.evt_index
 FROM dexs
 INNER JOIN {{ source('ethereum', 'transactions') }} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -117,7 +117,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -127,7 +127,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)

@@ -21,7 +21,7 @@ WITH sharky_txs AS (
         FROM {{ source('solana', 'account_activity') }}
         WHERE tx_success
             {% if not is_incremental() %}
-            AND block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND block_time >= TIMESTAMP '{{project_start_date}}'
             {% else %}
             AND block_time >= date_trunc('day', now() - interval '7' day)
             {% endif %}
@@ -35,7 +35,7 @@ WITH sharky_txs AS (
             blockchain IS NULL
             AND symbol = 'SOL'
             {% if not is_incremental() %}
-            AND minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND minute >= TIMESTAMP '{{project_start_date}}'
             {% else %}
             AND minute >= date_trunc('day', now() - interval '7' day)
             {% endif %}
@@ -52,7 +52,7 @@ WITH sharky_txs AS (
                id
         FROM {{ source('solana','transactions') }} tx
         {% if not is_incremental() %}
-        WHERE tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+        WHERE tx.block_time >= TIMESTAMP '{{project_start_date}}'
         {% else %}
         WHERE tx.block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
@@ -66,7 +66,7 @@ WITH sharky_txs AS (
                CAST(filtered_txs.block_slot AS BIGINT)                                                      AS block_number,
                (abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) / 1e9) * p.price          AS amount_usd,
                (abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) / 1e9)                    AS amount_original,
-               CAST(abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) AS DECIMAL(38, 0))    AS amount_raw,
+               CAST(abs(filtered_txs.post_balances[0] - filtered_txs.pre_balances[0]) AS DOUBLE)    AS amount_raw,
                filter(
                            filtered_txs.instructions,
                            x -> x.executing_account = '{{sharky_smart_contract}}'

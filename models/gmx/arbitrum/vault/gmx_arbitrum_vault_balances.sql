@@ -20,7 +20,7 @@ WITH minute AS  -- This CTE generates a series of minute values
     FROM
         (
         {% if not is_incremental() %}
-        SELECT explode(sequence(TIMESTAMP CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE), CURRENT_TIMESTAMP, INTERVAL 1 minute)) AS minute -- 2021-08-31 08:13 is the timestamp of the first vault transaction
+        SELECT explode(sequence(TIMESTAMP TIMESTAMP '{{project_start_date}}', CURRENT_TIMESTAMP, INTERVAL 1 minute)) AS minute -- 2021-08-31 08:13 is the timestamp of the first vault transaction
         {% endif %}
         {% if is_incremental() %}
         SELECT explode(sequence(date_trunc('day', now() - interval '7' day), CURRENT_TIMESTAMP, INTERVAL 1 minute)) AS minute
@@ -48,10 +48,10 @@ vault_balances_frax AS -- This CTE returns the balance of FRAX tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e18) AS transfer_value -- FRAX 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-                AND `contract_address` = 0x17fc002b466eec40dae837fc4be5c67993ddbd6f -- FRAX Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+                AND "contract_address" = 0x17fc002b466eec40dae837fc4be5c67993ddbd6f -- FRAX Arbitrum Smart Contract
                 {% if not is_incremental() %}
-                AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 {% if is_incremental() %}
                 AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -63,10 +63,10 @@ vault_balances_frax AS -- This CTE returns the balance of FRAX tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e18 AS transfer_value -- FRAX 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-                AND `contract_address` = 0x17fc002b466eec40dae837fc4be5c67993ddbd6f -- FRAX Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+                AND "contract_address" = 0x17fc002b466eec40dae837fc4be5c67993ddbd6f -- FRAX Arbitrum Smart Contract
                 {% if not is_incremental() %}
-                AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 {% if is_incremental() %}
                 AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -92,10 +92,10 @@ vault_balances_usdt AS -- This CTE returns the balance of USDT tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e6) AS transfer_value -- USDT 6dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-                AND `contract_address` = 0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9 -- USDT Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+                AND "contract_address" = 0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9 -- USDT Arbitrum Smart Contract
                 {% if not is_incremental() %}
-                AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 {% if is_incremental() %}
                 AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -107,10 +107,10 @@ vault_balances_usdt AS -- This CTE returns the balance of USDT tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e6 AS transfer_value -- USDT 6dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-                AND `contract_address` = 0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9 -- USDT Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+                AND "contract_address" = 0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9 -- USDT Arbitrum Smart Contract
                 {% if not is_incremental() %}
-                AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+                AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 {% if is_incremental() %}
                 AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -136,10 +136,10 @@ vault_balances_wbtc AS -- This CTE returns the balance of WBTC tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e8) AS transfer_value -- WBTC 8dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f -- WBTC Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f -- WBTC Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -151,10 +151,10 @@ vault_balances_wbtc AS -- This CTE returns the balance of WBTC tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e8 AS transfer_value -- WBTC 8dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f -- WBTC Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f -- WBTC Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -180,10 +180,10 @@ vault_balances_usdc AS -- This CTE returns the balance of USDC tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e6) AS transfer_value -- USDC 6dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xff970a61a04b1ca14834a43f5de4533ebddb5cc8 -- USDC Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xff970a61a04b1ca14834a43f5de4533ebddb5cc8 -- USDC Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -195,10 +195,10 @@ vault_balances_usdc AS -- This CTE returns the balance of USDC tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e6 AS transfer_value -- USDC 6dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xff970a61a04b1ca14834a43f5de4533ebddb5cc8 -- USDC Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xff970a61a04b1ca14834a43f5de4533ebddb5cc8 -- USDC Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -224,10 +224,10 @@ vault_balances_uni AS -- This CTE returns the balance of UNI tokens in the GMX A
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e18) AS transfer_value -- UNI 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0 -- UNI Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0 -- UNI Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -239,10 +239,10 @@ vault_balances_uni AS -- This CTE returns the balance of UNI tokens in the GMX A
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e18 AS transfer_value -- UNI 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0 -- UNI Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0 -- UNI Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -268,10 +268,10 @@ vault_balances_link AS -- This CTE returns the balance of LINK tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e18) AS transfer_value -- LINK 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xf97f4df75117a78c1a5a0dbb814af92458539fb4 -- LINK Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xf97f4df75117a78c1a5a0dbb814af92458539fb4 -- LINK Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -283,10 +283,10 @@ vault_balances_link AS -- This CTE returns the balance of LINK tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e18 AS transfer_value -- LINK 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a-- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xf97f4df75117a78c1a5a0dbb814af92458539fb4 -- LINK Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a-- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xf97f4df75117a78c1a5a0dbb814af92458539fb4 -- LINK Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -312,10 +312,10 @@ vault_balances_weth AS -- This CTE returns the balance of WETH tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e18) AS transfer_value -- WETH 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -327,10 +327,10 @@ vault_balances_weth AS -- This CTE returns the balance of WETH tokens in the GMX
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e18 AS transfer_value -- WETH 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -356,10 +356,10 @@ vault_balances_dai AS -- This CTE returns the balance of DAI tokens in the GMX A
                 date_trunc('minute', evt_block_time) AS minute,
                 ((value)/1e18) AS transfer_value -- DAI 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `to` = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xda10009cbd5d07dd0cecc66161fc93d7c9000da1 -- DAI Arbitrum Smart Contract
+            WHERE "to" = 0x489ee077994b6658eafa855c308275ead8097c4a -- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xda10009cbd5d07dd0cecc66161fc93d7c9000da1 -- DAI Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -371,10 +371,10 @@ vault_balances_dai AS -- This CTE returns the balance of DAI tokens in the GMX A
                 date_trunc('minute', evt_block_time) AS minute,
                 ((-1 * value))/1e18 AS transfer_value -- DAI 18dp
             FROM {{ source('erc20_arbitrum', 'evt_transfer') }}
-            WHERE `from` = 0x489ee077994b6658eafa855c308275ead8097c4a --- GMX Arbitrum Vault Address
-            AND `contract_address` = 0xda10009cbd5d07dd0cecc66161fc93d7c9000da1 -- DAI Arbitrum Smart Contract
+            WHERE "from" = 0x489ee077994b6658eafa855c308275ead8097c4a --- GMX Arbitrum Vault Address
+            AND "contract_address" = 0xda10009cbd5d07dd0cecc66161fc93d7c9000da1 -- DAI Arbitrum Smart Contract
             {% if not is_incremental() %}
-            AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+            AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             {% if is_incremental() %}
             AND evt_block_time >= date_trunc('day', now() - interval '7' day)

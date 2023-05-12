@@ -37,7 +37,7 @@ join {{ source('optimism', 'traces') }} as sd
   on cr.creation_tx_hash = sd.tx_hash
   and cr.created_time = sd.block_time
   and cr.trace_element = sd.trace_address[0]
-  and sd.`type` = 'suicide'
+  and sd."type" = 'suicide'
   {% if is_incremental() %}
   and sd.block_time >= date_trunc('day', now() - interval '7' day)
   {% endif %}

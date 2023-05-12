@@ -34,8 +34,8 @@ with nomad_bridge_domains(domain_id, domain_name, domain_type) as (
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) as original_amount
           ,e1.symbol as original_currency
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) * coalesce(p1.price, 0) as usd_amount
-          ,`from` as sender
-          ,concat('0x', `right`(toId, 40)) as recipient
+          ,"from" as sender
+          ,concat('0x', "right"(toId, 40)) as recipient
           ,toDomain as domain_id
           ,d.domain_name as domain_name
           ,fastLiquidityEnabled as fast_liquidity_enabled
@@ -61,9 +61,9 @@ with nomad_bridge_domains(domain_id, domain_name, domain_type) as (
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) as original_amount
           ,e1.symbol as original_currency
           ,CAST(amount AS DOUBLE) / pow(10, e1.decimals) * coalesce(p1.price, 0) as usd_amount
-          ,t.`from` as sender
+          ,t."from" as sender
           ,r.recipient
-          ,CAST(`left`(originAndNonce, 8) AS BIGINT) as domain_id
+          ,CAST("left"(originAndNonce, 8) AS BIGINT) as domain_id
           ,d.domain_name as domain_name
           ,false as fast_liquidity_enabled
           ,liquidityProvider as liquidity_provider
@@ -71,7 +71,7 @@ with nomad_bridge_domains(domain_id, domain_name, domain_type) as (
       inner join {{ source('ethereum','transactions') }} t on r.evt_block_number = t.block_number
             and r.evt_tx_hash = t.hash
             and t.block_time >= CAST('2022-01-01' AS TIMESTAMP)
-      inner join nomad_bridge_domains d on d.domain_id = CAST(`left`(originAndNonce, 8) AS BIGINT)
+      inner join nomad_bridge_domains d on d.domain_id = CAST("left`(originAndNonce, 8) AS BIGINT)
       left join {{ ref('tokens_erc20') }} e1 on e1.contract_address = r.token and e1.blockchain = 'ethereum'
       left join {{ source('prices', 'usd') }} p1 on p1.contract_address = r.token
             and p1.minute = date_trunc('minute', r.evt_block_time)

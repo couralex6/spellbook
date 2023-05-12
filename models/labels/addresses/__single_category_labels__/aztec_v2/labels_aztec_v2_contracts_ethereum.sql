@@ -108,7 +108,7 @@ with
   )
 select
   c.*,
-  t.`from` as contract_creator
+  t."from" as contract_creator
 from
   contract_labels c
   inner join ethereum.traces t on t.type = 'create'

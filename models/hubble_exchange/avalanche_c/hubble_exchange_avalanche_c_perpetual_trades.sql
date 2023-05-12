@@ -33,7 +33,7 @@ perp_events as (
     FROM 
     {{ source('hubble_exchange_avalanche_c', 'ClearingHouse_evt_PositionModified') }}
     {% if not is_incremental() %}
-    WHERE evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -49,7 +49,7 @@ trade_data as (
     {{ source('hubble_exchange_avalanche_c', 'ClearingHouse_call_closePosition') }}
     WHERE call_success = true 
     {% if not is_incremental() %}
-    AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND call_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND call_block_time >= date_trunc('day', now() - interval '7' day)
@@ -66,7 +66,7 @@ trade_data as (
     {{ source('hubble_exchange_avalanche_c', 'ClearingHouse_call_openPosition') }}
     WHERE call_success = true 
     {% if not is_incremental() %}
-    AND call_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND call_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND call_block_time >= date_trunc('day', now() - interval '7' day)
@@ -83,7 +83,7 @@ trade_data as (
     {{ source('hubble_exchange_avalanche_c', 'ClearingHouse_evt_PositionLiquidated') }}
     WHERE 1 = 1
     {% if not is_incremental() %}
-    AND evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND evt_block_time >= date_trunc('day', now() - interval '7' day)
@@ -120,7 +120,7 @@ INNER JOIN
     ON pe.tx_hash = txns.hash
     AND pe.block_number = txns.block_number
     {% if not is_incremental() %}
-    AND txns.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND txns.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND txns.block_time >= date_trunc('day', now() - interval '7' day)

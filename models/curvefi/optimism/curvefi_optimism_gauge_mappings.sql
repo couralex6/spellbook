@@ -21,7 +21,7 @@ SELECT distinct
 FROM (
     SELECT 
     _lp_token As pool, _gauge AS gauge,
-    CAST(evt_block_time AS TIMESTAMP(6) WITH TIME ZONE) as evt_block_time, evt_block_number, contract_address, evt_tx_hash, evt_index
+     as evt_block_time, evt_block_number, contract_address, evt_tx_hash, evt_index
     FROM {{ source ('curvefi_optimism', 'Vyper_contract_evt_DeployedGauge') }}
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc('day', now() - interval '7' day)

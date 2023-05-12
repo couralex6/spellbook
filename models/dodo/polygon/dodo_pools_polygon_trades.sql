@@ -24,7 +24,7 @@
 WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_symbol, base_token_address, quote_token_address) AS 
 (
     VALUES
-    (lower(0x813fddeccd0401c4fa73b092b074802440544e52), 'USDC', 'USDT', lower(0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174), lower(0xc2132D05D31c914a87C6611C10748AEb04B58e8F))
+    (0x813fddeccd0401c4fa73b092b074802440544e52, 'USDC', 'USDT', 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174, 0xc2132D05D31c914a87C6611C10748AEb04B58e8F)
 )
 , dexs AS 
 (
@@ -34,7 +34,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             'DODO' AS project,
             '1' AS version,
             s.seller AS taker,
-            '' AS maker,
+            0x AS maker,
             s.payBase AS token_bought_amount_raw,
             s.receiveQuote AS token_sold_amount_raw,
             cast(NULL as double) AS amount_usd,
@@ -50,7 +50,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             on s.contract_address = m.market_contract_address
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            s.seller <> '{{dodo_proxy}}'
+            s.seller <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -67,7 +67,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             'DODO' AS project,
             '1' AS version,
             b.buyer AS taker,
-            '' AS maker,
+            0x AS maker,
             b.receiveBase AS token_bought_amount_raw,
             b.payQuote AS token_sold_amount_raw,
             cast(NULL as double) AS amount_usd,
@@ -83,7 +83,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             on b.contract_address = m.market_contract_address
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            b.buyer <> '{{dodo_proxy}}'
+            b.buyer <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -114,7 +114,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DVM_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -145,7 +145,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DPP_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -176,7 +176,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DPPAdvanced_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -207,7 +207,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DPPOracle_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -239,7 +239,7 @@ WITH dodo_view_markets (market_contract_address, base_token_symbol, quote_token_
             {{ source('dodoex_polygon', 'DSP_evt_DODOSwap')}}
         WHERE
         {% for dodo_proxy in dodo_proxies %}
-            trader <> '{{dodo_proxy}}'
+            trader <> from_hex('{{dodo_proxy}}')
             {% if not loop.last %}
             and
             {% endif %}
@@ -262,8 +262,8 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
         ,(dexs.token_bought_amount_raw / power(10, (CASE dexs.token_bought_address WHEN 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 18 ELSE p_bought.decimals END))) * (CASE dexs.token_bought_address WHEN 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN  p_eth.price ELSE p_bought.price END)
@@ -283,7 +283,7 @@ FROM dexs
 INNER JOIN {{ source('polygon', 'transactions')}} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
@@ -299,7 +299,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'polygon'
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
@@ -309,7 +309,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'polygon'
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
@@ -319,7 +319,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_eth
     AND p_eth.blockchain is null
     AND p_eth.symbol = 'MATIC'
     {% if not is_incremental() %}
-    AND p_eth.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_eth.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_eth.minute >= date_trunc('day', now() - interval '7' day)

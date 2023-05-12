@@ -19,13 +19,13 @@ WITH
 fraxswap_dex AS (
     SELECT
         t.evt_block_time                                                    AS block_time
-        ,t.`to`                                                             AS taker
+        ,t."to"                                                             AS taker
         ,''                                                                 AS maker
-        ,CASE WHEN t.amount0Out = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw
-        ,CASE WHEN t.amount0In = 0 THEN t.amount1In ELSE t.amount0In END    AS token_sold_amount_raw
+        ,CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw
+        ,CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN t.amount1In ELSE t.amount0In END    AS token_sold_amount_raw
         ,cast(NULL as double)                                               AS amount_usd
-        ,CASE WHEN t.amount0Out = 0 THEN p.token1 ELSE p.token0 END         AS token_bought_address
-        ,CASE WHEN t.amount0In = 0 THEN p.token1 ELSE p.token0 END          AS token_sold_address
+        ,CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN p.token1 ELSE p.token0 END         AS token_bought_address
+        ,CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN p.token1 ELSE p.token0 END          AS token_sold_address
         ,t.contract_address                                                 AS project_contract_address
         ,t.evt_tx_hash                                                      AS tx_hash
         ,''                                                                 AS trace_address
@@ -37,7 +37,7 @@ fraxswap_dex AS (
     WHERE t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    WHERE t.evt_block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    WHERE t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 )
 
@@ -55,8 +55,8 @@ SELECT
      END                                                                AS token_pair
     ,fraxswap_dex.token_bought_amount_raw / power(10, erc20a.decimals)  AS token_bought_amount
     ,fraxswap_dex.token_sold_amount_raw / power(10, erc20b.decimals)    AS token_sold_amount
-    ,CAST(fraxswap_dex.token_bought_amount_raw AS DECIMAL(38,0))        AS token_bought_amount_raw
-    ,CAST(fraxswap_dex.token_sold_amount_raw AS DECIMAL(38,0))          AS token_sold_amount_raw
+    ,CAST(fraxswap_dex.token_bought_amount_raw AS DOUBLE)        AS token_bought_amount_raw
+    ,CAST(fraxswap_dex.token_sold_amount_raw AS DOUBLE)          AS token_sold_amount_raw
     ,coalesce(fraxswap_dex.amount_usd
             ,(fraxswap_dex.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price
             ,(fraxswap_dex.token_sold_amount_raw / power(10, p_sold.decimals)) * p_sold.price
@@ -78,7 +78,7 @@ INNER JOIN {{ source('polygon', 'transactions') }} tx
     AND tx.block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND tx.block_time >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
     ON erc20a.contract_address = fraxswap_dex.token_bought_address
@@ -94,7 +94,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND p_bought.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', fraxswap_dex.block_time)
@@ -104,5 +104,5 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    AND p_sold.minute >= CAST('{{project_start_date}}' AS TIMESTAMP(6) WITH TIME ZONE)
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
