@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: tigristrade_polygon
-    database: delta_prod
     description: "tigris trade polygon decoded events"
     tables:
       - name: PairsContract_evt_AssetAdded

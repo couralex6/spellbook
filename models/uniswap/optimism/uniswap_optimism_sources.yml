@@ -2,17 +2,18 @@ version: 2
 
 sources:
   - name: uniswap_v3_optimism
-    database: delta_prod
     description: "Optimism decoded tables related to Uniswap v3 contract"
     freshness:
-      warn_after: {count: 12, period: hour}
+      warn_after: { count: 12, period: hour }
     tables:
       - name: Pair_evt_Swap
         loaded_at_field: evt_block_time
         description: "" # to-do
         columns:
-          - name: amount1
-          - name: amount0
+          - &amount1
+            name: amount1
+          - &amount0
+            name: amount0
           - &contract_address
             name: contract_address
           - &evt_block_number

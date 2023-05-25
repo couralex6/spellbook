@@ -2,9 +2,8 @@ version: 2
 
 sources:
   - name: gnosis_safe_ethereum
-    database: delta_prod
     freshness:
-      warn_after: {count: 12, period: hour}
+      warn_after: { count: 12, period: hour }
     tables:
       - name: GnosisSafev1_3_0_evt_SafeSetup
         loaded_at_field: evt_block_time
@@ -31,9 +30,11 @@ sources:
           - &initializer
             name: initializer
             description: "Initializer address"
-          - name: initiator
+          - &initiator
+            name: initiator
             description: "Initiator (msg.sender) address"
-          - name: owners
+          - &owners
+            name: owners
             description: "An array of initial safe owners' addresses"
           - &threshold
             name: threshold
@@ -162,9 +163,11 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: proxy
+          - &proxy
+            name: proxy
             description: "Address of created Safe proxy"
-          - name: singleton
+          - &singleton
+            name: singleton
             description: "Singleton"
       - name: Safev0_1_0_call_setup
         loaded_at_field: call_block_time

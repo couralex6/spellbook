@@ -2,9 +2,8 @@ version: 2
 
 sources:
   - name: gnosis_safe_polygon
-    database: delta_prod
     freshness:
-      warn_after: {count: 12, period: hour}
+      warn_after: { count: 12, period: hour }
     tables:
       - name: ProxyFactory_v1_1_1_call_createProxy
         loaded_at_field: call_block_time
@@ -28,9 +27,11 @@ sources:
           - &contract_address
             name: contract_address
             description: "Contract address"
-          - name: data
+          - &data
+            name: data
             description: "Initializer data"
-          - name: masterCopy
+          - &masterCopy
+            name: masterCopy
             description: "Singleton"
           - &output_proxy
             name: output_proxy
@@ -74,15 +75,21 @@ sources:
         description: "Safe v1.3.0 factory ProxyCreation events"
         columns:
           - *contract_address
-          - name: evt_block_number
+          - &evt_block_number
+            name: evt_block_number
             description: "Event block number"
-          - name: evt_block_time
+          - &evt_block_time
+            name: evt_block_time
             description: "Event block time"
-          - name: evt_index
+          - &evt_index
+            name: evt_index
             description: "Event index"
-          - name: evt_tx_hash
+          - &evt_tx_hash
+            name: evt_tx_hash
             description: "Event tx hash"
-          - name: proxy
+          - &proxy
+            name: proxy
             description: "Address of created Safe proxy"
-          - name: singleton
+          - &singleton
+            name: singleton
             description: "Singleton"

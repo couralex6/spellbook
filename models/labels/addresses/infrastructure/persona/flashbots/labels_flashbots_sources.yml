@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: flashbots
-    database: delta_prod
     tables:
       - name: arbitrages
         columns:
