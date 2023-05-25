@@ -253,10 +253,15 @@ sources:
           - name: evt_index
           - name: evt_tx_hash
             description: "Unique transaction hash value tied to each vote on the DAO"
-          - name: proposalId
-          - name: reason
-          - name: voter
-          - name: votes
+          - &proposalId
+            name: proposalId
+          - &reason
+            name: reason
+          - &voter
+            name: voter
+          - &votes
+            name: votes
+
       - name: AaveGovernanceV2_evt_ProposalCreated
         loaded_at_field: evt_block_time
         columns:
@@ -272,11 +277,17 @@ sources:
           - name: endBlock
           - &id
             name: id
-          - name: proposer
-          - name: signatures
-          - name: startBlock
-          - name: targets
-          - name: values
+          - &proposer
+            name: proposer
+          - &signatures
+            name: signatures
+          - &startBlock
+            name: startBlock
+          - &targets
+            name: targets
+          - &values
+            name: values
+
       - name: AaveGovernanceV2_evt_ProposalCanceled
         loaded_at_field: evt_block_time
         columns:
@@ -286,6 +297,7 @@ sources:
           - *evt_index
           - *evt_tx_hash
           - *id
+
       - name: AaveGovernanceV2_evt_ProposalExecuted
         loaded_at_field: evt_block_time
         columns:
@@ -295,6 +307,7 @@ sources:
           - *evt_index
           - *evt_tx_hash
           - *id
+
       - name: AaveGovernanceV2_evt_ProposalQueued
         loaded_at_field: evt_block_time
         columns:
@@ -305,3 +318,15 @@ sources:
           - *evt_index
           - *evt_tx_hash
           - *id
+
+      - name: LendingPool_evt_FlashLoan
+        loaded_at_field: evt_block_time
+
+
+
+  - name: aave_v3_ethereum
+    description: "Decoded contracts for Aave v3 on Ethereum"
+
+    tables:
+      - name: Pool_evt_FlashLoan
+        loaded_at_field: evt_block_time

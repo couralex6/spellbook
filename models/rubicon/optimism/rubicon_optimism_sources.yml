@@ -10,7 +10,7 @@ sources:
     tables:
       - name: RubiconMarket_evt_LogTake
         loaded_at_field: evt_block_time
-        description: "" # to-do
+        description: "a table of events triggered when a taker fills an outstanding offer" 
         columns:
           - name: buy_gem
           - name: contract_address
@@ -22,11 +22,49 @@ sources:
             description: "Index value of the transaction"
           - name: evt_tx_hash
             description: "Primary key of the transaction"
-          - name: give_amt
-          - name: id
-          - name: maker
-          - name: pair
-          - name: pay_gem
-          - name: take_amt
-          - name: taker
-          - name: timestamp
+          - &give_amt
+            name: give_amt
+            description: "the amount of the token that the taker payed with"
+          - &id
+            name: id
+            description: "the unique id of the offer"
+          - &maker
+            name: maker
+            description: "the address of the maker"
+          - &pair
+            name: pair
+            description: "the pair of the offer"
+          - &pay_gem
+            name: pay_gem
+            description: "the token the offer is selling"
+          - &take_amt
+            name: take_amt
+            description: "the amount of the token that the taker received"
+          - &taker
+            name: taker
+            description: "the address of the taker"
+          - &timestamp
+            name: timestamp
+            description: "the timestamp of the event creation"
+
+      - name: RubiconMarket_evt_LogMake
+        loaded_at_field: evt_block_time
+        description: "a table of events triggered when a maker creates an offer" 
+        columes: 
+          - *contract_address
+          - *evt_tx_hash
+          - *evt_index
+          - *evt_block_time
+          - *evt_block_number
+          - *id
+          - *pair
+          - *pay_gem
+          - *buy_gem
+          - &pay_amt
+            name: pay_amt
+            description: "the amount of the token being sold"
+          - &buy_amt
+            name: buy_amt
+            description: "the amount of the token being bought"
+          - *maker
+          - *timestamp

@@ -147,18 +147,22 @@ sources:
         description: "Contians all the transactions involving repays for aave v3 on\
           \ optimism"
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
-        columns:
-          - *evt_block_number
-          - *evt_block_time
-          - *evt_index
-          - *evt_tx_hash
-          - name: repayer
-            description: "Wallet address of the repayer"
-          - *reserve
-          - name: useATokens
-            description: "Specifies if atokens are used or not"
-          - *user
-          - *amount
-          - *contract_address
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
+        columns:    
+        - *evt_block_number
+        - *evt_block_time
+        - *evt_index
+        - *evt_tx_hash
+        - name: repayer
+          description: "Wallet address of the repayer" 
+        - *reserve
+        - name: useATokens
+          description: "Specifies if atokens are used or not"
+        - *user
+        - *amount
+        - *contract_address 
+        
+      - name: Pool_evt_FlashLoan
+        loaded_at_field: evt_block_time
+          

@@ -36,9 +36,10 @@ sources:
             description: "Primary key of the transaction"
             tests:
               - not_null
-          - name: tokens_bought
-            description: "Raw amount of tokens bought during transaction with the\
-              \ contract"
+          - &tokens_bought
+            name: tokens_bought
+            description: "Raw amount of tokens bought during transaction with the contract"
+
       - name: Factory_evt_NewExchange
         loaded_at_field: evt_block_time
         freshness: # default freshness
@@ -56,6 +57,7 @@ sources:
               \ used to join to contract_address in Exchange_evt_TokenPurchase"
           - name: token
             description: "Token bought contract address"
+
       - name: Exchange_evt_EthPurchase
         loaded_at_field: evt_block_time
         description: "" # to-do
@@ -92,7 +94,9 @@ sources:
           - *evt_tx_hash
           - &sender
             name: sender
-          - name: to
+          - &to
+            name: to
+
       - name: Factory_evt_PairCreated
         loaded_at_field: evt_block_time
         description: "" # to-do
@@ -129,8 +133,11 @@ sources:
           - name: liquidity
           - name: recipient
           - *sender
-          - name: sqrtPriceX96
-          - name: tick
+          - &sqrtPriceX96
+            name: sqrtPriceX96
+          - &tick
+            name: tick
+
       - name: Factory_evt_PoolCreated
         loaded_at_field: evt_block_time
         description: "" # to-do
@@ -145,6 +152,7 @@ sources:
           - name: tickSpacing
           - *token0
           - *token1
+
       - name: GovernorBravoDelegate_evt_VoteCast
         loaded_at_field: evt_block_time
         columns:
@@ -153,10 +161,15 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: proposalId
-          - name: reason
-          - name: voter
-          - name: votes
+          - &proposalId
+            name: proposalId
+          - &reason
+            name: reason
+          - &voter
+            name: voter
+          - &votes
+            name: votes
+
       - name: GovernorBravoDelegate_evt_ProposalCreated
         loaded_at_field: evt_block_time
         columns:
@@ -170,11 +183,17 @@ sources:
           - name: endBlock
           - &id
             name: id
-          - name: proposer
-          - name: signatures
-          - name: startBlock
-          - name: targets
-          - name: values
+          - &proposer
+            name: proposer
+          - &signatures
+            name: signatures
+          - &startBlock
+            name: startBlock
+          - &targets
+            name: targets
+          - &values
+            name: values
+
       - name: GovernorBravoDelegate_evt_ProposalCanceled
         loaded_at_field: evt_block_time
         columns:
@@ -184,6 +203,7 @@ sources:
           - *evt_index
           - *evt_tx_hash
           - *id
+
       - name: GovernorBravoDelegate_evt_ProposalExecuted
         loaded_at_field: evt_block_time
         columns:
@@ -193,6 +213,7 @@ sources:
           - *evt_index
           - *evt_tx_hash
           - *id
+
       - name: GovernorBravoDelegate_evt_ProposalQueued
         loaded_at_field: evt_block_time
         columns:
@@ -203,3 +224,6 @@ sources:
           - *evt_index
           - *evt_tx_hash
           - *id
+
+      - name: Pair_evt_Flash
+        loaded_at_field: evt_block_time

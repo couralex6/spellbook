@@ -5,11 +5,7 @@
         unique_key = ['block_date', 'tx_hash', 'evt_index'],
         on_schema_change='sync_all_columns',
         file_format ='delta',
-        incremental_strategy='merge',
-        post_hook='{{ expose_spells(\'["arbitrum"]\',
-                                "project",
-                                "zeroex",
-                                \'["rantumBits","bakabhai993"]\') }}'
+        incremental_strategy='merge'
     )
 }}
 
@@ -66,6 +62,8 @@ AS
     GROUP BY  tx_hash,hop_count
 )
 SELECT  a.blockchain
+      , '0x API'  as project
+      , cast(null as varchar(10)) as version
       , a.block_date
       , a.block_time
       , b.taker_symbol AS taker_symbol
@@ -85,6 +83,7 @@ SELECT  a.blockchain
       , a.tx_from
       , a.tx_to
       , b.evt_index
+      , CAST(ARRAY(-1) as array<bigint>) as trace_address
       , a.type
       , a.swap_flag
       , b.fills_within
