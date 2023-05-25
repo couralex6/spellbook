@@ -4,7 +4,7 @@ import os
 import re
 
 def main():
-    for root, dirs, files in os.walk('models'):
+    for root, dirs, files in os.walk('../models'):
         for file in files:
             if file.endswith('.sql'):
                 with open(os.path.join(root, file), 'r') as f:
