@@ -7,6 +7,7 @@ def add_database_to_source(source_file):
     yaml = ruamel.yaml.YAML()
     yaml.indent(mapping=2, sequence=4, offset=2)
     yaml.preserve_quotes = True
+    yaml.allow_duplicate_keys = True
 
     with open(source_file, 'r') as f:
         data = yaml.load(f)

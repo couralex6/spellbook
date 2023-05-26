@@ -72,8 +72,4 @@ select CAST(solver AS VARCHAR(42)) as address,
       case when name is not null then name else 'Uncatalogued' end      as name,
       active
 from registered_solvers
-<<<<<<< HEAD
     left outer join known_solver_metadata on CAST(solver AS VARCHAR(42)) = lower(address)
-=======
-    left outer join known_solver_metadata on CAST(solver AS VARCHAR(42)) = lower(address);
->>>>>>> main-upstream

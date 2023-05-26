@@ -143,7 +143,6 @@ with events_raw as (
         end as buyer
         ,er.amount_raw / power(10, t1.decimals) as amount_original
         ,cast(er.amount_raw as decimal(38, 0)) as amount_raw
-<<<<<<< HEAD:models/quix/optimism/quix_v2_optimism_events.sql
         ,case 
             when (erc20.contract_address = 0x0000000000000000000000000000000000000000 or erc20.contract_address is null)
                 then 'ETH'
@@ -152,16 +151,6 @@ with events_raw as (
         ,case 
             when (erc20.contract_address = 0x0000000000000000000000000000000000000000 or erc20.contract_address is null) 
                 then 0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000
-=======
-        ,case
-            when (erc20.contract_address = '0x0000000000000000000000000000000000000000' or erc20.contract_address is null)
-                then 'ETH'
-                else t1.symbol
-            end as currency_symbol
-        ,case
-            when (erc20.contract_address = '0x0000000000000000000000000000000000000000' or erc20.contract_address is null)
-                then '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000'
->>>>>>> main-upstream:models/_sector/nft/trades/old/platforms/quix_v2_optimism_events.sql
                 else erc20.contract_address
             end as currency_contract
         ,er.nft_contract_address
@@ -183,11 +172,7 @@ with events_raw as (
         ,(tr.value / er.amount_raw * 100) as royalty_fee_percentage
         ,case when tr.value is not null then tr.to end as royalty_fee_receive_address
         ,case when tr.value is not null
-<<<<<<< HEAD:models/quix/optimism/quix_v2_optimism_events.sql
             then case when (erc20.contract_address = 0x0000000000000000000000000000000000000000 or erc20.contract_address is null) 
-=======
-            then case when (erc20.contract_address = '0x0000000000000000000000000000000000000000' or erc20.contract_address is null)
->>>>>>> main-upstream:models/_sector/nft/trades/old/platforms/quix_v2_optimism_events.sql
                 then 'ETH' else t1.symbol end
             end as royalty_fee_currency_symbol
     from events_raw as er

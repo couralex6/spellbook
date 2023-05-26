@@ -500,8 +500,5 @@ WHERE f.creator_address NOT IN (
    SELECT creator_address FROM {{ ref('contracts_optimism_nondeterministic_contract_creators') }}
 )
 
-<<<<<<< HEAD
-=======
 GROUP BY 1,2
-;
->>>>>>> main-upstream
+

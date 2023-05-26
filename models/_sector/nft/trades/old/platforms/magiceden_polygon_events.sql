@@ -84,7 +84,7 @@ native_order_summary AS (
         evt_tx_hash,
         sum(cast(amount_raw AS decimal(38, 0))) AS order_amount_raw
     FROM trades
-    WHERE original_erc20_token IN ('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000001010')
+    WHERE original_erc20_token IN (0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee, '0x0000000000000000000000000000000000001010')
     GROUP BY 1, 2
 ),
 
@@ -125,15 +125,6 @@ native_order_total_amount AS (
         AND t.block_time >= '{{nft_start_date}}'
         {% endif %}
         {% if is_incremental() %}
-<<<<<<< HEAD:models/magiceden/polygon/magiceden_polygon_events.sql
-        AND e.block_time >= date_trunc('day', now() - interval '7' day)
-        {% endif %}
-    WHERE t.original_erc20_token IN (0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee, 0x0000000000000000000000000000000000001010)
-        AND cast(e.value as double) > 0
-        AND cardinality(trace_address) > 0 -- exclude the main call record
-
-    UNION ALL
-=======
         AND t.block_time >= date_trunc("day", now() - interval '1 week')
         {% endif %}
     LEFT JOIN native_order_return_amount r ON o.evt_block_number = r.evt_block_number
@@ -158,9 +149,8 @@ native_trade_amount_summary AS (
     FROM trades t
     INNER JOIN native_order_total_amount o ON t.evt_block_number = o.evt_block_number
         AND o.evt_tx_hash = t.evt_tx_hash
-    WHERE t.original_erc20_token IN ('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000001010')
+    WHERE t.original_erc20_token IN (0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee, 0x0000000000000000000000000000000000001010)
 ),
->>>>>>> main-upstream:models/_sector/nft/trades/old/platforms/magiceden_polygon_events.sql
 
 erc20_trade_amount_detail as (
     SELECT e.evt_block_number,
@@ -186,12 +176,8 @@ erc20_trade_amount_detail as (
         {% if is_incremental() %}
         AND e.evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
-<<<<<<< HEAD:models/magiceden/polygon/magiceden_polygon_events.sql
     WHERE t.original_erc20_token NOT IN (0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee, 0x0000000000000000000000000000000000001010)
-=======
-    WHERE t.original_erc20_token NOT IN ('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '0x0000000000000000000000000000000000001010')
         AND e.`to` <> tx.`to` -- exclude transfer to contract, which is just a temp transfer
->>>>>>> main-upstream:models/_sector/nft/trades/old/platforms/magiceden_polygon_events.sql
 ),
 
 erc20_trade_amount_summary AS (

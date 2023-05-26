@@ -14,15 +14,9 @@ WITH looksrare_trades AS (
     , ROW_NUMBER() OVER (PARTITION BY tx_hash, nft_contract_address, nft_token_id ORDER BY evt_index ASC) AS id
     FROM (
         SELECT ta.evt_block_time AS block_time
-<<<<<<< HEAD:models/looksrare/ethereum/looksrare_ethereum_events.sql
         , ta.tokenId AS token_id
         , ta.amount AS number_of_items
         , CASE WHEN ta.strategy=0x58d83536d3efedb9f7f2a1ec3bdaad2b1a4dd98c THEN 'Private Sale' ELSE 'Buy' END AS trade_category
-=======
-        , ta.tokenId AS nft_token_id
-        , ta.amount AS nft_amount
-        , CASE WHEN ta.strategy='0x58d83536d3efedb9f7f2a1ec3bdaad2b1a4dd98c' THEN 'Private Sale' ELSE 'Buy' END AS trade_category
->>>>>>> main-upstream:models/_sector/nft/trades/ethereum/platforms/looksrare_v1_ethereum_base_trades.sql
         , ta.maker AS seller
         , ta.taker AS buyer
         , ta.price AS price_raw
@@ -41,15 +35,9 @@ WITH looksrare_trades AS (
         UNION ALL
 
         SELECT tb.evt_block_time AS block_time
-<<<<<<< HEAD:models/looksrare/ethereum/looksrare_ethereum_events.sql
         , tb.tokenId AS token_id
         , tb.amount AS number_of_items
         , CASE WHEN tb.strategy=0x58d83536d3efedb9f7f2a1ec3bdaad2b1a4dd98c THEN 'Private Sale' ELSE 'Offer Accepted' END AS trade_category
-=======
-        , tb.tokenId AS nft_token_id
-        , tb.amount AS nft_amount
-        , CASE WHEN tb.strategy='0x58d83536d3efedb9f7f2a1ec3bdaad2b1a4dd98c' THEN 'Private Sale' ELSE 'Offer Accepted' END AS trade_category
->>>>>>> main-upstream:models/_sector/nft/trades/ethereum/platforms/looksrare_v1_ethereum_base_trades.sql
         , tb.maker AS seller
         , tb.taker AS buyer
         , tb.price AS price_raw
