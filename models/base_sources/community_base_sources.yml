@@ -3,6 +3,7 @@ version: 2
 sources:
   # Community Tables
   - name: reservoir
+    database: delta_prod
     description: "Reservoir raw data uploaded into the community datasets"
     tables:
       - name: collections

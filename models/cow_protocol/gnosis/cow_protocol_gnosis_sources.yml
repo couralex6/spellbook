@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: gnosis_protocol_v2_gnosis
+    database: delta_prod
     description: "Gnosis Chain decoded tables related to CoW Protocol contract"
     tables:
       - name: GPv2AllowListAuthentication_evt_SolverAdded

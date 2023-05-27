@@ -1,7 +1,8 @@
 version: 2
 
-sources: 
+sources:
   - name: giveth_gnosis
+    database: delta_prod
     description: >
       Giveth gnosis contracts
     tables:

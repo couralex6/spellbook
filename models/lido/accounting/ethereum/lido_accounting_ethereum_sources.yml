@@ -2,11 +2,12 @@ version: 2 # Spells all have “version: 2” as that’s the version of our eng
 
 sources:
   - name: lido_ethereum
+    database: delta_prod
     description: "Decoded events for [LidoDAO](https://lido.fi/)."
-    loaded_at_field: evt_block_time 
+    loaded_at_field: evt_block_time
     freshness: # default freshness
-      warn_after: { count: 1, period: day }
-      error_after: { count: 7, period: day }
+      warn_after: {count: 1, period: day}
+      error_after: {count: 7, period: day}
     tables:
       - name: AllowedRecipientsRegistry_evt_RecipientAdded
       - name: AllowedRecipientsRegistry_evt_RecipientRemoved
@@ -20,4 +21,3 @@ sources:
       - name: steth_evt_ELRewardsReceived
       - name: steth_evt_WithdrawalsReceived
       - name: WithdrawalQueueERC721_evt_WithdrawalsFinalized
-      

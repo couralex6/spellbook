@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: dydx_protocol_ethereum
+    database: delta_prod
     description: "Decoded contracts for dYdX on Ethereum"
 
     tables:
@@ -90,6 +91,7 @@ sources:
           - *id
 
   - name: dydx_ethereum
+    database: delta_prod
     description: "Decoded contracts for dYdX on Ethereum"
 
     tables:

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: sushi_arbitrum
+    database: delta_prod
     description: "arbitrum decoded tables related to Sushiswap contract"
     freshness:
       warn_after: { count: 12, period: hour }

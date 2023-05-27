@@ -2,6 +2,7 @@ version: 2
 
 sources: 
   - name: quickswap_v3_polygon
+    database: delta_prod
     description: "Polygon decoded tables related to QuickSwap v3 contract"
     freshness:
       warn_after: { count: 12, period: hour }
@@ -69,6 +70,7 @@ sources:
             description: "Polygon address for the liquidity pool created"
 
   - name: quickswap_polygon
+    database: delta_prod
     description: "Polygon decoded tables related to Quickswap v2 contract"
     freshness:
       warn_after: { count: 12, period: hour }

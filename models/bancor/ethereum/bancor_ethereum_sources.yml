@@ -2,6 +2,7 @@ version: 2
 
 sources: 
   - name: bancornetwork_ethereum
+    database: delta_prod
     description: "Ethereum decoded tables related to Bancor Network contract"
     freshness: # default freshness
       warn_after: { count: 12, period: hour }

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: pancakeswap_v2_bnb
+    database: delta_prod
     description: >
       BNB chain decoded tables related to Pancakeswap v2 contract
     tables:
@@ -71,6 +72,7 @@ sources:
       - name: PancakeStableSwapFactory_evt_NewStableSwapPair
 
   - name: pancakeswap_v3_bnb
+    database: delta_prod
     description: "BNB chain decoded tables related to Pancakeswap v3 contract"
     freshness:
       warn_after: { count: 12, period: hour }

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: syndicate_v2_polygon
+    database: delta_prod
     description: "syndicate club created event"
     tables:
       - name: ERC20ClubFactory_evt_ERC20ClubCreated

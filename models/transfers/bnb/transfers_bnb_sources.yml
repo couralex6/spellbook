@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: erc20_bnb
+    database: delta_prod
     freshness:
       warn_after: { count: 12, period: hour }
     tables:
@@ -35,6 +36,7 @@ sources:
             description: "Raw amount of BEP20 token"
 
   - name: bnb_bnb
+    database: delta_prod
     freshness:
       warn_after: { count: 12, period: hour }
     tables:

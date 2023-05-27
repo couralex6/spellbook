@@ -2,6 +2,7 @@ version: 2
 
 sources: 
   - name: platypus_finance_avalanche_c
+    database: delta_prod
     description: "Avalanche C-Chain decoded tables related to Platypus Finance"
     tables:
       - name: Pool_evt_Swap

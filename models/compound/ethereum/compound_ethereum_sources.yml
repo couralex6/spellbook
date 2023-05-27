@@ -2,6 +2,7 @@ version: 2
 
 sources: 
   - name: compound_v2_ethereum
+    database: delta_prod
     description: "Ethereum decoded tables related to Compound v2 contract"
     freshness:
       warn_after: { count: 12, period: hour }

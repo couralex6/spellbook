@@ -1,7 +1,8 @@
 version: 2
 
-sources: 
+sources:
   - name: arbitrum_airdrop_arbitrum
+    database: delta_prod
     description: >
       Arbitrum contracts on Arbitrum
     tables:

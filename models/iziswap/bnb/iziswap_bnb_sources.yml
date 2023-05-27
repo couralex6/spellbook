@@ -2,6 +2,7 @@ version: 2
 
 sources: 
   - name: izumi_bnb
+    database: delta_prod
     description: "BNB decoded tables related to Izumi (e.g. IziSwap)"
     tables:
       - name: iZiSwapPool_evt_Swap

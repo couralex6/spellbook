@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: wombat_bnb
+    database: delta_prod
     description: "BNB decoded tables related to Wombat"
     tables:
       - name: Pool_evt_Swap

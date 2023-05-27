@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: tornado_cash_bnb
+    database: delta_prod
     tables:
       - name: TornadoCashBNB_evt_Deposit
         loaded_at_field: evt_block_time

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: tornado_cash_avalanche_c
+    database: delta_prod
     tables:
       - name: ETHTornado_evt_Deposit
         loaded_at_field: evt_block_time

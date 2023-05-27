@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: rubicon_optimism
+    database: delta_prod
     description: "Optimism decoded tables related to rubicon's implementation of OasisDEX"
     freshness:
       warn_after: { count: 12, period: hour } 

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: gnosis_safe_optimism
+    database: delta_prod
     freshness:
       warn_after: { count: 12, period: hour }
     tables:
@@ -55,6 +56,7 @@ sources:
             name: singleton
             description: "Singleton"
   - name: erc20_optimism
+    database: delta_prod
     freshness:
       warn_after: { count: 12, period: hour }
     tables:

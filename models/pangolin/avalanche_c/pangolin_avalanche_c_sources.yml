@@ -1,7 +1,8 @@
 version: 2
 
-sources: 
+sources:
   - name: pangolin_exchange_avalanche_c
+    database: delta_prod
     description: >
       Pangolin avalanche contracts
     tables:

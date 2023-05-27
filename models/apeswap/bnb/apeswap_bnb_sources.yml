@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: apeswap_bnb
+    database: delta_prod
     description: "BNB decoded tables related to apeswap contract"
     freshness:
       warn_after: { count: 12, period: hour }

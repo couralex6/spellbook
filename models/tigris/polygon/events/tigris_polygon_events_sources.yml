@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: tigristrade_polygon
+    database: delta_prod
     description: "tigris trade polygon decoded events"
     tables:
       - name: PairsContract_evt_AssetAdded
@@ -114,6 +115,7 @@ sources:
         loaded_at_field: evt_block_time
 
   - name: tigristrade_v2_polygon
+    database: delta_prod
     description: "tigris trade polygon decoded events & calls on v2"
     tables:
       - name: Trading_evt_AddToPosition

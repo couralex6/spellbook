@@ -2,24 +2,29 @@ version: 2
 
 sources:
   - name: cryptopunks_ethereum
+    database: delta_prod
     tables:
-        - name: CryptoPunksMarket_call_acceptBidForPunk
+      - name: CryptoPunksMarket_call_acceptBidForPunk
   - name: archipelago_ethereum
+    database: delta_prod
     tables:
       - name: ArchipelagoMarket_evt_Trade
       - name: ArchipelagoMarket_evt_TokenTrade
       - name: ArchipelagoMarket_evt_RoyaltyPayment
 
   - name: blur_ethereum
+    database: delta_prod
     tables:
       - name: BlurExchange_evt_OrdersMatched
 
   - name: collectionswap_ethereum
+    database: delta_prod
     tables:
       - name: CollectionPool_evt_SwapNFTOutPool
       - name: CollectionPool_evt_SwapNFTInPool
 
   - name: element_ex_ethereum
+    database: delta_prod
     tables:
       - name: OrdersFeature_evt_ERC721SellOrderFilled
       - name: OrdersFeature_evt_ERC721BuyOrderFilled
@@ -27,6 +32,7 @@ sources:
       - name: OrdersFeature_evt_ERC1155BuyOrderFilled
 
   - name: foundation_ethereum
+    database: delta_prod
     tables:
       - name: market_evt_ReserveAuctionFinalized
       - name: market_evt_ReserveAuctionCreated
@@ -36,6 +42,7 @@ sources:
       - name: market_evt_SellerReferralPaid
 
   - name: looksrare_ethereum
+    database: delta_prod
     tables:
       - name: LooksRareExchange_evt_TakerAsk
       - name: LooksRareExchange_evt_TakerBid
@@ -47,11 +54,13 @@ sources:
       - name: StrategyAnyItemFromCollectionForFixedPriceV1B_call_viewProtocolFee
 
   - name: looksrare_v2_ethereum
+    database: delta_prod
     tables:
       - name: LooksRareProtocol_evt_TakerAsk
       - name: LooksRareProtocol_evt_TakerBid
 
   - name: superrare_ethereum
+    database: delta_prod
     tables:
       - name: SuperRareMarketAuction_evt_Sold
       - name: SuperRare_evt_Sold
@@ -62,17 +71,20 @@ sources:
       - name: SuperRareBazaar_evt_Sold
 
   - name: x2y2_ethereum
+    database: delta_prod
     tables:
       - name: X2Y2_r1_evt_EvProfit
       - name: X2Y2_r1_evt_EvInventory
 
   - name: zora_ethereum
+    database: delta_prod
     tables:
       - name: Market_evt_BidFinalized
       - name: Media_evt_Transfer
       - name: AuctionHouse_evt_AuctionEnded
 
   - name: zora_v3_ethereum
+    database: delta_prod
     tables:
       - name: OffersV1_evt_ExchangeExecuted
       - name: AsksV1_0_evt_ExchangeExecuted

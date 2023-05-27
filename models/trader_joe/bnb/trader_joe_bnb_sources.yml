@@ -1,20 +1,19 @@
 version: 2
 
-sources: 
+sources:
   - name: trader_joe_v2_bnb
+    database: delta_prod
     description: "BNB chain decoded tables related to Trader Joe contract"
     freshness:
-      warn_after: { count: 12, period: hour }
+      warn_after: {count: 12, period: hour}
     tables:
       - name: LBPair_evt_Swap
         loaded_at_field: evt_block_time
-        description: "Liquidity book Pair swap event decoded table" 
+        description: "Liquidity book Pair swap event decoded table"
         columns:
-          - &amountIn
-            name: amountIn
+          - name: amountIn
             description: "Token Sold Amount"
-          - &amountOut
-            name: amountOut
+          - name: amountOut
             description: "Token Bought Amount"
           - &contract_address
             name: contract_address
@@ -31,45 +30,34 @@ sources:
           - &evt_tx_hash
             name: evt_tx_hash
             description: "Primary key of the transaction"
-          - &fees
-            name: fees
+          - name: fees
             description: "Fees paid for swap"
-          - &id
-            name: id
+          - name: id
             description: "id"
-          - &recipient
-            name: recipient
+          - name: recipient
             description: "Address receiving the tokens bought"
-          - &sender
-            name: sender
+          - name: sender
             description: "Swap Initiator"
-          - &swapForY
-            name: swapForY
+          - name: swapForY
             description: "Direction of trade"
-          - &volatilityAccumulated
-            name: volatilityAccumulated
+          - name: volatilityAccumulated
             description: "volatilityAccumulated"
       - name: LBFactory_evt_LBPairCreated
         loaded_at_field: evt_block_time
-        description: "Liquidity Book Factory pair create decoded table" 
+        description: "Liquidity Book Factory pair create decoded table"
         columns:
-          - &LBPair
-            name: LBPair
+          - name: LBPair
             description: "LBPair"
-          - &binStep
-            name: binStep
+          - name: binStep
             description: "binStep"
           - *contract_address
           - *evt_block_number
-          - *evt_block_time 
+          - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - &pid
-            name: pid
+          - name: pid
             description: "pid"
-          - &tokenX
-            name: tokenX
+          - name: tokenX
             description: "tokenX"
-          - &tokenY
-            name: tokenY
+          - name: tokenY
             description: "tokenY"

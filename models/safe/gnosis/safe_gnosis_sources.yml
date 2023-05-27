@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: gnosis_safe_gnosis
+    database: delta_prod
     freshness:
       warn_after: { count: 12, period: hour }
     tables:
@@ -94,6 +95,7 @@ sources:
             name: singleton
             description: "Singleton"
   - name: xdai_gnosis
+    database: delta_prod
     tables:
       - name: BlockRewardAuRa_evt_AddedReceiver
         loaded_at_field: evt_block_time

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: aave_v3_fantom
+    database: delta_prod
     description: "Decoded contracts for Aave v3 on Fantom"
     tables:
       - name: Pool_evt_FlashLoan

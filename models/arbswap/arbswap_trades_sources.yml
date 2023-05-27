@@ -2,6 +2,7 @@ version: 2
 
 sources: 
   - name: arbswap_arbitrum
+    database: delta_prod
     description: "Arbitrum decoded tables related to Arbswap contract"
     freshness:
       warn_after: { count: 12, period: hour }

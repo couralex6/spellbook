@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: sushiswap_gnosis
+    database: delta_prod
     description: "Gnosis decoded tables related to Sushiswap contract"
     freshness:
       warn_after: { count: 12, period: hour }

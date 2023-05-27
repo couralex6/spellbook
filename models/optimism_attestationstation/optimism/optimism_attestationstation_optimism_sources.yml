@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: attestationstation_optimism
+    database: delta_prod
     freshness:
       warn_after: { count: 12, period: hour }
     tables:

@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: aave_v2_ethereum
+    database: delta_prod
     description: "Decoded contracts for aave v2 on Ethereum"
 
     tables:
@@ -332,6 +333,7 @@ sources:
 
 
   - name: aave_v3_ethereum
+    database: delta_prod
     description: "Decoded contracts for Aave v3 on Ethereum"
 
     tables:

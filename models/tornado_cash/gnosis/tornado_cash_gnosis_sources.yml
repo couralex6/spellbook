@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: tornado_cash_gnosis
+    database: delta_prod
     tables:
       - name: eth_evt_Deposit
         loaded_at_field: evt_block_time
