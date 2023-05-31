@@ -87,7 +87,7 @@ FROM (VALUES
         ,(0x759faf269d0c662b5dc78e01ef61392541d52750, 'fcAUD', 18)
         ,(0xbc60ff90497f99cbf6fb84ce1e31845637033445, 'USDR', 18)
         ,(0x873484f654a7203296931f529680449e8a642898, 'iETHV', 18)
-        ,(0x7cb16cb78ea464ad35c8a50abf95dff3c9e09d5d, 0xBTC, 8)
+        ,(0x7cb16cb78ea464ad35c8a50abf95dff3c9e09d5d, '0xBTC', 8)
         ,(0x6f5401c53e2769c858665621d22ddbf53d8d27c5, 'CNFI', 18)
         ,(0xbe00f3db78688d9704bcb4e0a827aea3a9cc0d62, 'USD24', 2)
         ,(0xb67c014fa700e69681a673876eb8bafaa36bff71, 'HOP-LP-USDC', 18)
