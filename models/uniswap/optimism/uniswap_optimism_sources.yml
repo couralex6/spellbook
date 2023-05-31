@@ -32,6 +32,7 @@ sources:
           - name: sender
           - name: sqrtPriceX96
           - name: tick
+
       - name: factory_evt_poolcreated
         loaded_at_field: evt_block_time
         description: "" # to-do
@@ -46,3 +47,6 @@ sources:
           - name: tickSpacing
           - name: token0
           - name: token1
+
+      - name: Pair_evt_Flash
+        loaded_at_field: evt_block_time

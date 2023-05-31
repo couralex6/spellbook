@@ -16,7 +16,7 @@ models:
         description: "Solver's wallet address"
       - &environment
         name: environment
-        description: "Solver's environment"
+        description: "Development environment"
       - &name
         name: name
         description: "Solver's name"
@@ -136,6 +136,11 @@ models:
       - &order_type
         name: order_type
         description: "SELL/BUY string indicating if the trade was a sell or buy order"
+      - &partial_fill
+        name: partial_fill
+        description: "Boolean indicating if the order is partially fill-able"
+      - &fill_proportion
+        name: fill_proportion
 
   - name: cow_protocol_ethereum_batches
     meta:
@@ -252,6 +257,7 @@ models:
       - *block_time
       - *block_number
       - *tx_hash
+      - *environment
       - *valid_to
       - &quote_id
         name: quote_id
@@ -302,6 +308,7 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - order_uid
+            - block_number
     columns:
       - *order_uid
       - *block_time
@@ -314,6 +321,7 @@ models:
         name: tolerance_bips
       - &trade_usd_value
         name: trade_usd_value
+      - *fill_proportion
       - &amount_atoms
         name: amount_atoms
       - &amount_percentage

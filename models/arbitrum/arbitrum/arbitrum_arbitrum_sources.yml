@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: arbitrum_airdrop_arbitrum
+    database: delta_prod
+    description: >
+      Arbitrum contracts on Arbitrum
+    tables:
+      - name: TokenDistributor_evt_HasClaimed
+        loaded_at_field: evt_block_time

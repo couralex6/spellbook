@@ -5,7 +5,7 @@ sources:
     database: delta_prod
     description: "Avalanche (C-Chain) decoded tables related to Hashflow contract"
     freshness:
-      warn_after: {count: 12, period: hour}
+      warn_after: { count: 12, period: hour }
     tables:
       - name: Pool_evt_Trade
         loaded_at_field: evt_block_time
@@ -37,7 +37,8 @@ sources:
               - not_null
           - &fees
             name: fees
-          - name: pool
+          - &pool
+            name: pool
           - &trader
             name: trader
           - &txid
@@ -61,8 +62,10 @@ sources:
             name: dstPool
           - *evt_block_number
           - *quoteTokenAmount
-          - name: srcChainId
-          - name: srcPool
+          - &srcChainId
+            name: srcChainId
+          - &srcPool
+            name: srcPool
           - *trader
           - *txid
 

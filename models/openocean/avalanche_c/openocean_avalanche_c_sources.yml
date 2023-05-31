@@ -8,5 +8,5 @@ sources:
     description: >
       Decoded event table for swaps on openocean
     tables:
-      - name: OpenOceanExchangeProxy_evt_Swapped
+      - name: OpenOceanExchange_evt_Swapped
         loaded_at_field: evt_block_time

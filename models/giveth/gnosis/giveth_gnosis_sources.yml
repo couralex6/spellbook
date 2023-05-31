@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: giveth_gnosis
+    database: delta_prod
+    description: >
+      Giveth gnosis contracts
+    tables:
+      - name: MerkleDistro_evt_Claimed
+        loaded_at_field: evt_block_time

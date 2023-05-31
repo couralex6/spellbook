@@ -56,7 +56,13 @@
 ,ref('balancer_trades')
 ,ref('spiritswap_fantom_trades')
 ,ref('quickswap_trades')
+,ref('integral_trades')
 ,ref('maverick_trades')
+,ref('verse_dex_ethereum_trades')
+,ref('onepunchswap_bnb_trades')
+,ref('glacier_avalanche_c_trades')
+,ref('thena_trades')
+,ref('camelot_trades')
 ] %}
 
 

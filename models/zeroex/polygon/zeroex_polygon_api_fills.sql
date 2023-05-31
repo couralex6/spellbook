@@ -1,15 +1,12 @@
 {{  config(
+
         alias='api_fills',
         materialized='incremental',
         partition_by = ['block_date'],
         unique_key = ['block_date', 'tx_hash', 'evt_index'],
         on_schema_change='sync_all_columns',
         file_format ='delta',
-        incremental_strategy='merge',
-        post_hook='{{ expose_spells(\'["polygon"]\',
-                                "project",
-                                "zeroex",
-                                \'["rantumBits", "sui414", "bakabhai993"]\') }}'
+        incremental_strategy='merge'
     )
 }}
 
@@ -19,7 +16,7 @@
 -- Test Query here: https://dune.com/queries/1684477
 
 WITH zeroex_tx AS (
-    SELECT
+    SELECT distinct 
             tr.tx_hash,
             max('0x' || CASE
                         WHEN POSITION('869584cd' IN INPUT) <> 0
@@ -352,7 +349,7 @@ all_tx AS (
     FROM otc_fills 
 )
 
-SELECT 
+SELECT distinct 
         all_tx.tx_hash,
         all_tx.block_number, 
         all_tx.evt_index,
@@ -374,7 +371,7 @@ SELECT
         maker_token_amount_raw / pow(10, mp.decimals) AS maker_token_amount,
         maker_token_amount_raw,
         all_tx.type,
-        affiliate_address,
+        max(affiliate_address) over (partition by all_tx.tx_hash) as affiliate_address,
         swap_flag,
         matcha_limit_order_flag,
         CASE WHEN maker_token IN (0x2791bca1f2de4661ed88a30c99a7a9449aa84174,0x7ceb23fd6bc0add59e62ac25578270cff1b9f619,0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270,0xc2132d05d31c914a87c6611c10748aeb04b58e8f,0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6,0x8f3cf7ad23cd3cadbd9735aff958023239c6a063,0x3a58a54c066fdc0f2d55fc9c89f0415c92ebf3c4)
@@ -401,7 +398,8 @@ AND tx.block_time >= '{{zeroex_v3_start_date}}'
 
 LEFT JOIN {{ source('prices', 'usd') }} tp ON date_trunc('minute', all_tx.block_time) = tp.minute
 AND CASE
-        WHEN all_tx.taker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+        WHEN all_tx.taker_token = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x0000000000000000000000000000000000001010'
+        WHEN all_tx.taker_token = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' THEN '0x0000000000000000000000000000000000001010'
         ELSE all_tx.taker_token
     END = tp.contract_address
 AND tp.blockchain = 'polygon'
@@ -415,7 +413,8 @@ AND tp.minute >= '{{zeroex_v3_start_date}}'
 
 LEFT JOIN {{ source('prices', 'usd') }} mp ON DATE_TRUNC('minute', all_tx.block_time) = mp.minute
 AND CASE
-        WHEN all_tx.maker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+        WHEN all_tx.maker_token = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x0000000000000000000000000000000000001010'
+        WHEN all_tx.taker_token = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' THEN '0x0000000000000000000000000000000000001010'
         ELSE all_tx.maker_token
     END = mp.contract_address
 AND mp.blockchain = 'polygon'
@@ -429,3 +428,5 @@ AND mp.minute >= '{{zeroex_v3_start_date}}'
 
 LEFT OUTER JOIN {{ ref('tokens_erc20') }} ts ON ts.contract_address = taker_token and ts.blockchain = 'polygon'
 LEFT OUTER JOIN {{ ref('tokens_erc20') }} ms ON ms.contract_address = maker_token and ms.blockchain = 'polygon'
+
+WHERE all_tx.tx_hash != '0x34ee112f3d601e4bb2f19f7744e86f9b4f65ed6c44dfe48db1c560d6b1c34bef' -- exclude tx with wrong decimals data

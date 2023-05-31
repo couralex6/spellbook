@@ -6,8 +6,7 @@ sources:
     description: "Gnosis Chain decoded tables related to CoW Protocol contract"
     tables:
       - name: GPv2AllowListAuthentication_evt_SolverAdded
-        description: "GPv2AllowListAuthentication list of events when a Solver was\
-          \ added"
+        description: "GPv2AllowListAuthentication list of events when a Solver was added"
         columns:
           - &solver
             name: solver
@@ -30,8 +29,7 @@ sources:
             tests:
               - not_null
       - name: GPv2AllowListAuthentication_evt_SolverRemoved
-        description: "GPv2AllowListAuthentication list of events when a solver was\
-          \ removed"
+        description: "GPv2AllowListAuthentication list of events when a solver was removed"
         columns:
           - *solver
           - *contract_address
@@ -42,52 +40,62 @@ sources:
       - name: GPv2Settlement_evt_Trade
         description: "Trade events emitted by GPv2Settlement"
         columns:
-          - name: feeAmount
+          - &feeAmount
+            name: feeAmount
             description: "Amount (in sell token) in atoms of the trade fee"
-          - name: buyAmount
+          - &buyAmount
+            name: buyAmount
             description: "Amount (in atoms) of the buyToken bought"
-          - name: buyToken
-            description: "Contract address of token obtained in trade. 0xeee...ee\
-              \ represents native asset ETH"
+          - &buyToken
+            name: buyToken
+            description: "Contract address of token obtained in trade. 0xeee...ee represents native asset ETH"
           - *contract_address
           - *evt_block_number
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: orderUid
-            description: "Unique identifier of order involved in trade. Note that\
-              \ partially fillable orders can be touched multiple times so this is\
-              \ not a unique ID for trade events."
-          - name: owner
+          - &orderUid
+            name: orderUid
+            description: "Unique identifier of order involved in trade. Note that partially fillable orders can be touched multiple times so this is not a unique ID for trade events."
+          - &owner
+            name: owner
             description: "Owner of the order being traded (aka trader address)"
-          - name: sellAmount
+          - &sellAmount
+            name: sellAmount
             description: "Amount in atoms of the sellToken sold"
-          - name: sellToken
+          - &sellToken
+            name: sellToken
             description: "Contract address of token sold in trade."
       - name: GPv2Settlement_call_settle
-        description: "Contains all calls to the settle method of GPv2Settlement (both\
-          \ successful and failed)"
+        description: "Contains all calls to the settle method of GPv2Settlement (both successful and failed)"
         columns:
-          - name: call_block_number
+          - &call_block_number
+            name: call_block_number
             description: "Block number on which the method was called"
-          - name: call_block_time
+          - &call_block_time
+            name: call_block_time
             description: "UTC timestamp at which the method was called"
-          - name: call_success
+          - &call_success
+            name: call_success
             description: "Whether or not the call resulted in a successful transaction"
-          - name: call_trace_address
+          - &call_trace_address
+            name: call_trace_address
             description: "Trace address of the call"
-          - name: call_tx_hash
-            description: "Transaction hash of call (if successful, will result in\
-              \ a real transaction hash)."
-          - name: clearingPrices
-            description: "An array of relative token prices (matched with `tokens`\
-              \ by index)"
+          - &call_tx_hash
+            name: call_tx_hash
+            description: "Transaction hash of call (if successful, will result in a real transaction hash)."
+          - &clearingPrices
+            name: clearingPrices
+            description: "An array of relative token prices (matched with `tokens` by index)"
           - *contract_address
-          - name: interactions
+          - &interactions
+            name: interactions
             description: "An array of internal contract interactions"
-          - name: tokens
+          - &tokens
+            name: tokens
             description: "An array of token addresses (to be matched by index on `clearingPrices`)"
-          - name: trades
+          - &trades
+            name: trades
             description: "An array of order data for the trades being executed"
       - name: GPv2Settlement_evt_Settlement
         description: "Settlement events emitted by GPv2Settlement"
@@ -106,9 +114,12 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: selector
+          - &selector
+            name: selector
             description: Method ID of the contract being interacted with
-          - name: target
+          - &target
+            name: target
             description: Target contract address of the interaction
-          - name: value
+          - &value
+            name: value
             description: ETH amount (in WEI) being passed into contract interaction

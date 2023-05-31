@@ -10,8 +10,8 @@ SELECT
     TRIM(token_id) as token_id
     , LOWER(TRIM(blockchain)) as blockchain
     , TRIM(symbol) as symbol
-    , LOWER(TRIM(contract_address)) as contract_address
-    , decimals
+    , contract_address
+    , CAST(decimals as int)
 FROM
 (
     VALUES
@@ -40,7 +40,6 @@ FROM
     ("mona-monacoin", null, "MONA", null, null),
     ("neo-neo", null, "NEO", null, null),
     ("ont-ontology", null, "ONT", null, null),
-    ("op-optimism", "optimism", "OP", "0x4200000000000000000000000000000000000042", 18),
     ("sol-solana", null, "SOL", null, null),
     ("stx-blockstack", null, "STX", null, null),
     ("thr-thorecoin", null, "THR", null, null),

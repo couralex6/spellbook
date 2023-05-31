@@ -1,11 +1,11 @@
 version: 2
 
-sources:
+sources: 
   - name: compound_v2_ethereum
     database: delta_prod
     description: "Ethereum decoded tables related to Compound v2 contract"
     freshness:
-      warn_after: {count: 12, period: hour}
+      warn_after: { count: 12, period: hour }
     tables:
       - name: GovernorBravoDelegate_evt_VoteCast
         loaded_at_field: evt_block_time
@@ -25,10 +25,14 @@ sources:
           - &evt_tx_hash
             name: evt_tx_hash
             description: "Event transaction hash"
-          - name: proposalId
-          - name: reason
-          - name: voter
-          - name: votes
+          - &proposalId
+            name: proposalId
+          - &reason
+            name: reason
+          - &voter
+            name: voter
+          - &votes
+            name: votes
       - name: GovernorBravoDelegate_evt_ProposalCreated
         loaded_at_field: evt_block_time
         columns:
@@ -37,16 +41,24 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: calldatas
-          - name: description
-          - name: endBlock
+          - &calldatas
+            name: calldatas
+          - &description
+            name: description
+          - &endBlock
+            name: endBlock
           - &id
             name: id
-          - name: proposer
-          - name: signatures
-          - name: startBlock
-          - name: targets
-          - name: values
+          - &proposer
+            name: proposer
+          - &signatures
+            name: signatures
+          - &startBlock
+            name: startBlock
+          - &targets
+            name: targets
+          - &values
+            name: values
       - name: GovernorBravoDelegate_evt_ProposalCanceled
         loaded_at_field: evt_block_time
         columns:
@@ -69,7 +81,8 @@ sources:
         loaded_at_field: evt_block_time
         columns:
           - *contract_address
-          - name: eta
+          - &eta
+            name: eta
           - *evt_block_number
           - *evt_block_time
           - *evt_index

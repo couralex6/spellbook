@@ -1,6 +1,6 @@
 {{ config(
 	alias ='genesis_balances',
-    post_hook='{{ expose_spells_hide_trino(\'["ethereum"]\',
+    post_hook='{{ expose_spells(\'["ethereum"]\',
                                 "sector",
                                 "balances",
                                 \'["bernat"]\') }}'

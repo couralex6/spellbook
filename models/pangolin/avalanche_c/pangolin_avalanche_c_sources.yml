@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: pangolin_exchange_avalanche_c
+    database: delta_prod
+    description: >
+      Pangolin avalanche contracts
+    tables:
+      - name: Airdrop_evt_PngClaimed
+        loaded_at_field: evt_block_time

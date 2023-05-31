@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: ironbank_ethereum
-    database: delta_prod
     description: "decoded events and function calls for ironbank on ethereum"
     tables:
       - name: CErc20Delegator_evt_Borrow
@@ -27,7 +26,8 @@ sources:
           - &borrower
             name: borrower
             description: "Borrower wallet address"
-          - name: borrowAmount
+          - &borrowAmount
+            name: borrowAmount
             description: "The amount of the underlying asset to borrow"
           - &accountBorrows
             name: accountBorrows
@@ -44,11 +44,14 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: minter
+          - &minter
+            name: minter
             description: "Minter wallet address"
-          - name: mintAmount
+          - &mintAmount
+            name: mintAmount
             description: "The amount of the underlying asset to supply"
-          - name: mintTokens
+          - &mintTokens
+            name: mintTokens
             description: "the number of iTokens to be minted"
       - name: CErc20Delegator_evt_RepayBorrow
         loaded_at_field: evt_block_time
@@ -59,7 +62,8 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: payer
+          - &payer
+            name: payer
             description: "Payer wallet address"
           - *borrower
           - &repayAmount
@@ -76,11 +80,14 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: redeemer
+          - &redeemer
+            name: redeemer
             description: "Redeemer wallet address"
-          - name: redeemAmount
+          - &redeemAmount
+            name: redeemAmount
             description: "The amount of underlying to receive from redeeming iTokens"
-          - name: redeemTokens
+          - &redeemTokens
+            name: redeemTokens
             description: "The number of iTokens to redeem into underlying"
       - name: CErc20Delegator_evt_LiquidateBorrow
         loaded_at_field: evt_block_time
@@ -91,11 +98,14 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: liquidator
+          - &liquidator
+            name: liquidator
             description: "The address repaying the borrow and seizing collateral"
           - *borrower
           - *repayAmount
-          - name: cTokenCollateral
+          - &cTokenCollateral
+            name: cTokenCollateral
             description: "The market in which to seize collateral from the borrower"
-          - name: seizeTokens
+          - &seizeTokens
+            name: seizeTokens
             description: "The number of iTokens to seize"

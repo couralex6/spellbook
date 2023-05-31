@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: aragon_ethereum
+    database: delta_prod
+    description: "aragon dao deployed decoded event"
+    tables:
+      - name: DAOFactory_evt_DeployDAO
+        loaded_at_field: evt_block_time

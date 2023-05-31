@@ -4,7 +4,7 @@
         materialized = 'incremental',
         file_format = 'delta',
         incremental_strategy = 'merge',
-        unique_key = ['evt_block_time_week', 'evt_tx_hash', 'evt_index'] 
+        unique_key = ['evt_block_time_week', 'evt_tx_hash', 'evt_index']
         )
 }}
 
@@ -19,7 +19,7 @@ select event_type
         , evt_block_number
         , evt_index
         , evt_tx_hash
-from 
+from
 (
         select  'Offered' as event_type
             , punkIndex as punk_id
@@ -27,7 +27,7 @@ from
             , case when toAddress = 0x0000000000000000000000000000000000000000 then cast(NULL as varchar(5))
                 else toAddress end as to
             , minValue/1e18 as eth_amount
-            , a.evt_block_time 
+            , a.evt_block_time
             , date_trunc('week',a.evt_block_time) as evt_block_time_week
             , a.evt_block_number
             , a.evt_index
@@ -42,7 +42,7 @@ from
         where a.evt_block_time >= date_trunc('day', now() - interval '7' day)
         {% endif %}
 
-        union all 
+        union all
 
         select  'Offer Withdrawn' as event_type
                 , a.punkIndex
@@ -60,12 +60,12 @@ from
                 {% if is_incremental() %}
                 and b.block_time >= date_trunc('day', now() - interval '7' day)
                 {% endif %}
-        where a.evt_tx_hash not in (select distinct tx_hash from {{ ref('cryptopunks_ethereum_trades') }} )
+        where a.evt_tx_hash not in (select distinct evt_tx_hash from {{ source('cryptopunks_ethereum','CryptoPunksMarket_evt_PunkBought') }} )
                 and a.evt_tx_hash not in (select distinct evt_tx_hash from {{ ref('cryptopunks_ethereum_punk_transfers') }} )
                 {% if is_incremental() %}
                 and a.evt_block_time >= date_trunc('day', now() - interval '7' day)
                 {% endif %}
-) a 
+) a
 left join {{ source('prices', 'usd') }} p on p.minute = date_trunc('minute', a.evt_block_time)
         and p.contract_address = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
         and p.blockchain = 'ethereum'

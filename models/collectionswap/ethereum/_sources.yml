@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: collectionswap_ethereum
+    database: delta_prod
+    tables:
+      - name: CollectionPoolFactory_evt_NewPool
+      - name: CollectionPoolFactory_call_createPoolERC20
+      - name: CollectionPoolFactory_call_createPoolETH
+      - name: CollectionPoolFactory_call_createPoolERC20Filtered
+      - name: CollectionPoolFactory_call_createPoolETHFiltered

@@ -5,11 +5,7 @@
         unique_key = ['block_date', 'tx_hash', 'evt_index'],
         on_schema_change='sync_all_columns',
         file_format ='delta',
-        incremental_strategy='merge',
-        post_hook='{{ expose_spells(\'["avalanche_c"]\',
-                                "project",
-                                "zeroex",
-                                \'["rantumBits",  "bakabhai993", "sui414"]\') }}'
+        incremental_strategy='merge'
     )
 }}
 
@@ -22,7 +18,7 @@ WITH zeroex_tx AS (
         SELECT 
             tr.tx_hash,
             tr.block_number,
-            MAX('0x' || CASE
+            MAX(0x || CASE
                                 WHEN POSITION('869584cd' IN INPUT) <> 0
                                 THEN SUBSTRING(INPUT
                                         FROM (position('869584cd' IN INPUT) + 32)
@@ -151,10 +147,10 @@ ERC20BridgeTransfer AS (
             INDEX                                   AS evt_index,
             logs.contract_address,
             block_time                              AS block_time,
-            '0x' || substring(DATA, 283, 40)        AS maker,
-            '0x' || substring(DATA, 347, 40)        AS taker,
-            '0x' || substring(DATA, 27, 40)         AS taker_token,
-            '0x' || substring(DATA, 91, 40)         AS maker_token,
+            0x || substring(DATA, 283, 40)        AS maker,
+            0x || substring(DATA, 347, 40)        AS taker,
+            0x || substring(DATA, 27, 40)         AS taker_token,
+            0x || substring(DATA, 91, 40)         AS maker_token,
             bytea2numeric(substring(DATA, 155, 40)) AS taker_token_amount_raw,
             bytea2numeric(substring(DATA, 219, 40)) AS maker_token_amount_raw,
             'ERC20BridgeTransfer'                   AS type,
@@ -163,7 +159,7 @@ ERC20BridgeTransfer AS (
             FALSE                                   AS matcha_limit_order_flag
     FROM {{ source('avalanche_c', 'logs') }} logs
     INNER JOIN zeroex_tx ON zeroex_tx.tx_hash = logs.tx_hash
-    WHERE topic1 = '0x349fc08071558d8e3aa92dec9396e4e9f2dfecd6bb9065759d1932e7da43b8a9'
+    WHERE topic1 = 0x349fc08071558d8e3aa92dec9396e4e9f2dfecd6bb9065759d1932e7da43b8a9
     
     {% if is_incremental() %}
     AND block_time >= date_trunc('day', now() - interval '7' day)
@@ -179,19 +175,19 @@ BridgeFill AS (
             INDEX                                           AS evt_index,
             logs.contract_address,
             block_time                                      AS block_time,
-            '0x' || substring(DATA, 27, 40)                 AS maker,
+            0x || substring(DATA, 27, 40)                 AS maker,
             0xdef1c0ded9bec7f1a1670819833240f027b25eff    AS taker,
-            '0x' || substring(DATA, 91, 40)                 AS taker_token,
-            '0x' || substring(DATA, 155, 40)                AS maker_token,
-            bytea2numeric('0x' || substring(DATA, 219, 40)) AS taker_token_amount_raw,
-            bytea2numeric('0x' || substring(DATA, 283, 40)) AS maker_token_amount_raw,
+            0x || substring(DATA, 91, 40)                 AS taker_token,
+            0x || substring(DATA, 155, 40)                AS maker_token,
+            bytea2numeric(0x || substring(DATA, 219, 40)) AS taker_token_amount_raw,
+            bytea2numeric(0x || substring(DATA, 283, 40)) AS maker_token_amount_raw,
             'BridgeFill'                                    AS type,
             zeroex_tx.affiliate_address                     AS affiliate_address,
             TRUE                                            AS swap_flag,
             FALSE                                           AS matcha_limit_order_flag
     FROM {{ source('avalanche_c', 'logs') }} logs
     INNER JOIN zeroex_tx ON zeroex_tx.tx_hash = logs.tx_hash
-    WHERE topic1 = '0xff3bc5e46464411f331d1b093e1587d2d1aa667f5618f98a95afc4132709d3a9'
+    WHERE topic1 = 0xff3bc5e46464411f331d1b093e1587d2d1aa667f5618f98a95afc4132709d3a9
         AND contract_address = 0xdb6f1920a889355780af7570773609bd8cb1f498
 
         {% if is_incremental() %}
@@ -208,12 +204,12 @@ NewBridgeFill AS (
             INDEX                                           AS evt_index,
             logs.contract_address,
             block_time                                      AS block_time,
-            '0x' || substring(DATA, 27, 40)                 AS maker,
+            0x || substring(DATA, 27, 40)                 AS maker,
             0xdef1c0ded9bec7f1a1670819833240f027b25eff    AS taker,
-            '0x' || substring(DATA, 91, 40)                 AS taker_token,
-            '0x' || substring(DATA, 155, 40)                AS maker_token,
-            bytea2numeric('0x' || substring(DATA, 219, 40)) AS taker_token_amount_raw,
-            bytea2numeric('0x' || substring(DATA, 283, 40)) AS maker_token_amount_raw,
+            0x || substring(DATA, 91, 40)                 AS taker_token,
+            0x || substring(DATA, 155, 40)                AS maker_token,
+            bytea2numeric(0x || substring(DATA, 219, 40)) AS taker_token_amount_raw,
+            bytea2numeric(0x || substring(DATA, 283, 40)) AS maker_token_amount_raw,
             'BridgeFill'                                 AS type,
             zeroex_tx.affiliate_address                     AS affiliate_address,
             TRUE                                            AS swap_flag,
@@ -222,7 +218,7 @@ NewBridgeFill AS (
     INNER JOIN zeroex_tx
         ON zeroex_tx.tx_hash = logs.tx_hash
         AND zeroex_tx.block_number = logs.block_number
-    WHERE topic1 = '0xe59e71a14fe90157eedc866c4f8c767d3943d6b6b2e8cd64dddcc92ab4c55af8'
+    WHERE topic1 = 0xe59e71a14fe90157eedc866c4f8c767d3943d6b6b2e8cd64dddcc92ab4c55af8
         AND contract_address = 0xdb6f1920a889355780af7570773609bd8cb1f498
 
         {% if is_incremental() %}
@@ -301,12 +297,14 @@ SELECT
         maker_token_amount_raw / pow(10, mp.decimals) AS maker_token_amount,
         maker_token_amount_raw,
         all_tx.type,
-        affiliate_address,
+        max(affiliate_address) over (partition by all_tx.tx_hash) as affiliate_address,
         swap_flag,
         matcha_limit_order_flag,
-        CASE WHEN maker_token IN (0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7,0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664,0xc7198437980c041c805a1edcba50c1ce5db95118,0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7,0xd586e7f844cea2f87f50152665bcbc2c279d8d70, 0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab)
+        CASE WHEN maker_token IN (0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7,0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664,0xc7198437980c041c805a1edcba50c1ce5db95118,
+            0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7,0xd586e7f844cea2f87f50152665bcbc2c279d8d70, 0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab) AND  mp.price IS NOT NULL
              THEN (all_tx.maker_token_amount_raw / pow(10, mp.decimals)) * mp.price
-             WHEN taker_token IN (0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7,0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664,0xc7198437980c041c805a1edcba50c1ce5db95118,0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7,0xd586e7f844cea2f87f50152665bcbc2c279d8d70, 0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab)    
+             WHEN taker_token IN (0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7,0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664,0xc7198437980c041c805a1edcba50c1ce5db95118,
+                0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7,0xd586e7f844cea2f87f50152665bcbc2c279d8d70, 0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab)    AND  tp.price IS NOT NULL
              THEN (all_tx.taker_token_amount_raw / pow(10, tp.decimals)) * tp.price
              ELSE COALESCE((all_tx.maker_token_amount_raw / pow(10, mp.decimals)) * mp.price, (all_tx.taker_token_amount_raw / pow(10, tp.decimals)) * tp.price)
              END AS volume_usd, 
@@ -327,7 +325,7 @@ INNER JOIN {{ source('avalanche_c', 'transactions')}} tx
 LEFT JOIN {{ source('prices', 'usd') }} tp 
     ON date_trunc('minute', all_tx.block_time) = tp.minute
     AND CASE
-            WHEN all_tx.taker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+            WHEN all_tx.taker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7
             ELSE all_tx.taker_token
         END = tp.contract_address
     AND tp.blockchain = 'avalanche_c'
@@ -341,7 +339,7 @@ LEFT JOIN {{ source('prices', 'usd') }} tp
 LEFT JOIN {{ source('prices', 'usd') }} mp 
     ON DATE_TRUNC('minute', all_tx.block_time) = mp.minute
     AND CASE
-            WHEN all_tx.maker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+            WHEN all_tx.maker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7
             ELSE all_tx.maker_token
         END = mp.contract_address
     AND mp.blockchain = 'avalanche_c'

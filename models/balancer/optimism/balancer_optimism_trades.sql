@@ -28,6 +28,8 @@ with v2 as (
     from {{ source('balancer_v2_optimism', 'Vault_evt_Swap') }} s
     inner join {{ source('balancer_v2_optimism', 'Vault_evt_PoolRegistered') }} p
     on s.poolId = p.poolId
+    WHERE tokenIn != poolAddress
+        AND tokenOut != poolAddress
     {% if not is_incremental() %}
         where s.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}

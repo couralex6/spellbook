@@ -202,6 +202,9 @@ sources:
         description: "Rewards gauges created on Balancer on Optimism"
         loaded_at_field: evt_block_time
 
+      - name: Vault_evt_FlashLoan
+        loaded_at_field: evt_block_time
+
   - name: balancer_optimism
     database: delta_prod
     description: >

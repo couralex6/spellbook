@@ -1,21 +1,24 @@
 version: 2
 
-sources:
+sources: 
   - name: quickswap_v3_polygon
     database: delta_prod
     description: "Polygon decoded tables related to QuickSwap v3 contract"
     freshness:
-      warn_after: {count: 12, period: hour}
+      warn_after: { count: 12, period: hour }
     tables:
       - name: AlgebraPool_evt_Swap
         loaded_at_field: evt_block_time
         description: "" # to-do
         columns:
-          - name: amount1
+          - &amount1
+            name: amount1
             description: "The delta of the token1 balance of the pool"
-          - name: amount0
+          - &amount0
+            name: amount0
             description: "The delta of the token0 balance of the pool"
-          - name: contract_address
+          - &contract_address
+            name: contract_address
             description: "Polygon address for the liquidity pool used in transaction"
           - &evt_block_number
             name: evt_block_number
@@ -31,15 +34,20 @@ sources:
             description: "Primary key of the transaction"
             tests:
               - not_null
-          - name: liquidity
+          - &liquidity
+            name: liquidity
             description: "The liquidity of the pool after the swap"
-          - name: sqrtPriceX96
+          - &price
+            name: sqrtPriceX96
             description: the sqt(price) of the pool after the swap"
-          - name: recipient
+          - &recipient
+            name: recipient
             description: "The address that received the output of the swap"
-          - name: sender
+          - &sender
+            name: sender
             description: "The address that initiated the swap call"
-          - name: tick
+          - &tick
+            name: tick
             description: the log base 1.0001 of price of the pool after the swap"
       - name: AlgebraFactory_evt_Pool
         loaded_at_field: evt_block_time
@@ -51,9 +59,54 @@ sources:
           - *evt_block_time
           - *evt_index
           - *evt_tx_hash
-          - name: token0
+          - &token0
+            name: token0
             description: "The first of the two tokens in the pool"
-          - name: token1
+          - &token1
+            name: token1
             description: "The second of the two tokens in the pool"
-          - name: pool
+          - &pool
+            name: pool
             description: "Polygon address for the liquidity pool created"
+
+  - name: quickswap_polygon
+    database: delta_prod
+    description: "Polygon decoded tables related to Quickswap v2 contract"
+    freshness:
+      warn_after: { count: 12, period: hour }
+    tables:
+      - name: UniswapV2Pair_evt_Swap
+        loaded_at_field: evt_block_time
+        description: "" # to-do
+        columns:
+          - &amount0In
+            name: amount0In
+          - &amount0Out
+            name: amount0Out
+          - &amount1In
+            name: amount1In
+          - &amount1Out
+            name: amount1Out
+          - *contract_address
+          - *evt_block_number
+          - *evt_block_time 
+          - *evt_index
+          - *evt_tx_hash
+          - *sender
+          - &to
+            name: to
+      - name: UniswapV2Factory_evt_PairCreated
+        loaded_at_field: evt_block_time
+        description: "" # to-do
+        columns:
+          - &_0
+            name: _0
+          - *contract_address
+          - *evt_block_number
+          - *evt_block_time 
+          - *evt_index
+          - *evt_tx_hash
+          - &pair
+            name: pair
+          - *token0
+          - *token1
