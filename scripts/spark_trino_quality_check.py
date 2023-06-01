@@ -32,12 +32,6 @@ def databricks_client():
 
     return connection
 
-    # cursor.execute("SELECT * from range(10)")
-    # print(cursor.fetchall())
-    #
-    # cursor.close()
-    # connection.close()
-
 def trino_client():
     """
     Function that executes a query passed as a string against the trino server. We would like to use aws secrets
@@ -74,7 +68,7 @@ if __name__ == "__main__":
     trino_conn = databricks_client()
 
     # get spark tables
-    spark_tables = get_tables_from_manifest("s3://manifest-spellbook/manifest.json", [])
+    spark_tables = get_tables_from_manifest("manifest.json", [])
     # spark_tables = get_tables_from_manifest("/Users/couralex/Desktop/previous_manifest.json", [])
     # get trino tables
     # trino_tables = get_tables_from_manifest("s3://manifest-spellbook/manifest-trino.json", [])

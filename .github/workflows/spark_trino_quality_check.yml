@@ -1,7 +1,8 @@
 name: Spark - Trino Compatibility Check
 on:
   schedule:
-    - cron: "0 * * * *" # every hour
+    # once a day at midnight
+    - cron: "0 0 * * *"
 
 jobs:
   spark_trino_quality_check:
