@@ -98,7 +98,7 @@ SELECT
     ,kyberswap_dex.maker
     ,kyberswap_dex.project_contract_address
     ,kyberswap_dex.tx_hash
-    ,tx.from                                                             AS tx_from
+    ,tx."from"                                                             AS tx_from
     ,tx.to                                                               AS tx_to
     ,kyberswap_dex.trace_address
     ,kyberswap_dex.evt_index

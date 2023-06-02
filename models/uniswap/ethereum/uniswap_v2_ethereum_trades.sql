@@ -14,9 +14,9 @@
 }}
 
 {% set project_start_date = '2020-05-05' %}
-{% set weth_ubomb_wash_trading_pair = 0xed9c854cb02de75ce4c9bba992828d6cb7fd5c71 %}
-{% set weth_weth_wash_trading_pair = 0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92 %}
-{% set feg_eth_wash_trading_pair = 0x854373387e41371ac6e307a1f29603c6fa10d872 %}
+{% set weth_ubomb_wash_trading_pair = "0xed9c854cb02de75ce4c9bba992828d6cb7fd5c71" %}
+{% set weth_weth_wash_trading_pair = "0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92" %}
+{% set feg_eth_wash_trading_pair = "0x854373387e41371ac6e307a1f29603c6fa10d872" %}
 
 WITH dexs AS
 (
@@ -39,9 +39,9 @@ WITH dexs AS
     INNER JOIN {{ source('uniswap_v2_ethereum', 'Factory_evt_PairCreated') }} f
         ON f.pair = t.contract_address
     WHERE t.contract_address NOT IN (
-        {{weth_ubomb_wash_trading_pair}},
-        {{weth_weth_wash_trading_pair}},
-        {{feg_eth_wash_trading_pair}} )
+        from_hex({{weth_ubomb_wash_trading_pair}}),
+        from_hex({{weth_weth_wash_trading_pair}}),
+        from_hex({{feg_eth_wash_trading_pair}}) )
     {% if is_incremental() %}
     AND t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}

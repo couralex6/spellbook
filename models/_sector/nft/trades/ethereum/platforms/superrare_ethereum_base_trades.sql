@@ -211,7 +211,7 @@ SELECT
 from all_superrare_sales a
 left join {{ source('erc721_ethereum','evt_transfer') }} minter on minter.contract_address = a.contract_address
     and minter.tokenId = a.nft_token_id
-    and minter.from = 0x0000000000000000000000000000000000000000
+    and minter."from" = 0x0000000000000000000000000000000000000000
     {% if is_incremental() %}
     and minter.evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
@@ -220,7 +220,7 @@ left join {{ source('erc721_ethereum','evt_transfer') }} minter on minter.contra
 
 left join {{ source('erc20_ethereum','evt_transfer') }} minter_superrare on minter_superrare.contract_address = a.contract_address
     and minter_superrare.value = a.nft_token_id
-    and minter_superrare.from = 0x0000000000000000000000000000000000000000
+    and minter_superrare."from" = 0x0000000000000000000000000000000000000000
     {% if is_incremental() %}
     and minter_superrare.evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}

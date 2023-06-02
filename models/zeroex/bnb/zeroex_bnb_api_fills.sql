@@ -412,7 +412,7 @@ SELECT distinct
              THEN (all_tx.taker_token_amount_raw / pow(10, ts.decimals)) * tp.price
              ELSE COALESCE((all_tx.maker_token_amount_raw / pow(10, ms.decimals)) * mp.price, (all_tx.taker_token_amount_raw / pow(10, ts.decimals)) * tp.price)
              END AS volume_usd,
-        tx.from AS tx_from,
+        tx."from" AS tx_from,
         tx.to AS tx_to,
         'bnb' AS blockchain
 FROM all_tx

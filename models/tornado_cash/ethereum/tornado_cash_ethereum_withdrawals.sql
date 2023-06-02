@@ -23,7 +23,7 @@ SELECT tc.evt_block_time AS block_time
 , 'ETH' AS currency_symbol
 , 'ethereum' AS blockchain
 , 'classic' AS tornado_version
-, et.from AS tx_from
+, et."from" AS tx_from
 , tc.nullifierHash AS nullifier
 , tc.fee/POWER(10, 18) AS fee
 , tc.relayer
@@ -105,7 +105,7 @@ SELECT tc.evt_block_time AS block_time
         END AS currency_symbol
 , 'ethereum' AS blockchain
 , 'classic' AS tornado_version
-, et.from AS tx_from
+, et."from" AS tx_from
 , tc.nullifierHash AS nullifier
 , tc.fee/POWER(10, 18) AS fee
 , tc.relayer
@@ -205,7 +205,7 @@ SELECT tc.evt_block_time AS block_time
         END AS currency_symbol
 , 'ethereum' AS blockchain
 , 'classic' AS tornado_version
-, et.from AS tx_from
+, et."from" AS tx_from
 , tc.nullifierHash AS nullifier
 , tc.fee/POWER(10, 18) AS fee
 , tc.relayer
