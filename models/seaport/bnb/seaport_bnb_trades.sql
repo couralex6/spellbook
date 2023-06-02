@@ -12,8 +12,8 @@
     )
 }}
 
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" %}  -- WBNB
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c %}  -- WBNB
 {% set c_native_symbol = "BNB" %}
 {% set c_seaport_first_date = "2022-06-01" %}
 

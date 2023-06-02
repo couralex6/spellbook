@@ -37,13 +37,13 @@ WITH dex_swap AS (
             srcAmount AS token_sold_amount_raw,
             CAST(NULL AS double) AS amount_usd,
             CASE 
-                WHEN destToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' -- WETH 
+                WHEN destToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 -- WETH 
                 ELSE destToken
             END AS token_bought_address,
             CASE 
-                WHEN srcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' -- WETH 
+                WHEN srcToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 -- WETH 
                 ELSE srcToken
             END AS token_sold_address,
             contract_address AS project_contract_address,
@@ -125,7 +125,7 @@ call_swap_without_event AS (
             t.block_number,
             t.block_time,
             tx.`from` AS user_address,
-            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' AS tokenIn, -- WETH
+            0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 AS tokenIn, -- WETH
             sum(case
                 when t.`from` = tx.`from` then cast(t.value AS decimal(38, 0))
                 else -1 * cast(t.value AS decimal(38, 0))
@@ -207,7 +207,7 @@ call_swap_without_event AS (
             t.block_number,
             t.block_time,
             t.`to` AS user_address,
-            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' AS tokenOut, -- WETH
+            0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 AS tokenOut, -- WETH
             cast(t.value AS decimal(38, 0)) AS amountOut,
             t.trace_address,
             CAST(-1 as integer) AS evt_index
@@ -245,7 +245,7 @@ call_swap_without_event AS (
         CAST(NULL AS double) AS amount_usd,
         o.tokenOut AS token_bought_address,
         i.tokenIn AS token_sold_address,
-        '0x1bd435f3c054b6e901b7b108a0ab7617c808677b' AS project_contract_address,
+        0x1bd435f3c054b6e901b7b108a0ab7617c808677b AS project_contract_address,
         i.tx_hash,
         greatest(i.trace_address, o.trace_address) AS trace_address,
         greatest(i.evt_index, o.evt_index) AS evt_index

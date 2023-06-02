@@ -35,7 +35,7 @@ WITH
             , tt.symbol AS taker_symbol
             , fills.takerAssetFilledAmount / pow(10, tt.decimals) AS taker_asset_filled_amount
             , (fills.feeRecipientAddress in 
-                ('0x9b858be6e3047d88820f439b240deac2418a2551','0x86003b044f70dac0abc80ac8957305b6370893ed','0x5bc2419a087666148bfbe1361ae6c06d240c6131')) 
+                (0x9b858be6e3047d88820f439b240deac2418a2551,0x86003b044f70dac0abc80ac8957305b6370893ed,0x5bc2419a087666148bfbe1361ae6c06d240c6131)) 
                 AS matcha_limit_order_flag
             , CASE
                     WHEN tp.symbol = 'USDC' THEN (fills.takerAssetFilledAmount / 1e6) --don't multiply by anything as these assets are USD
@@ -56,14 +56,14 @@ WITH
             date_trunc('minute', evt_block_time) = tp.minute and tp.blockchain = 'polygon'
             AND CASE
                     -- Set Deversifi ETHWrapper to WETH
-                    WHEN SUBSTRING(fills.takerAssetData,17,20) IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN SUBSTRING(fills.takerAssetData,17,20) IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE SUBSTRING(fills.takerAssetData,17,20)
                 END = tp.contract_address
         LEFT JOIN {{ source('prices', 'usd') }} mp ON
             DATE_TRUNC('minute', evt_block_time) = mp.minute  and mp.blockchain = 'polygon'
             AND CASE
                     -- Set Deversifi ETHWrapper to WETH
-                    WHEN SUBSTRING(fills.makerAssetData,17,20) IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN SUBSTRING(fills.makerAssetData,17,20) IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE SUBSTRING(fills.makerAssetData,17,20)
                 END = mp.contract_address
         LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = SUBSTRING(fills.makerAssetData,17,20) and mt.blockchain = 'polygon'
@@ -98,7 +98,7 @@ WITH
             , tt.symbol AS taker_symbol
             , fills.takerTokenFilledAmount / pow(10, tt.decimals) AS taker_asset_filled_amount
             , (fills.feeRecipient in 
-                ('0x9b858be6e3047d88820f439b240deac2418a2551','0x86003b044f70dac0abc80ac8957305b6370893ed','0x5bc2419a087666148bfbe1361ae6c06d240c6131')) 
+                (0x9b858be6e3047d88820f439b240deac2418a2551,0x86003b044f70dac0abc80ac8957305b6370893ed,0x5bc2419a087666148bfbe1361ae6c06d240c6131)) 
                 AS matcha_limit_order_flag
             , CASE
                     WHEN tp.symbol = 'USDC' THEN (fills.takerTokenFilledAmount / 1e6) ----don't multiply by anything as these assets are USD
@@ -119,14 +119,14 @@ WITH
             date_trunc('minute', evt_block_time) = tp.minute and  tp.blockchain = 'polygon'
             AND CASE
                     -- Set Deversifi ETHWrapper to WETH
-                    WHEN fills.takerToken IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN fills.takerToken IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE fills.takerToken
                 END = tp.contract_address
         LEFT JOIN {{ source('prices', 'usd') }} mp ON
             DATE_TRUNC('minute', evt_block_time) = mp.minute  and mp.blockchain = 'polygon'
             AND CASE
                     -- Set Deversifi ETHWrapper to WETH
-                    WHEN fills.makerToken IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN fills.makerToken IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE fills.makerToken
                 END = mp.contract_address
         LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = fills.makerToken and mt.blockchain = 'polygon'
@@ -179,14 +179,14 @@ WITH
           date_trunc('minute', evt_block_time) = tp.minute and tp.blockchain = 'polygon'
           AND CASE
                   -- Set Deversifi ETHWrapper to WETH
-                    WHEN fills.takerToken IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN fills.takerToken IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE fills.takerToken
               END = tp.contract_address
       LEFT JOIN {{ source('prices', 'usd') }} mp ON
           DATE_TRUNC('minute', evt_block_time) = mp.minute  and     mp.blockchain = 'polygon'
           AND CASE
                   -- Set Deversifi ETHWrapper to WETH
-                    WHEN fills.makerToken IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN fills.makerToken IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE fills.makerToken
               END = mp.contract_address
       LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = fills.makerToken and mt.blockchain = 'polygon'
@@ -238,14 +238,14 @@ WITH
           date_trunc('minute', evt_block_time) = tp.minute and tp.blockchain = 'polygon'
           AND CASE
                   -- Set Deversifi ETHWrapper to WETH
-                    WHEN fills.takerToken IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN fills.takerToken IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE fills.takerToken
               END = tp.contract_address
       LEFT JOIN {{ source('prices', 'usd') }} mp ON
           DATE_TRUNC('minute', evt_block_time) = mp.minute  and    mp.blockchain = 'polygon'
           AND CASE
                   -- Set Deversifi ETHWrapper to WETH
-                    WHEN fills.makerToken IN ('0x0000000000000000000000000000000000001010') THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+                    WHEN fills.makerToken IN (0x0000000000000000000000000000000000001010) THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
                     ELSE fills.makerToken
               END = mp.contract_address
       LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = fills.makerToken and mt.blockchain = 'polygon'

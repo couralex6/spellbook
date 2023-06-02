@@ -18,8 +18,8 @@
 
 
 {% set c_seaport_first_date = "2023-02-01" %}
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" %}
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 %}
 {% set c_native_symbol = "ETH" %}
 
 with source_ethereum_transactions as (
@@ -68,8 +68,8 @@ with source_ethereum_transactions as (
           ,evt_index as om_evt_index
           ,posexplode(orderhashes) as (om_order_id, om_order_hash)
       from {{ source('seaport_ethereum','Seaport_evt_OrdersMatched') }}
-     where contract_address in ('0x00000000000001ad428e4906ae43d8f9852d0dd6' -- Seaport v1.4
-                               ,'0x00000000000000adc04c56bf30ac9d3c0aaf14dc' -- Seaport v1.5
+     where contract_address in (0x00000000000001ad428e4906ae43d8f9852d0dd6 -- Seaport v1.4
+                               ,0x00000000000000adc04c56bf30ac9d3c0aaf14dc -- Seaport v1.5
                                )  
 )
 ,iv_platform_fee_wallet (wallet_address, wallet_name) as (
@@ -134,8 +134,8 @@ with source_ethereum_transactions as (
             , orderHash AS order_hash
             , posexplode(offer) as (offer_idx, offer_item)
         from {{ source('seaport_ethereum', 'Seaport_evt_OrderFulfilled') }}
-       where contract_address in ('0x00000000000001ad428e4906ae43d8f9852d0dd6' -- Seaport v1.4
-                                 ,'0x00000000000000adc04c56bf30ac9d3c0aaf14dc' -- Seaport v1.5
+       where contract_address in (0x00000000000001ad428e4906ae43d8f9852d0dd6 -- Seaport v1.4
+                                 ,0x00000000000000adc04c56bf30ac9d3c0aaf14dc -- Seaport v1.5
                                  )  
         {% if not is_incremental() %}
         and evt_block_time >= date '{{c_seaport_first_date}}'  -- seaport first txn
@@ -200,8 +200,8 @@ with source_ethereum_transactions as (
             , orderHash AS order_hash
             ,posexplode(consideration) as (consideration_idx, consideration_item)
         from {{ source('seaport_ethereum','Seaport_evt_OrderFulfilled') }}
-       where contract_address in ('0x00000000000001ad428e4906ae43d8f9852d0dd6' -- Seaport v1.4
-                                 ,'0x00000000000000adc04c56bf30ac9d3c0aaf14dc' -- Seaport v1.5
+       where contract_address in (0x00000000000001ad428e4906ae43d8f9852d0dd6 -- Seaport v1.4
+                                 ,0x00000000000000adc04c56bf30ac9d3c0aaf14dc -- Seaport v1.5
                                  )  
         {% if not is_incremental() %}
         and evt_block_time >= date '{{c_seaport_first_date}}'  -- seaport first txn
@@ -466,7 +466,7 @@ with source_ethereum_transactions as (
     and p.minute = date_trunc('minute', a.block_time)
   left join ref_nft_aggregators agg on agg.contract_address = t.to
   left join ref_nft_aggregators_marks agg_m on right(t.data, agg_m.hash_marker_size) = agg_m.hash_marker
-  where t.from != '0x110b2b128a9ed1be5ef3232d8e4e41640df5c2cd' -- this is a special address which transact English Auction, will handle later. test comment to force CI
+  where t.from != 0x110b2b128a9ed1be5ef3232d8e4e41640df5c2cd -- this is a special address which transact English Auction, will handle later. test comment to force CI
 
 )
   -- Rename column to align other *.trades tables
@@ -547,11 +547,11 @@ select
         ,fee_wallet_name
         ,'seaport-' || CAST(tx_hash AS VARCHAR(100)) || '-' || cast(evt_index as VARCHAR(10)) || '-' || CAST(nft_contract_address AS VARCHAR(100)) || '-' || cast(nft_token_id as VARCHAR(100)) || '-' || cast(sub_type as VARCHAR(20)) || '-' || cast(sub_idx as VARCHAR(10)) as unique_trade_id
   from   iv_trades
- where  (   CAST(zone AS VARCHAR(100)) in ('0xf397619df7bfd4d1657ea9bdd9df7ff888731a11'
-                                          ,'0x9b814233894cd227f561b78cc65891aa55c62ad2'
-                                          ,'0x004c00500000ad104d7dbd00e3ae0a5c00560c00'
-                                          ,'0x110b2b128a9ed1be5ef3232d8e4e41640df5c2cd'
-                                          ,'0x000000e7ec00e7b300774b00001314b8610022b8' -- newly added on seaport v1.4
+ where  (   CAST(zone AS VARCHAR(100)) in (0xf397619df7bfd4d1657ea9bdd9df7ff888731a11
+                                          ,0x9b814233894cd227f561b78cc65891aa55c62ad2
+                                          ,0x004c00500000ad104d7dbd00e3ae0a5c00560c00
+                                          ,0x110b2b128a9ed1be5ef3232d8e4e41640df5c2cd
+                                          ,0x000000e7ec00e7b300774b00001314b8610022b8 -- newly added on seaport v1.4
                                           )
          or  fee_wallet_name = 'opensea'
         ) 

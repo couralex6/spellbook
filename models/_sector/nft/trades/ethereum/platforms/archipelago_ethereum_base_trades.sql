@@ -32,10 +32,10 @@ fee_events as (
         evt_block_number
         , tradeId
         , sum(amount) filter (
-            where recipient not in ('0xa76456bb6abc50fb38e17c042026bc27a95c3314','0x1fc12c9f68a6b0633ba5897a40a8e61ed9274dc9')
+            where recipient not in (0xa76456bb6abc50fb38e17c042026bc27a95c3314,0x1fc12c9f68a6b0633ba5897a40a8e61ed9274dc9)
             ) as royalty_amount
         , sum(amount) filter (
-            where recipient in ('0xa76456bb6abc50fb38e17c042026bc27a95c3314','0x1fc12c9f68a6b0633ba5897a40a8e61ed9274dc9')
+            where recipient in (0xa76456bb6abc50fb38e17c042026bc27a95c3314,0x1fc12c9f68a6b0633ba5897a40a8e61ed9274dc9)
             ) as platform_amount
     FROM {{ source('archipelago_ethereum','ArchipelagoMarket_evt_RoyaltyPayment') }}
     {% if is_incremental() %}

@@ -162,8 +162,8 @@ with base_level as (
   union all
   -- missing contracts
   select 
-     COALESCE(oc.from,'0xdeaddeaddeaddeaddeaddeaddeaddeaddead0006') AS trace_creator_address
-    ,COALESCE(oc.from,'0xdeaddeaddeaddeaddeaddeaddeaddeaddead0006') AS creator_address
+     COALESCE(oc.from,0xdeaddeaddeaddeaddeaddeaddeaddeaddead0006) AS trace_creator_address
+    ,COALESCE(oc.from,0xdeaddeaddeaddeaddeaddeaddeaddeaddead0006) AS creator_address
     ,cast(NULL as string) as contract_factory
     ,l.contract_address
     ,oc.namespace as contract_project 

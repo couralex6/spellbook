@@ -27,7 +27,7 @@ inner join (
     union all
     select
     output_pool
-    ,'0x0000000000000000000000000000000000000000' AS token_address
+    ,0x0000000000000000000000000000000000000000 AS token_address
     from {{ source('collectionswap_ethereum','CollectionPoolFactory_call_createPoolETH') }}
     where call_success
     {% if is_incremental() %}
@@ -45,7 +45,7 @@ inner join (
     union all
     select
     output_pool
-    ,'0x0000000000000000000000000000000000000000' AS token_address
+    ,0x0000000000000000000000000000000000000000 AS token_address
     from {{ source('collectionswap_ethereum','CollectionPoolFactory_call_createPoolETHFiltered') }}
     where call_success
     {% if is_incremental() %}

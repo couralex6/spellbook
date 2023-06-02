@@ -37,7 +37,7 @@ WITH
             , tt.symbol AS taker_symbol
             , fills.takerTokenFilledAmount / pow(10, tt.decimals) AS taker_asset_filled_amount
             , (fills.feeRecipient in 
-                ('0x9b858be6e3047d88820f439b240deac2418a2551','0x86003b044f70dac0abc80ac8957305b6370893ed','0x5bc2419a087666148bfbe1361ae6c06d240c6131')) 
+                (0x9b858be6e3047d88820f439b240deac2418a2551,0x86003b044f70dac0abc80ac8957305b6370893ed,0x5bc2419a087666148bfbe1361ae6c06d240c6131)) 
                 AS matcha_limit_order_flag
             , CASE
                     WHEN tp.symbol = 'USDC' THEN (fills.takerTokenFilledAmount / 1e6) ----don't multiply by anything as these assets are USD
@@ -58,14 +58,14 @@ WITH
             date_trunc('minute', evt_block_time) = tp.minute and  tp.blockchain = 'arbitrum'
             AND CASE
                     -- set native token to wrapped version
-                    WHEN fills.takerToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+                    WHEN fills.takerToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1
                     ELSE fills.takerToken
                 END = tp.contract_address
         LEFT JOIN {{ source('prices', 'usd') }} mp ON
             DATE_TRUNC('minute', evt_block_time) = mp.minute  and mp.blockchain = 'arbitrum'
             AND CASE
                     -- set native token to wrapped version
-                    WHEN fills.makerToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+                    WHEN fills.makerToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1
                     ELSE fills.makerToken
                 END = mp.contract_address
         LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = fills.makerToken and mt.blockchain = 'arbitrum'
@@ -119,14 +119,14 @@ WITH
           date_trunc('minute', evt_block_time) = tp.minute 
           AND CASE
                   -- set native token to wrapped version
-                    WHEN fills.takerToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+                    WHEN fills.takerToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1
                     ELSE fills.takerToken
               END = tp.contract_address
       LEFT JOIN {{ source('prices', 'usd') }} mp ON mp.blockchain = 'arbitrum' and
           DATE_TRUNC('minute', evt_block_time) = mp.minute  
           AND CASE
                   -- set native token to wrapped version
-                    WHEN fills.makerToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+                    WHEN fills.makerToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1
                     ELSE fills.makerToken
               END = mp.contract_address
       LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = fills.makerToken and mt.blockchain = 'arbitrum'
@@ -179,14 +179,14 @@ WITH
           date_trunc('minute', evt_block_time) = tp.minute 
           AND CASE
                   -- set native token to wrapped version
-                    WHEN fills.takerToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+                    WHEN fills.takerToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1
                     ELSE fills.takerToken
               END = tp.contract_address
       LEFT JOIN {{ source('prices', 'usd') }} mp ON mp.blockchain = 'arbitrum' and 
           DATE_TRUNC('minute', evt_block_time) = mp.minute  
           AND CASE
                   -- set native token to wrapped version
-                    WHEN fills.makerToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
+                    WHEN fills.makerToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1
                     ELSE fills.makerToken
               END = mp.contract_address
       LEFT OUTER JOIN {{ ref('tokens_erc20') }} mt ON mt.contract_address = fills.makerToken and mt.blockchain = 'arbitrum'

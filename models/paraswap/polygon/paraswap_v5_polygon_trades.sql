@@ -34,13 +34,13 @@ WITH dexs AS (
             srcAmount AS token_sold_amount_raw,
             CAST(NULL AS double) AS amount_usd,
             CASE 
-                WHEN destToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' -- WMATIC 
+                WHEN destToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270 -- WMATIC 
                 ELSE destToken
             END AS token_bought_address,
             CASE 
-                WHEN srcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' -- WMATIC 
+                WHEN srcToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270 -- WMATIC 
                 ELSE srcToken
             END AS token_sold_address,
             contract_address AS project_contract_address,
@@ -61,7 +61,7 @@ WITH dexs AS (
 price_missed_previous AS (
     SELECT minute, contract_address, decimals, symbol, price
     FROM {{ source('prices', 'usd') }}
-    WHERE contract_address = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' -- WMATIC
+    WHERE contract_address = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270 -- WMATIC
     ORDER BY minute
     LIMIT 1
 ),
@@ -70,7 +70,7 @@ price_missed_previous AS (
 price_missed_next AS (
     SELECT minute, contract_address, decimals, symbol, price
     FROM {{ source('prices', 'usd') }}
-    WHERE contract_address = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' -- WMATIC
+    WHERE contract_address = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270 -- WMATIC
     ORDER BY minute desc
     LIMIT 1
 )

@@ -20,10 +20,10 @@
 -- materialize : incremental table
 
 {% set c_seaport_first_date = "2023-02-01" %}
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0x0000000000000000000000000000000000001010" %}  -- MATIC
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0x0000000000000000000000000000000000001010 %}  -- MATIC
 {% set c_native_symbol = "MATIC" %}
-{% set c_seaport_contract_address = "0x00000000000001ad428e4906ae43d8f9852d0dd6" %} -- v2 = Seaport v1.4
+{% set c_seaport_contract_address = 0x00000000000001ad428e4906ae43d8f9852d0dd6 %} -- v2 = Seaport v1.4
 
 with source_polygon_transactions as (
     select *
@@ -67,12 +67,12 @@ with source_polygon_transactions as (
           ,evt_index as om_evt_index
           ,posexplode(orderhashes) as (om_order_id, om_order_hash)
       from {{ source('seaport_polygon','Seaport_evt_OrdersMatched') }}
-     where contract_address in ('0x00000000000001ad428e4906ae43d8f9852d0dd6' -- Seaport v1.4
-                               ,'0x00000000000000adc04c56bf30ac9d3c0aaf14dc' -- Seaport v1.5
+     where contract_address in (0x00000000000001ad428e4906ae43d8f9852d0dd6 -- Seaport v1.4
+                               ,0x00000000000000adc04c56bf30ac9d3c0aaf14dc -- Seaport v1.5
                                )  
 )
 ,iv_platform_fee_wallet (wallet_address, wallet_name) as (
-    values   ('0x0000a26b00c1f0df003000390027140000faa719','opensea')
+    values   (0x0000a26b00c1f0df003000390027140000faa719,'opensea')
 )
 ,iv_offer_consideration as (
     select evt_block_time as block_time
@@ -130,8 +130,8 @@ with source_polygon_transactions as (
             , orderHash AS order_hash
             , posexplode(offer) as (offer_idx, offer_item)
         from {{ source('seaport_polygon', 'Seaport_evt_OrderFulfilled') }}
-       where contract_address in ('0x00000000000001ad428e4906ae43d8f9852d0dd6' -- Seaport v1.4
-                                 ,'0x00000000000000adc04c56bf30ac9d3c0aaf14dc' -- Seaport v1.5
+       where contract_address in (0x00000000000001ad428e4906ae43d8f9852d0dd6 -- Seaport v1.4
+                                 ,0x00000000000000adc04c56bf30ac9d3c0aaf14dc -- Seaport v1.5
                                  )  
        {% if not is_incremental() %}
          and evt_block_time >= date '{{c_seaport_first_date}}'  -- seaport first txn
@@ -196,8 +196,8 @@ with source_polygon_transactions as (
               ,orderHash AS order_hash
               ,posexplode(consideration) as (consideration_idx, consideration_item)
           from {{ source('seaport_polygon','Seaport_evt_OrderFulfilled') }}
-       where contract_address in ('0x00000000000001ad428e4906ae43d8f9852d0dd6' -- Seaport v1.4
-                                 ,'0x00000000000000adc04c56bf30ac9d3c0aaf14dc' -- Seaport v1.5
+       where contract_address in (0x00000000000001ad428e4906ae43d8f9852d0dd6 -- Seaport v1.4
+                                 ,0x00000000000000adc04c56bf30ac9d3c0aaf14dc -- Seaport v1.5
                                  )  
         {% if not is_incremental() %}
            and evt_block_time >= date '{{c_seaport_first_date}}'  -- seaport first txn

@@ -12,7 +12,7 @@
     )
 }}
 
-{% set velo_token_address = '0x3c8b650257cfb5f272f799f5e2b4e65093a11a05' %}
+{% set velo_token_address = 0x3c8b650257cfb5f272f799f5e2b4e65093a11a05 %}
 
 WITH price_bounds AS (
     SELECT MIN(hour) AS min_hour

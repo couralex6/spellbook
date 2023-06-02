@@ -23,9 +23,9 @@ eth_flow_orders as (
         evt_block_number as block_number,
         evt_tx_hash as tx_hash,
         case
-            when event.contract_address = '0x40a50cf069e992aa4536211b23f286ef88752187'
+            when event.contract_address = 0x40a50cf069e992aa4536211b23f286ef88752187
                 then 'prod'
-            when event.contract_address = '0xd02de8da0b71e1b59489794f423fabba2adc4d93'
+            when event.contract_address = 0xd02de8da0b71e1b59489794f423fabba2adc4d93
                 then 'barn'
         end as environment,
         -- This validity is always infinite. Instead we unpack this from the data field.

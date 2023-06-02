@@ -13,7 +13,7 @@
 }}
 
 {% set c_seaport_first_date = "2023-01-31" %}
-{% set weth_address = "0x4200000000000000000000000000000000000006" %}
+{% set weth_address = 0x4200000000000000000000000000000000000006 %}
 
 with iv_offer_consideration_raw as (
     select evt_block_time as block_time

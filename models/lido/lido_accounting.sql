@@ -12,13 +12,13 @@
 
 with tokens AS (
 select * from (values 
-    (LOWER('0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32')), --LDO
-    (LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F')),   --DAI
-    (LOWER('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')),   --USDC
-    (LOWER('0xdAC17F958D2ee523a2206206994597C13D831ec7')), -- USDT
-    (LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')),   --WETH
-    (LOWER('0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0')),   --MATIC
-    (LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84'))  --stETH
+    (LOWER(0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32)), --LDO
+    (LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F)),   --DAI
+    (LOWER(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48)),   --USDC
+    (LOWER(0xdAC17F958D2ee523a2206206994597C13D831ec7)), -- USDT
+    (LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2)),   --WETH
+    (LOWER(0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0)),   --MATIC
+    (LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84))  --stETH
 ) as tokens(address)),
  
 eth_prices as (
@@ -29,7 +29,7 @@ eth_prices as (
         price
     FROM {{source('prices','usd')}}
     WHERE blockchain = 'ethereum'
-    AND contract_address = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') 
+    AND contract_address = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) 
     AND EXTRACT(hour FROM minute) = 23
     AND EXTRACT(minute FROM minute) = 59
     AND minute >= '2020-10-01'
@@ -85,7 +85,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             coalesce(tokens_prices.token, accounts.token) AS base_token_address,
             
             coalesce(SUM(accounts.token_amount*tokens_prices.price)/POWER(10,coalesce(tokens_prices.decimals, pt.decimals)), 0) AS value_usd,
-            case when coalesce(tokens_prices.token, accounts.token) = lower('0xae7ab96520de3a18e5e111b5eaab095312d7fe84') 
+            case when coalesce(tokens_prices.token, accounts.token) = 0xae7ab96520de3a18e5e111b5eaab095312d7fe84 
                  then SUM(coalesce(accounts.token_amount, 0))/coalesce(POWER(10,coalesce(tokens_prices.decimals, pt.decimals)),1) 
                  else coalesce(SUM(accounts.token_amount*tokens_prices.token_eth_price)/POWER(10,coalesce(tokens_prices.decimals, pt.decimals)), 0) 
             end AS value_eth,
@@ -102,7 +102,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.1.1. Staked ETH' AS account,
             '-' AS category,
             COALESCE(amount_staked,0) AS token_amount,
-            coalesce(token, LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')) as token --ETH
+            coalesce(token, LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2)) as token --ETH
     FROM {{ref('lido_accounting_ethereum_deposits')}}
     
     
@@ -115,7 +115,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '2.1.1. stETH in Circulation' AS account,
             '-' AS category,
             COALESCE(amount_staked,0) AS token_amount,
-            LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') AS token
+            LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) AS token
     FROM {{ref('lido_accounting_ethereum_deposits')}}
     
     -- ========================================================= Gross staking rewards with the corresponding increase in asset accounts
@@ -140,7 +140,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3.1. Protocol Assets' AS account,
             '1.3.1.1. stETH' AS category,
             COALESCE(total,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     
@@ -154,7 +154,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.1.1. Staked ETH' AS account,
             '-' AS category,
             COALESCE(total,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -166,7 +166,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '2.1.1. stETH in Circulation' AS account,
             '-' AS category,
             COALESCE(total,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -180,7 +180,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '3.2.1. Net Revenue' AS account,
             '3.2.1.2. Staking rewards to holders (-)' AS category,            
             -COALESCE(depositors_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -192,7 +192,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3.1. Protocol Assets' AS account,
             '1.3.1.1. stETH' AS category,
             -COALESCE(depositors_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -206,7 +206,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '3.2.2. Cost of Revenue' AS account,
             '3.2.2.1. Staking rewards to node operators (-)' AS category,            
             -COALESCE(operators_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -218,7 +218,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3.1. Protocol Assets' AS account,
             '1.3.1.1. stETH' AS category,
             -COALESCE(operators_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -236,7 +236,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '3.2.2. Cost of Revenue' AS account,
             '3.2.2.2. Provision for slashing (-)' AS category,            
             -COALESCE(insurance_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -248,7 +248,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.2.2. Slashing Provision Contra Assets' AS account,
             '-' AS category,
             -COALESCE(insurance_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -260,7 +260,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '2.2.1. Slashing Provision' AS account,
             '-' AS category,
             COALESCE(insurance_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -272,7 +272,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.2.1. Slashing Provision' AS account,
             '-' AS category,
             COALESCE(insurance_revenue,0),
-            coalesce(token,LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')) AS token
+            coalesce(token,LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)) AS token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -286,7 +286,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '3.2.2. Cost of Revenue' AS account,
             '3.2.2.3. Other costs of revenue (-)' AS category,
             -0,
-            LOWER('0xae7ab96520de3a18e5e111b5eaab095312d7fe84') AS base_token
+            LOWER(0xae7ab96520de3a18e5e111b5eaab095312d7fe84) AS base_token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     UNION ALL
@@ -298,7 +298,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3.1. Protocol Assets' AS account,
             '1.3.1.1. stETH' AS category,            
             -0,
-            LOWER('0xae7ab96520de3a18e5e111b5eaab095312d7fe84') AS base_token
+            LOWER(0xae7ab96520de3a18e5e111b5eaab095312d7fe84) AS base_token
     FROM {{ref('lido_accounting_ethereum_revenue')}}
     
     -- ========================================================= LDO denominated Deposit Referrals
@@ -380,7 +380,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             COALESCE(amount_token,0),
             token
     FROM {{ref('lido_accounting_ethereum_liquidity_incentives')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     UNION ALL
@@ -391,16 +391,16 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' as secondary_label,
             '1.3.1. Protocol Assets' as account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,            
             COALESCE(amount_token,0),
             token
             
     FROM {{ref('lido_accounting_ethereum_liquidity_incentives')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     -- ========================================================= LDO denominated Domain Incentives
     -- This only works for LDO denominated expenses.
@@ -429,7 +429,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             amount_token AS value,
             token
     FROM {{ref('lido_accounting_ethereum_lox_incentives')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     UNION ALL
@@ -440,15 +440,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' AS secondary_label,
             '1.3.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,
             amount_token AS value,
             token
     FROM {{ref('lido_accounting_ethereum_lox_incentives')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     -- ========================================================= LEGO Grants
@@ -473,15 +473,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' AS secondary_label,
             '1.3.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,
             -amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_lego_expenses')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     UNION ALL 
     
@@ -494,7 +494,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_lego_expenses')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     UNION ALL
     -- ========================================================= Operating expenses from service entities
@@ -518,15 +518,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' AS secondary_label,
             '1.3.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,
             -amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_operating_expenses')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     UNION ALL
     
@@ -539,7 +539,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_operating_expenses')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     UNION ALL
@@ -556,7 +556,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             -amount_token,
             token 
     FROM {{ref('lido_accounting_ethereum_other_expenses')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     
@@ -568,15 +568,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' AS secondary_label,
             '1.3.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,
             -amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_other_expenses')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     --LDO expenses
     UNION ALL
@@ -590,7 +590,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             -amount_token,
             token 
     FROM {{ref('lido_accounting_ethereum_other_expenses')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     UNION ALL
     
@@ -604,7 +604,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             amount_token,
             token
     FROM   {{ref('lido_accounting_ethereum_other_expenses')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     UNION ALL
@@ -618,7 +618,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             -amount_token,
             token 
     FROM {{ref('lido_accounting_ethereum_trp_expenses')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     
@@ -634,7 +634,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_trp_expenses')}}
-    WHERE token IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     UNION ALL
@@ -649,7 +649,7 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_other_income')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     
@@ -661,15 +661,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' AS secondary_label,
             '1.3.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,
             amount_token,
             token
     FROM {{ref('lido_accounting_ethereum_other_income')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     UNION ALL 
@@ -680,15 +680,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '3.1. Protocol Capital' AS secondary_label,
             '3.1.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '3.1.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '3.1.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '3.1.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '3.1.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '3.1.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '3.1.1.3. ETH'
                 ELSE '3.1.1.4. Other'
             END AS category,
             CAST(amount_token AS DOUBLE),
             token
     FROM {{ref('lido_accounting_ethereum_fundraising')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
     
     
@@ -700,15 +700,15 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
             '1.3. Protocol Assets' AS secondary_label,
             '1.3.1. Protocol Assets' AS account,
             CASE
-                WHEN token = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') THEN '1.3.1.1. stETH'
-                WHEN token = LOWER('0x6B175474E89094C44Da98b954EedeAC495271d0F') THEN '1.3.1.2. DAI'
-                WHEN token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') THEN '1.3.1.3. ETH'
+                WHEN token = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) THEN '1.3.1.1. stETH'
+                WHEN token = LOWER(0x6B175474E89094C44Da98b954EedeAC495271d0F) THEN '1.3.1.2. DAI'
+                WHEN token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) THEN '1.3.1.3. ETH'
                 ELSE '1.3.1.4. Other'
             END AS category,
             CAST(amount_token AS DOUBLE),
             token
     FROM {{ref('lido_accounting_ethereum_fundraising')}}
-    WHERE token NOT IN (LOWER('0x5a98fcbea516cf06857215779fd812ca3bef1b32'))
+    WHERE token NOT IN (LOWER(0x5a98fcbea516cf06857215779fd812ca3bef1b32))
     
 
 ) accounts
@@ -717,11 +717,11 @@ SELECT  DATE_TRUNC('day', prices.usd.minute) AS period,
     AND ( 
         (
             (accounts.token) = (tokens_prices.token) 
-            AND (accounts.token) != LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')
+            AND (accounts.token) != LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)
         )
         OR (
-            tokens_prices.token = LOWER('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
-            AND accounts.token  = LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84')
+            tokens_prices.token = LOWER(0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2)
+            AND accounts.token  = LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84)
         )
     )
     LEFT JOIN {{ref('prices_tokens')}} pt ON accounts.token = pt.contract_address                     

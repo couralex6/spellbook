@@ -9,7 +9,7 @@
                                     "nft",
                                     \'["chuxin"]\') }}')
 }}
-{% set eth_address = "0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000" %}
+{% set eth_address = 0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000 %}
 
 with namespaces as (
     select

@@ -28,11 +28,11 @@ WITH dexs AS(
         cast(get_json_object(quoteInfo,'$.fromAmount') as double) as token_sold_amount_raw,
         cast(NULL as double)          AS amount_usd,
         case 
-            when get_json_object(quoteInfo,'$.toAsset') = '0x0000000000000000000000000000000000000000' then '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+            when get_json_object(quoteInfo,'$.toAsset') = 0x0000000000000000000000000000000000000000 then 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
             else get_json_object(quoteInfo,'$.toAsset')
         end                                                 as token_bought_address,
         case 
-            when get_json_object(quoteInfo,'$.fromAsset') = '0x0000000000000000000000000000000000000000' then '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+            when get_json_object(quoteInfo,'$.fromAsset') = 0x0000000000000000000000000000000000000000 then 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
             else get_json_object(quoteInfo,'$.fromAsset')
         end                                                 as token_sold_address,
 
@@ -59,7 +59,7 @@ WITH dexs AS(
 SELECT 'bnb'                                                     AS blockchain
      , 'onepunchswap'                                            AS project
      , case
-           when dexs.project_contract_address = '0xeeb28c597dc67ed4a337c14b20b0a5c353e38253' then 'quick'
+           when dexs.project_contract_address = 0xeeb28c597dc67ed4a337c14b20b0a5c353e38253 then 'quick'
            else 'normal'
     end                                                          AS version
      , TRY_CAST(date_trunc('DAY', dexs.block_time) AS date)      AS block_date

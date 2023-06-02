@@ -13,7 +13,7 @@ def main():
                     f.write(text)
 
 def remove_quotes(text):
-    return re.sub(r"'(0x[a-fA-F0-9]{40})'", r"\1", text)
+    return re.sub(r'"(0x[a-fA-F0-9]{40})"', r"\1", text)
 
 test_string = """
 
