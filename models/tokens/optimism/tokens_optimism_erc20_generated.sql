@@ -12,7 +12,7 @@ SELECT contract_address, symbol, MIN(decimals) AS decimals, token_type, token_ma
 FROM (
 
     SELECT
-    LOWER(l2_token) AS contract_address, l1_symbol AS symbol, l1_decimals as decimals
+    l2_token AS contract_address, l1_symbol AS symbol, l1_decimals as decimals
     , 'underlying' as token_type, 'l2 bridge mapping' AS token_mapping_source
     FROM {{ ref('tokens_optimism_erc20_bridged_mapping') }}
     WHERE l1_symbol IS NOT NULL
@@ -20,7 +20,7 @@ FROM (
     UNION ALL
 
     SELECT
-    LOWER(atoken_address) AS contract_address, atoken_symbol AS symbol, atoken_decimals as decimals
+    atoken_address AS contract_address, atoken_symbol AS symbol, atoken_decimals as decimals
     , 'receipt' as token_type, 'aave factory' AS token_mapping_source
     FROM {{ ref('aave_v3_tokens') }}
       WHERE blockchain = 'optimism'
@@ -28,7 +28,7 @@ FROM (
     UNION ALL
 
     SELECT
-    LOWER(atoken_address) AS contract_address, atoken_symbol AS symbol, atoken_decimals as decimals
+    atoken_address AS contract_address, atoken_symbol AS symbol, atoken_decimals as decimals
     , 'receipt' as token_type, 'the granary factory' AS token_mapping_source
     FROM {{ ref('the_granary_optimism_tokens') }}
       WHERE blockchain = 'optimism'
@@ -36,7 +36,7 @@ FROM (
     UNION ALL
 
     SELECT
-    LOWER(vault_token) AS contract_address, vault_symbol AS symbol, 18 as decimals
+    vault_token AS contract_address, vault_symbol AS symbol, 18 as decimals
     , 'receipt' as token_type, 'yearn vault factory' AS token_mapping_source
     FROM {{ ref('yearn_optimism_vaults') }}
       WHERE blockchain = 'optimism'
@@ -45,7 +45,7 @@ FROM (
   GROUP BY contract_address, symbol, token_type, token_mapping_source --get uniques & handle if L2 token factory gets decimals wrong
 )
 
-SELECT LOWER(contract_address) AS contract_address
+SELECT contract_address
       , symbol
       , decimals
       , token_type
