@@ -13,7 +13,7 @@
 }}
 
 
-{% set op_token_address = 0x4200000000000000000000000000000000000042 %}
+{% set op_token_address = "0x4200000000000000000000000000000000000042" %}
 {% set op_token_launch_date = '2022-05-31'  %}
 {% set foundation_label = 'OP Foundation'  %}
 {% set grants_descriptor = 'OP Foundation Grants'  %}
@@ -104,7 +104,7 @@ WITH all_labels AS (
             -- LEFT JOIN tx_labels txl
             --     ON txl.tx_hash = tf.evt_tx_hash
                 
-            WHERE tf.contract_address = '{{op_token_address}}'
+            WHERE tf.contract_address = from_hex('{{op_token_address}}')
             --exclude Wintermute funding tfers
             AND NOT (tf."from" = 0x2501c477d0a35545a387aa4a3eee4292a9a8b3f0
                     and tf.to IN (0x4f3a120e72c76c22ae802d129f599bfdbc31cb81

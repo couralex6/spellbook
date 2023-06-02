@@ -12,7 +12,7 @@
     )
 }}
 
-{% set op_token_address = 0x4200000000000000000000000000000000000042 %}
+{% set op_token_address = "0x4200000000000000000000000000000000000042" %}
 {% set op_token_launch_date = '2022-05-31'  %}
 {% set foundation_label = 'OP Foundation'  %}
 {% set grants_descriptor = 'OP Foundation Grants'  %}
@@ -90,7 +90,7 @@ FROM (
                 {% endif %}
 
             
-        WHERE reward = '{{op_token_address}}' --OP Token
+        WHERE reward = from_hex('{{op_token_address}}') --OP Token
         and cast(amount as double)/cast(1e18 as double) > 0
         AND lbl_from.label = '{{foundation_label}}'
         {% if is_incremental() %} 

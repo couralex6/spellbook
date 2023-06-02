@@ -8,8 +8,8 @@
   )
 }}
 
-{% set aave_mock_address = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee %}
-{% set weth_address = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 %}
+{% set aave_mock_address = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" %}
+{% set weth_address = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" %}
 
 SELECT
       version,
@@ -35,7 +35,7 @@ SELECT
         WHEN CAST(_borrowRateMode AS VARCHAR(100)) = '2' THEN 'variable'
     END AS loan_type,
     CASE
-        WHEN CAST(_reserve AS VARCHAR(100)) = '{{aave_mock_address}}' THEN '{{weth_address}}' --Using WETH instead of Aave "mock" address
+        WHEN CAST(_reserve AS VARCHAR(100)) = from_hex('{{aave_mock_address}}') THEN '{{weth_address}}' --Using WETH instead of Aave "mock" address
         ELSE CAST(_reserve AS VARCHAR(100))
     END AS token,
     CAST(_user AS VARCHAR(100)) AS borrower,

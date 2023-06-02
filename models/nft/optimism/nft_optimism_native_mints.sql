@@ -47,7 +47,7 @@ select
     , nft_mints."from" as seller
     , nft_mints.to as buyer
     , case when tr.tx_hash is not null then 'ETH' else pu_erc20s.symbol end as currency_symbol
-    , case when tr.tx_hash is not null then '{{eth_address}}' else erc20s.contract_address end as currency_contract
+    , case when tr.tx_hash is not null then from_hex('{{eth_address}}') else erc20s.contract_address end as currency_contract
     , nft_mints.contract_address as nft_contract_address
     , etxs.to as project_contract_address
     , agg.name as aggregator_name
@@ -87,7 +87,7 @@ left join {{ ref('transfers_optimism_eth') }} as tr
 left join {{ source('prices','usd') }} as pu_eth
     on pu_eth.blockchain='optimism'
     and pu_eth.minute=date_trunc('minute', tr.tx_block_time)
-    and pu_eth.contract_address='{{eth_address}}'
+    and pu_eth.contract_address=from_hex('{{eth_address}}')
     {% if is_incremental() %}
     and pu_eth.minute >= date_trunc('day', now() - interval '7' day)
     {% endif %}

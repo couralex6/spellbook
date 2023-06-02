@@ -43,7 +43,7 @@ WITH v3_trades as (
         , get_json_object(auction, '$.seller') AS seller
         , get_json_object(auction, '$.highestBidder') AS buyer
         , get_json_object(auction, '$.highestBid') AS price_raw
-        , coalesce(get_json_object(auction, '$.currency'),'0x0000000000000000000000000000000000000000') AS currency_contract
+        , coalesce(get_json_object(auction, '$.currency'),0x0000000000000000000000000000000000000000) AS currency_contract
         , tokenContract AS nft_contract_address
         , contract_address AS project_contract_address
         , evt_tx_hash AS tx_hash
@@ -74,7 +74,7 @@ WITH v3_trades as (
         , get_json_object(ask, '$.seller') AS seller
         , get_json_object(ask, '$.buyer') AS buyer
         , get_json_object(ask, '$.price') AS price_raw
-        , '0x0000000000000000000000000000000000000000' AS currency_contract
+        , 0x0000000000000000000000000000000000000000 AS currency_contract
         , tokenContract AS nft_contract_address
         , contract_address AS project_contract_address
         , evt_tx_hash AS tx_hash
@@ -92,7 +92,7 @@ WITH v3_trades as (
         , seller AS seller
         , buyer AS buyer
         , price AS price_raw
-        , '0x0000000000000000000000000000000000000000' AS currency_contract
+        , 0x0000000000000000000000000000000000000000 AS currency_contract
         , tokenContract AS nft_contract_address
         , contract_address AS project_contract_address
         , evt_tx_hash AS tx_hash

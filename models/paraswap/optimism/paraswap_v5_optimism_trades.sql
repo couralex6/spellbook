@@ -30,13 +30,13 @@ WITH dexs AS (
             srcAmount AS token_sold_amount_raw,
             CAST(NULL AS double) AS amount_usd,
             CASE 
-                WHEN destToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0x4200000000000000000000000000000000000006' -- WETH 
+                WHEN destToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0x4200000000000000000000000000000000000006 -- WETH 
                 ELSE destToken
             END AS token_bought_address,
             CASE 
-                WHEN srcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0x4200000000000000000000000000000000000006' -- WETH 
+                WHEN srcToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0x4200000000000000000000000000000000000006 -- WETH 
                 ELSE srcToken
             END AS token_sold_address,
             contract_address AS project_contract_address,
@@ -79,7 +79,7 @@ SELECT 'optimism' AS blockchain,
     d.maker,
     d.project_contract_address,
     d.tx_hash,
-    tx.from AS tx_from,
+    tx."from" AS tx_from,
     tx.to AS tx_to,
     d.trace_address,
     d.evt_index

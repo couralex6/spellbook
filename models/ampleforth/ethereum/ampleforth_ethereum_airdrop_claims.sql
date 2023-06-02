@@ -12,7 +12,7 @@
     )
 }}
 
-{% set forth_token_address = '0x77fba179c79de5b7653f68b5039af940ada60ce0' %}
+{% set forth_token_address = 0x77fba179c79de5b7653f68b5039af940ada60ce0 %}
 
 WITH early_price AS (
     SELECT MIN(minute) AS minute

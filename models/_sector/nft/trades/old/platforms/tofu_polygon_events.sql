@@ -9,7 +9,7 @@
     )
 }}
 
-{% set MATIC_ADDRESS = '0x0000000000000000000000000000000000001010' %}
+{% set MATIC_ADDRESS = 0x0000000000000000000000000000000000001010 %}
 {% set project_start_date = '2021-11-01' %}
 
 WITH tff AS (
@@ -51,11 +51,11 @@ WITH tff AS (
                 get_json_object(inventory, '$.buyer')    as buyer,
                 get_json_object(inventory, '$.kind')     as kind,
                 get_json_object(inventory, '$.price')    as price,
-                CASE WHEN get_json_object(inventory, '$.currency') = '0x0000000000000000000000000000000000000000'
+                CASE WHEN get_json_object(inventory, '$.currency') = 0x0000000000000000000000000000000000000000
                   THEN '{{MATIC_ADDRESS}}'
                   ELSE get_json_object(inventory, '$.currency')
                 END as currency,
-                (get_json_object(inventory, '$.currency') = '0x0000000000000000000000000000000000000000') as native_matic,
+                (get_json_object(inventory, '$.currency') = 0x0000000000000000000000000000000000000000) as native_matic,
                 contract_address
          from {{ source('tofu_nft_polygon', 'MarketNG_evt_EvInventoryUpdate') }}
          where get_json_object(inventory, '$.status') = '1'
@@ -98,7 +98,7 @@ SELECT 'polygon'                                 as blockchain
      , agg.name                                                                     as aggregator_name
      , agg.contract_address                                                         as aggregator_address
      , tfe.evt_tx_hash                                                              as tx_hash
-     , tx.from                                                                      as tx_from
+     , tx."from"                                                                      as tx_from
      , tx.to                                                                        as tx_to
      , CAST(tfe.price * tff.fee_rate AS DOUBLE)                                     as platform_fee_amount_raw
      , CAST(tfe.price * tff.fee_rate / power(10, pu.decimals) AS DOUBLE)            as platform_fee_amount

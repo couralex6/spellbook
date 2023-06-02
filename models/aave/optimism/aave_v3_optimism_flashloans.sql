@@ -12,8 +12,8 @@
   )
 }}
 
-{% set aave_mock_address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' %}
-{% set weth_address = '0x4200000000000000000000000000000000000006' %}
+{% set aave_mock_address = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee %}
+{% set weth_address = 0x4200000000000000000000000000000000000006 %}
 
 
 WITH flashloans AS (

@@ -34,13 +34,13 @@ WITH dexs AS (
             srcAmount AS token_sold_amount_raw,
             CAST(NULL AS double) AS amount_usd,
             CASE 
-                WHEN destToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c' -- WBNB 
+                WHEN destToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c -- WBNB 
                 ELSE destToken
             END AS token_bought_address,
             CASE 
-                WHEN srcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c' -- WBNB 
+                WHEN srcToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c -- WBNB 
                 ELSE srcToken
             END AS token_sold_address,
             contract_address AS project_contract_address,
@@ -83,7 +83,7 @@ SELECT 'bnb' AS blockchain,
     d.maker,
     d.project_contract_address,
     d.tx_hash,
-    tx.from AS tx_from,
+    tx."from" AS tx_from,
     tx.to AS tx_to,
     d.trace_address,
     d.evt_index

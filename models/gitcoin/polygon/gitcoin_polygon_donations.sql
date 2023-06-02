@@ -12,8 +12,8 @@
     )
 }}
 
-{% set eth_contract = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' %}
-{% set weth_contract = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' %}
+{% set eth_contract = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee %}
+{% set weth_contract = 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270 %}
 
 WITH gitcoin_donations AS (
     SELECT gd.evt_block_number AS block_number
