@@ -60,7 +60,7 @@ select
     ) AS amount_usd,
     dexs.token_bought_address,
     dexs.token_sold_address,
-    coalesce(dexs.taker, tx.from) AS taker,
+    coalesce(dexs.taker, tx."from") AS taker,
     dexs.maker,
     dexs.project_contract_address,
     dexs.tx_hash,
