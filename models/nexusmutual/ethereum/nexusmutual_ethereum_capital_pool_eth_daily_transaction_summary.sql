@@ -27,7 +27,7 @@ WITH
     WHERE
       success
 {% if not is_incremental() %}
-       AND block_time >= '{{project_start_date}}'
+       AND block_time >= TIMESTAMP '{{project_start_date}}'
 {% endif %}
 {% if is_incremental() %}
       AND block_time >= date_trunc("day", now() - interval '1 week')

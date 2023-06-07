@@ -28,7 +28,7 @@ WITH event_data as (
     FROM  {{ source('clipper_polygon', 'ClipperCove_evt_CoveSwapped') }}
     WHERE 1=1
     {% if not is_incremental() %}
-    AND evt_block_time >= '{{project_start_date}}'
+    AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND evt_block_time >= date_trunc("day", now() - interval '1 week')
@@ -70,7 +70,7 @@ INNER JOIN {{ source('polygon', 'transactions') }} tx
     ON tx.block_number = e.block_number
     AND tx.hash = e.tx_hash
     {% if not is_incremental() %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -86,7 +86,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = e.token_bought_address
     AND p_bought.blockchain = 'polygon'
     {% if not is_incremental() %}
-    AND p_bought.minute >= '{{project_start_date}}'
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc("day", now() - interval '1 week')
@@ -96,7 +96,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = e.token_sold_address
     AND p_sold.blockchain = 'polygon'
     {% if not is_incremental() %}
-    AND p_sold.minute >= '{{project_start_date}}'
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc("day", now() - interval '1 week')

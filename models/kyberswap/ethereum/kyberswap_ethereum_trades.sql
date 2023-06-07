@@ -108,7 +108,7 @@ INNER JOIN {{ source('ethereum', 'transactions') }} tx
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
     ON erc20a.contract_address = kyberswap_dex.token_bought_address
@@ -123,7 +123,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    AND p_bought.minute >= '{{project_start_date}}'
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', kyberswap_dex.block_time)
@@ -132,7 +132,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    AND p_sold.minute >= '{{project_start_date}}'
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 WHERE (kyberswap_dex.token_bought_address != 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     OR kyberswap_dex.token_sold_address != 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)

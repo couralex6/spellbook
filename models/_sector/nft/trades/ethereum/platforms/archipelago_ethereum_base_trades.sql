@@ -16,7 +16,7 @@ trade_events as (
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    WHERE evt_block_time >= '{{project_start_date}}'
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 ),
 token_events as (
@@ -24,7 +24,7 @@ token_events as (
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    WHERE evt_block_time >= '{{project_start_date}}'
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 ),
 fee_events as (
@@ -41,7 +41,7 @@ fee_events as (
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    WHERE evt_block_time >= '{{project_start_date}}'
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     GROUP BY evt_block_number, tradeId
 )

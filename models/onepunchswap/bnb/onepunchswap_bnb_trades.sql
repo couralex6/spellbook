@@ -43,7 +43,7 @@ WITH dexs AS(
       FROM
         {{ evt_trade_table }}
         {% if not is_incremental() %}
-        WHERE evt_block_time >= '{{project_start_date}}'
+        WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
@@ -92,7 +92,7 @@ FROM dexs
 INNER JOIN {{ source('bnb', 'transactions') }} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -108,7 +108,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_bought.minute >= '{{project_start_date}}'
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc("day", now() - interval '1 week')
@@ -118,7 +118,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_sold.minute >= '{{project_start_date}}'
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc("day", now() - interval '1 week')
