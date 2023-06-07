@@ -1,4 +1,5 @@
-# Translation Docstore for DuneSQL
+
+# Translation Docstore for DuneSQL (outdated)
 
 This spike is based loosely on the Langchain example for building a [question answering database on Notion](https://github.com/hwchase17/notion-qa). 
 
