@@ -13,7 +13,7 @@ def get_tables_from_manifest(manifest_path):
     '''
     returns a csv of tables from a manifest file. We filter out
     '''
-    table_csv_str = ""
+    table_csv_str = "schema, table, materialized, created_at, partition_by\n"
     with open(manifest_path, "r") as f:
         manifest = json.load(f)
     for node_name in manifest["nodes"]:
@@ -35,8 +35,9 @@ def upload_csv(table_list):
     '''
     Upload CSV string to dune.
     '''
-    url = 'https://api.dune.com/api/v1/table/upload/csv'
+    url = 'https://api.dev.dune.com/api/v1/table/upload/csv'
     api_key = os.environ.get('DUNE_API_KEY')
+    print(api_key)
     headers = {'X-Dune-Api-Key': api_key}
     payload = {
         "table_name": "spark_spellbook_status",
