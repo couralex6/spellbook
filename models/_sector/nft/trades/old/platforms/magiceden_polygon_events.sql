@@ -84,7 +84,7 @@ native_order_summary AS (
         evt_tx_hash,
         sum(cast(amount_raw AS decimal(38, 0))) AS order_amount_raw
     FROM trades
-    WHERE original_erc20_token IN (0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee, '0x0000000000000000000000000000000000001010')
+    WHERE original_erc20_token IN (0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee, 0x0000000000000000000000000000000000001010)
     GROUP BY 1, 2
 ),
 

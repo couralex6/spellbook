@@ -3,7 +3,7 @@
     post_hook = '{{ expose_spells_hide_trino(\'["ethereum"]\', "project", "keep3r", \'["wei3erHase", "agaperste"]\') }}'
 ) }}
 
-{% set kp3r_token = "0x1ceb5cb57c4d4e2b2433641b95dd330a33185a44" %}
+{% set kp3r_token = 0x1ceb5cb57c4d4e2b2433641b95dd330a33185a44 %}
 WITH work_evt AS (
 
     SELECT

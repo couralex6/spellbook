@@ -16,7 +16,7 @@
 {% set blockchain = 'ethereum' %}
 {% set project = 'ens' %}
 {% set dao_name = 'DAO: ENS' %}
-{% set dao_address = 0x323a76393544d5ecca80cd6ef2a560c6a395b7e3 %}
+{% set dao_address = "0x323a76393544d5ecca80cd6ef2a560c6a395b7e3" %}
 
 with cte_support as (SELECT 
         voter as voter,
@@ -45,7 +45,7 @@ SELECT DISTINCT
     date_trunc('DAY', pcr.evt_block_time) AS block_date,
     pcr.evt_tx_hash as tx_hash, -- Proposal Created tx hash
     '{{dao_name}}' as dao_name,
-    '{{dao_address}}' as dao_address,
+    from_hex('{{dao_address}}') as dao_address,
     proposer,
     pcr.proposalId as proposal_id,
     csv.votes_for,

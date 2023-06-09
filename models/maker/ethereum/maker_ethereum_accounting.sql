@@ -370,12 +370,12 @@ WITH dao_wallet AS (
 )
 , rwa_yield_trxns AS (
     SELECT call_tx_hash
-        , CASE WHEN usr = '0x6c6d4be2223b5d202263515351034861dd9afdb6' THEN 'RWA009-A'
-            WHEN usr = '0xef1b095f700be471981aae025f92b03091c3ad47' THEN 'RWA007-A'
+        , CASE WHEN usr = 0x6c6d4be2223b5d202263515351034861dd9afdb6 THEN 'RWA009-A'
+            WHEN usr = 0xef1b095f700be471981aae025f92b03091c3ad47 THEN 'RWA007-A'
         END AS ilk
     FROM {{ source('maker_ethereum', 'dai_call_burn') }}
     WHERE call_success
-      AND usr IN ('0x6c6d4be2223b5d202263515351034861dd9afdb6', '0xef1b095f700be471981aae025f92b03091c3ad47') --HVB RWA JAR, MIP65 RWA JAR
+      AND usr IN (0x6c6d4be2223b5d202263515351034861dd9afdb6, 0xef1b095f700be471981aae025f92b03091c3ad47) --HVB RWA JAR, MIP65 RWA JAR
     --   {% if is_incremental() %}
     --   AND call_block_time >= date_trunc('day', now() - interval '7' day)
     --   {% endif %}

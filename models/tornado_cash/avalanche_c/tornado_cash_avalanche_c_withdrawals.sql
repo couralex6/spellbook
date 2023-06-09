@@ -16,19 +16,19 @@
 {% set avalanche_start_date = '2021-09-17' %}
 
 SELECT tc.evt_block_time AS block_time
-, '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7' AS currency_contract
+, 0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7 AS currency_contract
 , 'AVAX' AS currency_symbol
 , 'avalanche_c' AS blockchain
 , 'classic' AS tornado_version
-, at.from AS tx_from
+, at."from" AS tx_from
 , tc.nullifierHash AS nullifier
 , tc.fee/POWER(10, 18) AS fee
 , tc.relayer
 , tc.to AS recipient
 , tc.contract_address AS contract_address
-, CASE WHEN tc.contract_address='0x330bdfade01ee9bf63c209ee33102dd334618e0a' THEN 10
-        WHEN tc.contract_address='0x1e34a77868e19a6647b1f2f47b51ed72dede95dd' THEN 100
-        WHEN tc.contract_address='0xaf8d1839c3c67cf571aa74b5c12398d4901147b3' THEN 500
+, CASE WHEN tc.contract_address=0x330bdfade01ee9bf63c209ee33102dd334618e0a THEN 10
+        WHEN tc.contract_address=0x1e34a77868e19a6647b1f2f47b51ed72dede95dd THEN 100
+        WHEN tc.contract_address=0xaf8d1839c3c67cf571aa74b5c12398d4901147b3 THEN 500
         END AS amount
 , tc.evt_tx_hash AS tx_hash
 , tc.evt_index

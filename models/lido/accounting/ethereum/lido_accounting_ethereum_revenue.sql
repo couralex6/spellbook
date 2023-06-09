@@ -16,9 +16,9 @@
 with 
 addresses AS (
 select * from (values
-(LOWER('0x3e40d73eb977dc6a537af587d48316fee66e9c8c'), 'Aragon'),
-(LOWER('0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5'),  'NO'),
-(LOWER('0x8B3f33234ABD88493c0Cd28De33D583B70beDe35'),  'InsuranceFund')
+(LOWER(0x3e40d73eb977dc6a537af587d48316fee66e9c8c), 'Aragon'),
+(LOWER(0x55032650b14df07b85bF18A3a3eC8E0Af2e028d5),  'NO'),
+(LOWER(0x8B3f33234ABD88493c0Cd28De33D583B70beDe35),  'InsuranceFund')
 ) as list(address, name)
  ),
 
@@ -44,7 +44,7 @@ oraclev2_txns as (
         o.evt_tx_hash
     FROM {{source('lido_ethereum','AccountingOracle_evt_ProcessingStarted')}} o
     left join {{source('lido_ethereum','steth_evt_Transfer')}} t on o.evt_tx_hash = t.evt_tx_hash 
-            and t.`from` = '0x0000000000000000000000000000000000000000' 
+            and t.`from` = 0x0000000000000000000000000000000000000000 
             and `to` in (select address from addresses)
     ) group by 1,5
 ),
@@ -72,7 +72,7 @@ protocol_fee_distribution AS (
     SELECT  
         oracle_txns.period AS period, 
         oracle_txns.evt_tx_hash,
-        LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') AS token,
+        LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) AS token,
         lido_rewards AS total,
         protocol_fee.points AS protocol_fee,
         protocol_fee_distribution.insurance_points AS insurance_fee,
@@ -91,7 +91,7 @@ protocol_fee_distribution AS (
     SELECT  
         oracle_txns.period AS period, 
         oracle_txns.evt_tx_hash,
-        LOWER('0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84') AS token,
+        LOWER(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84) AS token,
         oracle_txns.treasury_revenue + oracle_txns.operators_revenue + 	oracle_txns.insurance_revenue AS total,
         protocol_fee.points AS protocol_fee,
         protocol_fee_distribution.insurance_points AS insurance_fee,

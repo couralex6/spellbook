@@ -65,7 +65,7 @@ price_missed_previous AS (
     WITH usdc_price AS (
         SELECT minute, contract_address, decimals, symbol, price
         FROM {{ source('prices', 'usd') }}
-        WHERE contract_address = '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664' -- USDC.e
+        WHERE contract_address = 0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664 -- USDC.e
         ORDER BY minute
         LIMIT 1
     ),
@@ -73,7 +73,7 @@ price_missed_previous AS (
     usdt_price AS (
         SELECT minute, contract_address, decimals, symbol, price
         FROM {{ source('prices', 'usd') }}
-        WHERE contract_address = '0xc7198437980c041c805a1edcba50c1ce5db95118' -- USDT.e
+        WHERE contract_address = 0xc7198437980c041c805a1edcba50c1ce5db95118 -- USDT.e
         ORDER BY minute
         LIMIT 1
     )
@@ -92,7 +92,7 @@ price_missed_next AS (
     WITH usdc_price AS (
         SELECT minute, contract_address, decimals, symbol, price
         FROM {{ source('prices', 'usd') }}
-        WHERE contract_address = '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664' -- USDC.e
+        WHERE contract_address = 0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664 -- USDC.e
         ORDER BY minute DESC
         LIMIT 1
     ),
@@ -100,7 +100,7 @@ price_missed_next AS (
     usdt_price AS (
         SELECT minute, contract_address, decimals, symbol, price
         FROM {{ source('prices', 'usd') }}
-        WHERE contract_address = '0xc7198437980c041c805a1edcba50c1ce5db95118' -- USDT.e
+        WHERE contract_address = 0xc7198437980c041c805a1edcba50c1ce5db95118 -- USDT.e
         ORDER BY minute DESC
         LIMIT 1
     )

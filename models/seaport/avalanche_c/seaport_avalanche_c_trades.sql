@@ -12,8 +12,8 @@
     )
 }}
 
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7" %}  -- WAVAX
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7 %}  -- WAVAX
 {% set c_native_symbol = "AVAX" %}
 {% set c_seaport_first_date = "2022-06-01" %}
 

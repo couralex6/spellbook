@@ -8,7 +8,7 @@
     unique_key = ['block_date', 'tx_hash', 'token_id', 'seller',  'evt_index']
     )
 }}
-{% set quix_fee_address_address = "0xec1557a67d4980c948cd473075293204f4d280fd" %}
+{% set quix_fee_address_address = 0xec1557a67d4980c948cd473075293204f4d280fd %}
 {% set min_block_number = 1327197 %}
 {% set project_start_date = '2021-12-18' %}     -- select time from optimism.blocks where "number" = 1327197
 

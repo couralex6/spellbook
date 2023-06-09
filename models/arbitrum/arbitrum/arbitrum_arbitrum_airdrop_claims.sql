@@ -12,7 +12,7 @@
     )
 }}
 
-{% set arb_token_address = '0x912ce59144191c1204e64559fe8253a0e49e6548' %}
+{% set arb_token_address = 0x912ce59144191c1204e64559fe8253a0e49e6548 %}
 
 WITH early_price AS (
     SELECT MIN(minute) AS minute

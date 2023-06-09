@@ -30,13 +30,13 @@ WITH dexs AS (
             srcAmount AS token_sold_amount_raw,
             CAST(NULL AS double) AS amount_usd,
             CASE 
-                WHEN destToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1' -- WETH 
+                WHEN destToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH 
                 ELSE destToken
             END AS token_bought_address,
             CASE 
-                WHEN srcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0x82af49447d8a07e3bd95bd0d56f35241523fbab1' -- WETH 
+                WHEN srcToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 -- WETH 
                 ELSE srcToken
             END AS token_sold_address,
             contract_address AS project_contract_address,
@@ -79,7 +79,7 @@ SELECT 'arbitrum' AS blockchain,
     d.maker,
     d.project_contract_address,
     d.tx_hash,
-    tx.from AS tx_from,
+    tx."from" AS tx_from,
     tx.to AS tx_to,
     d.trace_address,
     d.evt_index
@@ -87,7 +87,7 @@ FROM dexs d
 INNER JOIN {{ source('arbitrum', 'transactions') }} tx ON d.tx_hash = tx.hash
     AND d.block_number = tx.block_number
     {% if not is_incremental() %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -100,7 +100,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p1 ON p1.minute = date_trunc('minute', d
     AND p1.contract_address = d.token_bought_address
     AND p1.blockchain = 'arbitrum'
     {% if not is_incremental() %}
-    AND p1.minute >= '{{project_start_date}}'
+    AND p1.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p1.minute >= date_trunc("day", now() - interval '1 week')
@@ -109,7 +109,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p2 ON p2.minute = date_trunc('minute', d
     AND p2.contract_address = d.token_sold_address
     AND p2.blockchain = 'arbitrum'
     {% if not is_incremental() %}
-    AND p2.minute >= '{{project_start_date}}'
+    AND p2.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p2.minute >= date_trunc("day", now() - interval '1 week')

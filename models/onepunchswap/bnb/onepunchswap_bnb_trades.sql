@@ -28,11 +28,11 @@ WITH dexs AS(
         cast(get_json_object(quoteInfo,'$.fromAmount') as double) as token_sold_amount_raw,
         cast(NULL as double)          AS amount_usd,
         case 
-            when get_json_object(quoteInfo,'$.toAsset') = '0x0000000000000000000000000000000000000000' then '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+            when get_json_object(quoteInfo,'$.toAsset') = 0x0000000000000000000000000000000000000000 then 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
             else get_json_object(quoteInfo,'$.toAsset')
         end                                                 as token_bought_address,
         case 
-            when get_json_object(quoteInfo,'$.fromAsset') = '0x0000000000000000000000000000000000000000' then '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+            when get_json_object(quoteInfo,'$.fromAsset') = 0x0000000000000000000000000000000000000000 then 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
             else get_json_object(quoteInfo,'$.fromAsset')
         end                                                 as token_sold_address,
 
@@ -43,7 +43,7 @@ WITH dexs AS(
       FROM
         {{ evt_trade_table }}
         {% if not is_incremental() %}
-        WHERE evt_block_time >= '{{project_start_date}}'
+        WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}
         {% if is_incremental() %}
         WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
@@ -59,7 +59,7 @@ WITH dexs AS(
 SELECT 'bnb'                                                     AS blockchain
      , 'onepunchswap'                                            AS project
      , case
-           when dexs.project_contract_address = '0xeeb28c597dc67ed4a337c14b20b0a5c353e38253' then 'quick'
+           when dexs.project_contract_address = 0xeeb28c597dc67ed4a337c14b20b0a5c353e38253 then 'quick'
            else 'normal'
     end                                                          AS version
      , TRY_CAST(date_trunc('DAY', dexs.block_time) AS date)      AS block_date
@@ -84,7 +84,7 @@ SELECT 'bnb'                                                     AS blockchain
      , dexs.taker
      , dexs.project_contract_address
      , dexs.tx_hash
-     , tx.from                                                   AS tx_from
+     , tx."from"                                                   AS tx_from
      , tx.to                                                     AS tx_to
      , dexs.trace_address
      , dexs.evt_index
@@ -92,7 +92,7 @@ FROM dexs
 INNER JOIN {{ source('bnb', 'transactions') }} tx
     ON dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -108,7 +108,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND p_bought.contract_address = dexs.token_bought_address
     AND p_bought.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_bought.minute >= '{{project_start_date}}'
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc("day", now() - interval '1 week')
@@ -118,7 +118,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND p_sold.contract_address = dexs.token_sold_address
     AND p_sold.blockchain = 'bnb'
     {% if not is_incremental() %}
-    AND p_sold.minute >= '{{project_start_date}}'
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc("day", now() - interval '1 week')

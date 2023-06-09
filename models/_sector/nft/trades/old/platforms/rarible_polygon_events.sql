@@ -82,8 +82,8 @@ WITH trades AS (
         CAST(bytea2numeric_v3(substr(p.direct:nftData, 3 + 64, 64)) AS string) AS token_id,
         p.direct:buyOrderNftAmount AS number_of_items,
         CASE WHEN p.direct:nftAssetClass = '0x73ad2146' THEN 'erc721' ELSE 'erc1155' END AS token_standard, -- 0x73ad2146: erc721; 0x973bb640: erc1155
-        CASE WHEN p.direct:paymentToken = '0x0000000000000000000000000000000000000000'
-            THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+        CASE WHEN p.direct:paymentToken = 0x0000000000000000000000000000000000000000
+            THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
             ELSE p.direct:paymentToken
         END AS currency_contract,
         p.direct:buyOrderPaymentAmount AS amount_raw
@@ -120,8 +120,8 @@ WITH trades AS (
         CAST(bytea2numeric_v3(substr(p.direct:nftData, 3 + 64, 64)) AS string) AS token_id,
         p.direct:sellOrderNftAmount AS number_of_items,
         CASE WHEN p.direct:nftAssetClass = '0x73ad2146' THEN 'erc721' ELSE 'erc1155' END AS token_standard, -- 0x73ad2146: erc721; 0x973bb640: erc1155
-        CASE WHEN p.direct:paymentToken = '0x0000000000000000000000000000000000000000'
-            THEN '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270'
+        CASE WHEN p.direct:paymentToken = 0x0000000000000000000000000000000000000000
+            THEN 0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
             ELSE p.direct:paymentToken
         END AS currency_contract,
         p.direct:sellOrderPaymentAmount AS amount_raw
