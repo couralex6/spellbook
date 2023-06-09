@@ -1,0 +1,14 @@
+name: Spark - Trino Compatibility Check
+on:
+  schedule:
+    # once a day at midnight
+    - cron: "0 0 * * *"
+
+jobs:
+  spark_trino_quality_check:
+    runs-on: [ self-hosted, linux, spellbook-trino ]
+
+    steps:
+      - uses: actions/setup-python@v3
+      - name: Download manifest from s3
+        run: "aws s3 cp s3://manifest-spellbook/manifest.json manifest.json"
