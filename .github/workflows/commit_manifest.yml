@@ -29,20 +29,20 @@ jobs:
       run: "dbt compile --target-path ."
 
     - name: copy old manifest locally
-      run: "aws s3 cp s3://manifest-spellbook/manifest_trino.json previous_manifest_trino.json"
-      
+      run: "aws s3 cp s3://trino-manifest-spellbook/manifest.json previous_manifest.json"
+
     - name: copy old manifest to s3
-      run: "aws s3 cp previous_manifest_trino.json s3://manifest-spellbook/previous_manifest_trino.json"
+      run: "aws s3 cp previous_manifest.json s3://trino-manifest-spellbook/previous_manifest.json"
 
     - name: Set environment variables
       run: |
         echo "GIT_SHA=$(echo ${{ github.sha }} | tr - _ | cut -c1-7)" >> $GITHUB_ENV
 
     - name: upload git_sha versioned previous manifest (for manual catchup if jobs fail)
-      run: "aws s3 cp previous_manifest.json s3://manifest-spellbook/manifest_$GIT_SHA.json"
+      run: "aws s3 cp previous_manifest.json s3://trino-manifest-spellbook/manifest_$GIT_SHA.json"
 
     - name: upload manifest
-      run: "aws s3 cp manifest.json s3://manifest-spellbook/manifest.json"
+      run: "aws s3 cp manifest.json s3://trino-manifest-spellbook/manifest.json"
 
 #  dispatch:
 #    runs-on: [ self-hosted, linux, spellbook-trino ]
