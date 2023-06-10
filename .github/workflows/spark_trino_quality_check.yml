@@ -1,8 +1,9 @@
 name: Spark - Trino Compatibility Check
 on:
-  schedule:
-    # once a day at midnight
-    - cron: "0 0 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
 
 jobs:
   spark_trino_quality_check:
@@ -10,5 +11,10 @@ jobs:
 
     steps:
       - uses: actions/setup-python@v3
-      - name: Download manifest from s3
-        run: "aws s3 cp s3://manifest-spellbook/manifest.json manifest.json"
+      - name: Download spark manifest from s3
+        run: "aws s3 cp s3://manifest-spellbook/manifest.json spark_manifest.json"
+      - name: Download trino manifest from s3
+        run: "aws s3 cp s3://manifest-spellbook/manifest.json trino_manifest.json"
+
+      - name: Create and upload CSV
+        run: python scripts/spark_trino_quality_check.py
