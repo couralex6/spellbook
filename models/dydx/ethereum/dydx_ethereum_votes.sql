@@ -16,7 +16,7 @@
 {% set blockchain = 'ethereum' %}
 {% set project = 'dydx' %}
 {% set dao_name = 'DAO: dYdX' %}
-{% set dao_address = '0x7e9b1672616ff6d6629ef2879419aae79a9018d2' %}
+{% set dao_address = 0x7e9b1672616ff6d6629ef2879419aae79a9018d2 %}
 
 WITH cte_sum_votes as
 (SELECT sum(votingPower/1e18) as sum_votes,

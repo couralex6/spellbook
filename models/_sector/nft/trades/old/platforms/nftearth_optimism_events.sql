@@ -9,11 +9,11 @@
     )
 }}
 
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000" %}  -- ETH
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000 %}  -- ETH
 {% set c_native_symbol = "ETH" %}
 {% set c_seaport_first_date = "2023-01-31" %}
-{% set non_buyer_address = "0x2140ea50bc3b6ac3971f9e9ea93a1442665670e4" %} -- nftearth contract address
+{% set non_buyer_address = 0x2140ea50bc3b6ac3971f9e9ea93a1442665670e4 %} -- nftearth contract address
 
 with source_optimism_transactions as (
     select *

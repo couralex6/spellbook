@@ -24,7 +24,7 @@ WITH zeroex_tx AS (
 
         SELECT v3.evt_tx_hash AS tx_hash,
                     CASE
-                        WHEN takerAddress = '0x63305728359c088a52b0b0eeec235db4d31a67fc' THEN takerAddress
+                        WHEN takerAddress = 0x63305728359c088a52b0b0eeec235db4d31a67fc THEN takerAddress
                         ELSE NULL
                     END AS affiliate_address,
                 SUBSTRING(v3.takerAssetData, 34, 40) as taker_token,
@@ -33,10 +33,10 @@ WITH zeroex_tx AS (
                 evt_index
         FROM {{ source('zeroex_v2_bnb', 'Exchange_evt_Fill') }} v3
         WHERE (  -- nuo
-                v3.takerAddress = '0x63305728359c088a52b0b0eeec235db4d31a67fc'
+                v3.takerAddress = 0x63305728359c088a52b0b0eeec235db4d31a67fc
                 OR -- contains a bridge order
                 (
-                    v3.feeRecipientAddress = '0x1000000000000000000000000000000000000011'
+                    v3.feeRecipientAddress = 0x1000000000000000000000000000000000000011
                     AND SUBSTRING(v3.makerAssetData, 1, 10) = '0xdc1600f3'
                 )
             )
@@ -67,13 +67,13 @@ WITH zeroex_tx AS (
         FROM {{ source('bnb', 'traces') }} tr
         WHERE tr.to IN (
                 -- exchange contract
-                '0x61935cbdd02287b511119ddb11aeb42f1593b7ef',
+                0x61935cbdd02287b511119ddb11aeb42f1593b7ef,
                 -- forwarder addresses
-                '0x6958f5e95332d93d21af0d7b9ca85b8212fee0a5',
-                '0x4aa817c6f383c8e8ae77301d18ce48efb16fd2be',
-                '0x4ef40d1bf0983899892946830abf99eca2dbc5ce',
+                0x6958f5e95332d93d21af0d7b9ca85b8212fee0a5,
+                0x4aa817c6f383c8e8ae77301d18ce48efb16fd2be,
+                0x4ef40d1bf0983899892946830abf99eca2dbc5ce,
                 -- exchange proxy
-                '0xdef1c0ded9bec7f1a1670819833240f027b25eff'
+                0xdef1c0ded9bec7f1a1670819833240f027b25eff
                 )
                 AND (
                         POSITION('869584cd' IN INPUT) <> 0
@@ -105,12 +105,12 @@ v2_fills_no_bridge AS (
             'Fill'                                                                     AS type,
             COALESCE(zeroex_tx.affiliate_address, fills.feeRecipientAddress)           AS affiliate_address,
             (zeroex_tx.tx_hash IS NOT NULL)                                            AS swap_flag,
-            (fills.feeRecipientAddress = '0x86003b044f70dac0abc80ac8957305b6370893ed') AS matcha_limit_order_flag
+            (fills.feeRecipientAddress = 0x86003b044f70dac0abc80ac8957305b6370893ed) AS matcha_limit_order_flag
     FROM {{ source('zeroex_v2_bnb', 'Exchange_evt_Fill') }} fills
     JOIN zeroex_tx ON zeroex_tx.tx_hash = fills.evt_tx_hash
     WHERE (SUBSTRING(makerAssetData, 1, 10) != '0xdc1600f3')
         AND (zeroex_tx.tx_hash IS NOT NULL
-        OR fills.feeRecipientAddress = '0x86003b044f70dac0abc80ac8957305b6370893ed')
+        OR fills.feeRecipientAddress = 0x86003b044f70dac0abc80ac8957305b6370893ed)
 
         {% if is_incremental() %}
          AND evt_block_time >= date_trunc('day', now() - interval '1 week')
@@ -161,7 +161,7 @@ v4_limit_fills_no_bridge AS (
             'LimitOrderFilled' AS type,
             COALESCE(zeroex_tx.affiliate_address, fills.feeRecipient) AS affiliate_address,
             (zeroex_tx.tx_hash IS NOT NULL) AS swap_flag,
-            (fills.feeRecipient = '0x9b858be6e3047d88820f439b240deac2418a2551') AS matcha_limit_order_flag
+            (fills.feeRecipient = 0x9b858be6e3047d88820f439b240deac2418a2551) AS matcha_limit_order_flag
     FROM {{ source('zeroex_bnb', 'ExchangeProxy_evt_LimitOrderFilled') }} fills
     JOIN zeroex_tx ON zeroex_tx.tx_hash = fills.evt_tx_hash
 
@@ -234,7 +234,7 @@ BridgeFill AS (
             logs.contract_address,
             block_time                                      AS block_time,
             '0x' || substring(DATA, 27, 40)                 AS maker,
-            '0xdef1c0ded9bec7f1a1670819833240f027b25eff'    AS taker,
+            0xdef1c0ded9bec7f1a1670819833240f027b25eff    AS taker,
             '0x' || substring(DATA, 91, 40)                 AS taker_token,
             '0x' || substring(DATA, 155, 40)                AS maker_token,
             bytea2numeric_v3('0x' || substring(DATA, 219, 40)) AS taker_token_amount_raw,
@@ -246,7 +246,7 @@ BridgeFill AS (
     FROM {{ source('bnb', 'logs') }} logs
     JOIN zeroex_tx ON zeroex_tx.tx_hash = logs.tx_hash
     WHERE topic1 = '0xff3bc5e46464411f331d1b093e1587d2d1aa667f5618f98a95afc4132709d3a9'
-        AND contract_address = '0xdb6f1920a889355780af7570773609bd8cb1f498'
+        AND contract_address = 0xdb6f1920a889355780af7570773609bd8cb1f498
 
         {% if is_incremental() %}
         AND block_time >= date_trunc('day', now() - interval '1 week')
@@ -262,7 +262,7 @@ NewBridgeFill AS (
             logs.contract_address,
             block_time                                      AS block_time,
             '0x' || substring(DATA, 27, 40)                 AS maker,
-            '0xdef1c0ded9bec7f1a1670819833240f027b25eff'    AS taker,
+            0xdef1c0ded9bec7f1a1670819833240f027b25eff    AS taker,
             '0x' || substring(DATA, 91, 40)                 AS taker_token,
             '0x' || substring(DATA, 155, 40)                AS maker_token,
             bytea2numeric_v3('0x' || substring(DATA, 219, 40)) AS taker_token_amount_raw,
@@ -274,7 +274,7 @@ NewBridgeFill AS (
     FROM {{ source('bnb' ,'logs') }} logs
     JOIN zeroex_tx ON zeroex_tx.tx_hash = logs.tx_hash
     WHERE topic1 = '0xe59e71a14fe90157eedc866c4f8c767d3943d6b6b2e8cd64dddcc92ab4c55af8'
-        AND contract_address = '0xdb6f1920a889355780af7570773609bd8cb1f498'
+        AND contract_address = 0xdb6f1920a889355780af7570773609bd8cb1f498
 
         {% if is_incremental() %}
         AND block_time >= date_trunc('day', now() - interval '1 week')
@@ -390,7 +390,7 @@ SELECT distinct
         try_cast(date_trunc('day', all_tx.block_time) AS date) AS block_date,
         maker,
         CASE
-            WHEN taker = '0xdef1c0ded9bec7f1a1670819833240f027b25eff' THEN tx.from
+            WHEN taker = 0xdef1c0ded9bec7f1a1670819833240f027b25eff THEN tx.from
             ELSE taker
         END AS taker, -- fix the user masked by ProxyContract issue
         taker_token,
@@ -406,13 +406,13 @@ SELECT distinct
         max(affiliate_address) over (partition by all_tx.tx_hash) as affiliate_address,
         swap_flag,
         matcha_limit_order_flag,
-        CASE WHEN maker_token IN ('0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c','0x55d398326f99059ff775485246999027b3197955','0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d','0x7083609fce4d1d8dc0c979aab8c869ea2c873402')
+        CASE WHEN maker_token IN (0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c,0x55d398326f99059ff775485246999027b3197955,0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d,0x7083609fce4d1d8dc0c979aab8c869ea2c873402)
              THEN (all_tx.maker_token_amount_raw / pow(10, ms.decimals)) * mp.price
-             WHEN taker_token IN ('0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c','0x55d398326f99059ff775485246999027b3197955','0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d','0x7083609fce4d1d8dc0c979aab8c869ea2c873402')
+             WHEN taker_token IN (0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c,0x55d398326f99059ff775485246999027b3197955,0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d,0x7083609fce4d1d8dc0c979aab8c869ea2c873402)
              THEN (all_tx.taker_token_amount_raw / pow(10, ts.decimals)) * tp.price
              ELSE COALESCE((all_tx.maker_token_amount_raw / pow(10, ms.decimals)) * mp.price, (all_tx.taker_token_amount_raw / pow(10, ts.decimals)) * tp.price)
              END AS volume_usd,
-        tx.from AS tx_from,
+        tx."from" AS tx_from,
         tx.to AS tx_to,
         'bnb' AS blockchain
 FROM all_tx
@@ -427,7 +427,7 @@ AND tx.block_time >= '{{zeroex_v3_start_date}}'
 
 LEFT JOIN {{ source('prices', 'usd') }} tp ON date_trunc('minute', all_tx.block_time) = tp.minute
 AND CASE
-        WHEN all_tx.taker_token = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+        WHEN all_tx.taker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
         ELSE all_tx.taker_token
     END = tp.contract_address
 AND tp.blockchain = 'bnb'
@@ -441,7 +441,7 @@ AND tp.minute >= '{{zeroex_v3_start_date}}'
 
 LEFT JOIN {{ source('prices', 'usd') }} mp ON DATE_TRUNC('minute', all_tx.block_time) = mp.minute
 AND CASE
-        WHEN all_tx.maker_token = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+        WHEN all_tx.maker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
         ELSE all_tx.maker_token
     END = mp.contract_address
 AND mp.blockchain = 'bnb'
@@ -454,11 +454,11 @@ AND mp.minute >= '{{zeroex_v3_start_date}}'
 {% endif %}
 
 LEFT OUTER JOIN {{ ref('tokens_erc20') }} ts  ON ts.contract_address = case 
-                    WHEN all_tx.taker_token = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+                    WHEN all_tx.taker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
                     ELSE all_tx.taker_token end
                 AND ts.blockchain = 'bnb'
 LEFT OUTER JOIN {{ ref('tokens_erc20') }} ms ON ms.contract_address = 
                 case 
-                    WHEN all_tx.maker_token = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' THEN '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'
+                    WHEN all_tx.maker_token = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee THEN 0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c
                     ELSE all_tx.maker_token end 
                 AND ms.blockchain = 'bnb'

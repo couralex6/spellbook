@@ -10,7 +10,7 @@
 }}
 
 {%- set project_start_date = '2022-02-04' %}
-{%- set fee_management_addr = '0xd823c605807cc5e6bd6fc0d7e4eea50d3e2d66cd' %}
+{%- set fee_management_addr = 0xd823c605807cc5e6bd6fc0d7e4eea50d3e2d66cd %}
 
 
 WITH src_evt_inventory as (
@@ -31,11 +31,11 @@ WITH src_evt_inventory as (
     ,get_json_object(inv.item, '$.price') as price_raw
     ,get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to') as fees_0_to
     ,get_json_object(get_json_object(inv.detail, '$.fees[1]'), '$.to') as fees_1_to
-    ,CASE WHEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to') ='{{fee_management_addr}}'
+    ,CASE WHEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to') =from_hex('{{fee_management_addr}}')
      THEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.percentage')
      ELSE 0
      END as platform_fee_percentage
-    ,CASE WHEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to') ='{{fee_management_addr}}'
+    ,CASE WHEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to') =from_hex('{{fee_management_addr}}')
      THEN (COALESCE(get_json_object(get_json_object(inv.detail, '$.fees[1]'), '$.percentage'), 0)
         +COALESCE(get_json_object(get_json_object(inv.detail, '$.fees[2]'), '$.percentage'), 0)
         +COALESCE(get_json_object(get_json_object(inv.detail, '$.fees[3]'), '$.percentage'), 0)
@@ -45,8 +45,8 @@ WITH src_evt_inventory as (
         +COALESCE(get_json_object(get_json_object(inv.detail, '$.fees[2]'), '$.percentage'), 0)
         +COALESCE(get_json_object(get_json_object(inv.detail, '$.fees[3]'), '$.percentage'), 0))
      END as royalty_fee_percentage
-    ,'{{fee_management_addr}}'  as platform_fee_address
-    ,CASE WHEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to')='{{fee_management_addr}}'
+    ,from_hex('{{fee_management_addr}}')  as platform_fee_address
+    ,CASE WHEN get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to')=from_hex('{{fee_management_addr}}')
         THEN get_json_object(get_json_object(inv.detail, '$.fees[1]'), '$.to')
         ELSE get_json_object(get_json_object(inv.detail, '$.fees[0]'), '$.to')
         END AS royalty_fee_address
@@ -55,7 +55,7 @@ WITH src_evt_inventory as (
     {% if is_incremental() %}
     WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    WHERE evt_block_time >= '{{project_start_date}}'
+    WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 )
 

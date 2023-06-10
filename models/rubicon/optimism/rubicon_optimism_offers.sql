@@ -152,7 +152,7 @@ SELECT
     ((CAST(txn.gas_used AS DECIMAL(38,0)) / power(10, 18)) * CAST(txn.gas_price AS decimal(38,0))) + ((CAST(txn.l1_gas_used AS DECIMAL(38,0)) / power(10, 18)) * CAST(txn.l1_gas_price AS decimal(38,0)) * CAST(txn.l1_fee_scalar AS decimal(38,0))) * eth.price AS txn_cost_usd,
     offers.project_contract_address, 
     offers.tx_hash,
-    txn.from AS tx_from,
+    txn."from" AS tx_from,
     txn.to AS tx_to
 FROM offers
 
@@ -204,7 +204,7 @@ LEFT JOIN {{ source('prices', 'usd') }} buy_token_price
 -- get the price of eth at the time of the offer 
 LEFT JOIN {{ source('prices', 'usd') }}  eth
     ON eth.minute = date_trunc('minute', offers.block_time)
-    AND cast(eth.contract_address AS varchar(100)) = '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000' -- this is for optimism specifically
+    AND cast(eth.contract_address AS varchar(100)) = 0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000 -- this is for optimism specifically
     AND eth.blockchain = 'optimism'
     {% if not is_incremental() %}
     AND eth.minute >= cast('{{ project_start_date }}' AS timestamp)

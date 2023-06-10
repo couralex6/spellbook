@@ -131,7 +131,7 @@ AND tr1.block_time >= TIMESTAMP '{{project_start_date}}'
 AND tr1.block_time >= date_trunc('day', now() - interval '7' day)
 {% endif %}
 LEFT JOIN (SELECT
-                   bt.from as address
+                   bt."from" as address
                   ,tx_hash
                   ,SUM(CAST (value AS DOUBLE)) AS value
             FROM {{ source ('bnb','traces')}} bt
@@ -228,7 +228,7 @@ SELECT 'bnb' as blockchain
        , agg.name as aggregator_name
        , agg.contract_address as aggregator_address
         ,ae.tx_hash
-        ,btx.from as tx_from
+        ,btx."from" as tx_from
         ,btx.to as tx_to
 
 

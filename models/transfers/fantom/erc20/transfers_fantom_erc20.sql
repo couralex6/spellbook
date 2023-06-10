@@ -32,7 +32,7 @@ with
             'receive'as transfer_type,
             evt_tx_hash,
             evt_index,
-            et.from as wallet_address,
+            et."from" as wallet_address,
             contract_address as token_address,
             evt_block_time,
             '-' || CAST(value AS VARCHAR(100)) as amount_raw

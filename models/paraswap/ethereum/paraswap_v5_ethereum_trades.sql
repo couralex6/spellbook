@@ -47,13 +47,13 @@ WITH dex_swap AS (
             srcAmount AS token_sold_amount_raw,
             CAST(NULL AS double) AS amount_usd,
             CASE 
-                WHEN destToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' -- WETH 
+                WHEN destToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 -- WETH 
                 ELSE destToken
             END AS token_bought_address,
             CASE 
-                WHEN srcToken = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-                THEN '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' -- WETH 
+                WHEN srcToken = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 -- WETH 
                 ELSE srcToken
             END AS token_sold_address,
             contract_address AS project_contract_address,
@@ -80,13 +80,13 @@ liqudity_swap AS (
         fromAmount AS token_sold_amount_raw,
         CAST(NULL AS double) AS amount_usd,
         CASE 
-            WHEN toAsset = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-            THEN '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' -- WETH 
+            WHEN toAsset = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+            THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 -- WETH 
             ELSE toAsset
         END AS token_bought_address,
         CASE 
-            WHEN fromAsset = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-            THEN '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' -- WETH 
+            WHEN fromAsset = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+            THEN 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 -- WETH 
             ELSE fromAsset
         END AS token_sold_address,
         p.contract_address AS project_contract_address,
@@ -97,7 +97,7 @@ liqudity_swap AS (
     INNER JOIN {{ source('ethereum', 'transactions') }} tx ON p.evt_tx_hash = tx.hash
     AND p.evt_block_number = tx.block_number
     {% if not is_incremental() %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -148,7 +148,7 @@ call_swap_without_event AS (
                 AND t.evt_block_time >= date_trunc("day", now() - interval '1 week')
                 {% endif %}
                 {% if not is_incremental() %}
-                AND t.evt_block_time >= '{{project_start_date}}'
+                AND t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
             INNER JOIN {{ source('ethereum', 'transactions') }} tx ON t.evt_block_number = tx.block_number
                 AND t.evt_tx_hash = tx.hash
@@ -159,7 +159,7 @@ call_swap_without_event AS (
                 AND tx.block_time >= date_trunc("day", now() - interval '1 week')
                 {% endif %}
                 {% if not is_incremental() %}
-                AND tx.block_time >= '{{project_start_date}}'
+                AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 AND tx.value = 0 -- Swap ERC20 to other token
         ) t
@@ -172,7 +172,7 @@ call_swap_without_event AS (
             t.block_number,
             t.block_time,
             tx.`from` AS user_address,
-            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' AS tokenIn, -- WETH
+            0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 AS tokenIn, -- WETH
             sum(case
                 when t.`from` = tx.`from` then cast(t.value AS decimal(38, 0))
                 else -1 * cast(t.value AS decimal(38, 0))
@@ -186,7 +186,7 @@ call_swap_without_event AS (
             AND t.block_time >= date_trunc("day", now() - interval '1 week')
             {% endif %}
             {% if not is_incremental() %}
-            AND t.block_time >= '{{project_start_date}}'
+            AND t.block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
         INNER JOIN {{ source('ethereum', 'transactions') }} tx ON t.block_number = tx.block_number
             AND t.tx_hash = tx.hash
@@ -197,7 +197,7 @@ call_swap_without_event AS (
             AND tx.block_time >= date_trunc("day", now() - interval '1 week')
             {% endif %}
             {% if not is_incremental() %}
-            AND tx.block_time >= '{{project_start_date}}'
+            AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             AND t.call_type = 'call'
             AND t.value > '0'
@@ -231,7 +231,7 @@ call_swap_without_event AS (
                 AND t.evt_block_time >= date_trunc("day", now() - interval '1 week')
                 {% endif %}
                 {% if not is_incremental() %}
-                AND t.evt_block_time >= '{{project_start_date}}'
+                AND t.evt_block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
             INNER JOIN {{ source('ethereum', 'transactions') }} tx ON t.evt_block_number = tx.block_number
                 AND t.evt_tx_hash = tx.hash
@@ -242,7 +242,7 @@ call_swap_without_event AS (
                 AND tx.block_time >= date_trunc("day", now() - interval '1 week')
                 {% endif %}
                 {% if not is_incremental() %}
-                AND tx.block_time >= '{{project_start_date}}'
+                AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
                 {% endif %}
                 AND tx.value = 0  -- Swap ERC20 to other token
         ) t
@@ -254,7 +254,7 @@ call_swap_without_event AS (
             t.block_number,
             t.block_time,
             t.`to` AS user_address,
-            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' AS tokenOut, -- WETH
+            0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 AS tokenOut, -- WETH
             cast(t.value AS decimal(38, 0)) AS amountOut,
             t.trace_address,
             CAST(-1 as integer) AS evt_index
@@ -265,7 +265,7 @@ call_swap_without_event AS (
             AND t.block_time >= date_trunc("day", now() - interval '1 week')
             {% endif %}
             {% if not is_incremental() %}
-            AND t.block_time >= '{{project_start_date}}'
+            AND t.block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
         INNER JOIN {{ source('ethereum', 'transactions') }} tx ON t.block_number = tx.block_number
             AND t.tx_hash = tx.hash
@@ -276,7 +276,7 @@ call_swap_without_event AS (
             AND tx.block_time >= date_trunc("day", now() - interval '1 week')
             {% endif %}
             {% if not is_incremental() %}
-            AND tx.block_time >= '{{project_start_date}}'
+            AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             AND t.call_type = 'call'
             AND t.value > '0'
@@ -292,7 +292,7 @@ call_swap_without_event AS (
         CAST(NULL AS double) AS amount_usd,
         o.tokenOut AS token_bought_address,
         i.tokenIn AS token_sold_address,
-        '0xdef171fe48cf0115b1d80b88dc8eab59176fee57' AS project_contract_address,
+        0xdef171fe48cf0115b1d80b88dc8eab59176fee57 AS project_contract_address,
         i.tx_hash,
         greatest(i.trace_address, o.trace_address) AS trace_address,
         greatest(i.evt_index, o.evt_index) AS evt_index
@@ -383,7 +383,7 @@ SELECT 'ethereum' AS blockchain,
     d.maker,
     d.project_contract_address,
     d.tx_hash,
-    tx.from AS tx_from,
+    tx."from" AS tx_from,
     tx.to AS tx_to,
     d.trace_address,
     d.evt_index
@@ -391,7 +391,7 @@ FROM dexs d
 INNER JOIN {{ source('ethereum', 'transactions') }} tx ON d.tx_hash = tx.hash
     AND d.block_number = tx.block_number
     {% if not is_incremental() %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -404,7 +404,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p1 ON p1.minute = date_trunc('minute', d
     AND p1.contract_address = d.token_bought_address
     AND p1.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p1.minute >= '{{project_start_date}}'
+    AND p1.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p1.minute >= date_trunc("day", now() - interval '1 week')
@@ -413,7 +413,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p2 ON p2.minute = date_trunc('minute', d
     AND p2.contract_address = d.token_sold_address
     AND p2.blockchain = 'ethereum'
     {% if not is_incremental() %}
-    AND p2.minute >= '{{project_start_date}}'
+    AND p2.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p2.minute >= date_trunc("day", now() - interval '1 week')

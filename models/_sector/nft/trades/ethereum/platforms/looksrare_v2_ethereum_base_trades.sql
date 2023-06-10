@@ -27,7 +27,7 @@ WITH looksrare_v2_trades AS (
     , l.evt_index
     , l.feeAmounts[1] AS royalty_fee_amount_raw
     , l.feeAmounts[2] AS platform_fee_amount_raw
-    , CASE WHEN l.feeRecipients[1]!='0x0000000000000000000000000000000000000000' THEN l.feeRecipients[1] END AS royalty_fee_address
+    , CASE WHEN l.feeRecipients[1]!=0x0000000000000000000000000000000000000000 THEN l.feeRecipients[1] END AS royalty_fee_address
     , get_json_object(l.nonceInvalidationParameters, '$.orderHash') AS order_hash
     FROM {{ source('looksrare_v2_ethereum','LooksRareProtocol_evt_TakerAsk') }} l
     {% if is_incremental() %}
@@ -53,7 +53,7 @@ WITH looksrare_v2_trades AS (
     , l.evt_index
     , l.feeAmounts[1] AS royalty_fee_amount_raw
     , l.feeAmounts[2] AS platform_fee_amount_raw
-    , CASE WHEN l.feeRecipients[1]!='0x0000000000000000000000000000000000000000' THEN l.feeRecipients[1] END AS  royalty_fee_address
+    , CASE WHEN l.feeRecipients[1]!=0x0000000000000000000000000000000000000000 THEN l.feeRecipients[1] END AS  royalty_fee_address
     , get_json_object(l.nonceInvalidationParameters, '$.orderHash') AS order_hash
     FROM {{ source('looksrare_v2_ethereum','LooksRareProtocol_evt_TakerBid') }} l
     {% if is_incremental() %}

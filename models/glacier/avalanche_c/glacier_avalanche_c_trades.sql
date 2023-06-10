@@ -62,7 +62,7 @@ select 'avalanche_c'                                             as blockchain,
        dexs.maker,
        dexs.project_contract_address,
        dexs.tx_hash,
-       tx.from                                                   AS tx_from,
+       tx."from"                                                   AS tx_from,
        tx.to                                                     AS tx_to,
        dexs.trace_address,
        dexs.evt_index
@@ -70,7 +70,7 @@ from dexs
 inner join {{ source('avalanche_c', 'transactions') }} tx
     on dexs.tx_hash = tx.hash
     {% if not is_incremental() %}
-    and tx.block_time >= '{{project_start_date}}'
+    and tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and tx.block_time >= date_trunc("day", now() - interval '1 week')
@@ -86,7 +86,7 @@ left join {{ source('prices', 'usd') }} p_bought
     and p_bought.contract_address = dexs.token_bought_address
     and p_bought.blockchain = 'avalanche_c'
     {% if not is_incremental() %}
-    and p_bought.minute >= '{{project_start_date}}'
+    and p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and p_bought.minute >= date_trunc("day", now() - interval '1 week')
@@ -96,7 +96,7 @@ left join {{ source('prices', 'usd') }} p_sold
     and p_sold.contract_address = dexs.token_sold_address
     and p_sold.blockchain = 'avalanche_c'
     {% if not is_incremental() %}
-    and p_sold.minute >= '{{project_start_date}}'
+    and p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     and p_sold.minute >= date_trunc("day", now() - interval '1 week')

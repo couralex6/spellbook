@@ -31,6 +31,7 @@ jobs:
         run: "/runner/change_schema.sh git_$GIT_SHA"
 
       - name: Get latest manifest
+
         run: "aws s3 cp s3://trino-manifest-spellbook/manifest.json manifest.json"
 
       - name: dbt dependencies

@@ -23,7 +23,7 @@ SELECT
 FROM 
 {{ source('ethereum', 'logs') }}
 {% if not is_incremental() %}
-WHERE block_time >= '{{project_start_date}}'
+WHERE block_time >= TIMESTAMP '{{project_start_date}}'
 {% endif %}
 {% if is_incremental() %}
 WHERE block_time >= date_trunc("day", now() - interval '1 week')

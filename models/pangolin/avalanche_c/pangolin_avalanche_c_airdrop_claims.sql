@@ -12,7 +12,7 @@
     )
 }}
 
-{% set png_token_address = '0x60781c2586d68229fde47564546784ab3faca982' %}
+{% set png_token_address = 0x60781c2586d68229fde47564546784ab3faca982 %}
 
 WITH early_price AS (
     SELECT MIN(minute) AS minute

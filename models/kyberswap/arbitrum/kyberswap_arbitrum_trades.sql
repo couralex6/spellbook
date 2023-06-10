@@ -19,7 +19,7 @@ WITH
 kyberswap_dex AS (
     SELECT
         t.evt_block_time                                                    AS block_time
-        ,t.`to`                                                             AS taker
+        ,t."to"                                                             AS taker
         ,''                                                                 AS maker
         ,CASE WHEN t.amount0Out = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw
         ,CASE WHEN t.amount0In = 0 THEN t.amount1In ELSE t.amount0In END    AS token_sold_amount_raw
@@ -97,7 +97,7 @@ SELECT 'arbitrum'                                                         AS blo
      , kyberswap_dex.maker
      , kyberswap_dex.project_contract_address
      , kyberswap_dex.tx_hash
-     , tx.from                                                            AS tx_from
+     , tx."from"                                                            AS tx_from
      , tx.to                                                              AS tx_to
      , kyberswap_dex.trace_address
      , kyberswap_dex.evt_index
@@ -107,7 +107,7 @@ INNER JOIN {{ source('arbitrum', 'transactions') }} tx
     {% if is_incremental() %}
     AND tx.block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    AND tx.block_time >= '{{project_start_date}}'
+    AND tx.block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ ref('tokens_erc20') }} erc20a
     ON erc20a.contract_address = kyberswap_dex.token_bought_address
@@ -122,7 +122,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    AND p_bought.minute >= '{{project_start_date}}'
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
 LEFT JOIN {{ source('prices', 'usd') }} p_sold
     ON p_sold.minute = date_trunc('minute', kyberswap_dex.block_time)
@@ -131,8 +131,8 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    AND p_sold.minute >= '{{project_start_date}}'
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
-WHERE (kyberswap_dex.token_bought_address != '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-    OR kyberswap_dex.token_sold_address != '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+WHERE (kyberswap_dex.token_bought_address != 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    OR kyberswap_dex.token_sold_address != 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee)
 ;

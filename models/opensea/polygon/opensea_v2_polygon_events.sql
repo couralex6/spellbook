@@ -65,7 +65,7 @@ trade_amount_detail as (
         {% if is_incremental() %}
         AND e.evt_block_time >= date_trunc("day", now() - interval '1 week')
         {% endif %}
-    WHERE e.`from` = '0xf715beb51ec8f63317d66f491e37e7bb048fcc2d' -- All fees are transferred to this address then split to other addresses
+    WHERE e.`from` = 0xf715beb51ec8f63317d66f491e37e7bb048fcc2d -- All fees are transferred to this address then split to other addresses
 ),
 
 trade_amount_grouped as (

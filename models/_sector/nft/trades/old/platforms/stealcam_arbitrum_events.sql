@@ -21,7 +21,7 @@ FROM {{ source('stealcam_arbitrum', 'Stealcam_evt_Stolen') }} sc
 WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
 {% endif %}
 {% if not is_incremental() %}
-WHERE evt_block_time >= '{{project_start_date}}'
+WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
 {% endif %}
 
 )

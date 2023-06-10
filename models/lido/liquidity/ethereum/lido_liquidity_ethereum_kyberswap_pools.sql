@@ -21,7 +21,7 @@ select explode(sequence(to_date('{{ project_start_date }}'), now(), interval 1 h
 , pools as (
 select pool as address, 'ethereum' as blockchain, 'kyberswap' as project, swapFeeUnits/1000 as fee
 from {{ source('kyber_ethereum', 'Elastic_Factory_evt_PoolCreated') }}
-where token0 = lower('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') or token1 = lower('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0')
+where token0 = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0 or token1 = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0
 )
 
 , tokens as (
@@ -29,13 +29,13 @@ select distinct token as address, pt.symbol, pt.decimals
 from (
 select token1 as token
 from {{ source('kyber_ethereum', 'Elastic_Factory_evt_PoolCreated') }}
-where token0 = lower('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') 
+where token0 = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0 
 union
 select token0
 from {{ source('kyber_ethereum', 'Elastic_Factory_evt_PoolCreated') }}
-where token1 = lower('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') 
+where token1 = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0 
 union 
-select lower('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') 
+select 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0 
 ) t
 left join {{ref('prices_tokens')}} pt on t.token = pt.contract_address
 )
@@ -225,14 +225,14 @@ group by 1,2
 
 , all_metrics as (
 select l.pool, pools.blockchain, pools.project, pools.fee, l.time, 
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then token0 else token1 end main_token,
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then t0.symbol else t1.symbol end main_token_symbol,
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then token1 else token0 end paired_token,
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then t1.symbol else t0.symbol end paired_token_symbol, 
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then amount0/power(10, t0.decimals)  else amount1/power(10, t1.decimals)  end main_token_reserve,
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then amount1/power(10, t1.decimals)  else amount0/power(10, t0.decimals)  end paired_token_reserve,
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then p0.price*amount0/power(10, t0.decimals) else p1.price*amount1/power(10, t1.decimals) end as main_token_usd_reserve,
-    case when token0 = LOWER('0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0') then p1.price*amount1/power(10, t1.decimals) else p0.price*amount0/power(10, t0.decimals) end as paired_token_usd_reserve,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then token0 else token1 end main_token,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then t0.symbol else t1.symbol end main_token_symbol,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then token1 else token0 end paired_token,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then t1.symbol else t0.symbol end paired_token_symbol, 
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then amount0/power(10, t0.decimals)  else amount1/power(10, t1.decimals)  end main_token_reserve,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then amount1/power(10, t1.decimals)  else amount0/power(10, t0.decimals)  end paired_token_reserve,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then p0.price*amount0/power(10, t0.decimals) else p1.price*amount1/power(10, t1.decimals) end as main_token_usd_reserve,
+    case when token0 = LOWER(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0) then p1.price*amount1/power(10, t1.decimals) else p0.price*amount0/power(10, t0.decimals) end as paired_token_usd_reserve,
     volume as trading_volume
 from pool_liquidity l 
 left join pools on l.pool = pools.address

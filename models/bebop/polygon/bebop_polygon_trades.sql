@@ -69,7 +69,7 @@ WITH
     WHERE
       call_success = true
       {% if not is_incremental() %}
-      AND evt_block_time >= '{{project_start_date}}'
+      AND evt_block_time >= TIMESTAMP '{{project_start_date}}'
       {% endif %}
       {% if is_incremental() %}
       AND evt_block_time >= date_trunc("day", now() - interval '1 week')
@@ -147,7 +147,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_bought
     AND cast(p_bought.contract_address AS string) = t.maker_token
     AND p_bought.blockchain = 'polygon'
     {% if not is_incremental() %}
-    AND p_bought.minute >= '{{project_start_date}}'
+    AND p_bought.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_bought.minute >= date_trunc("day", now() - interval '1 week')
@@ -157,7 +157,7 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     AND cast(p_sold.contract_address AS string) = t.taker_token
     AND p_sold.blockchain = 'polygon'
     {% if not is_incremental() %}
-    AND p_sold.minute >= '{{project_start_date}}'
+    AND p_sold.minute >= TIMESTAMP '{{project_start_date}}'
     {% endif %}
     {% if is_incremental() %}
     AND p_sold.minute >= date_trunc("day", now() - interval '1 week')
