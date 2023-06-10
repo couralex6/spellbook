@@ -19,4 +19,6 @@ jobs:
         run: "pip3 install requests"
 
       - name: Create and upload CSV
+        env:
+          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
         run: python scripts/spark_trino_quality_check.py

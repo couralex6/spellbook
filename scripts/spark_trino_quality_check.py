@@ -126,8 +126,9 @@ if __name__ == "__main__":
     # databricks_conn.close()
     # trino_conn.close()
 
-    spark_tables = get_tables_from_manifest("spark_manifest.json")
+    # spark_tables = get_tables_from_manifest("spark_manifest.json")
+    spark_tables = get_tables_from_manifest("/Users/couralex/Desktop/previous_manifest.json")
     upload_csv(spark_tables, "spark")
 
-    trino_tables = get_tables_from_manifest("trino_manifest.json")
+    trino_tables = get_tables_from_manifest("target/manifest.json")
     upload_csv(trino_tables, "trino")
