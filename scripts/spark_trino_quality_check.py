@@ -3,9 +3,9 @@ from pprint import pprint
 
 import requests
 # from databricks import sql
-from trino import dbapi
-from trino.auth import BasicAuthentication
-from trino.exceptions import TrinoUserError
+# from trino import dbapi
+# from trino.auth import BasicAuthentication
+# from trino.exceptions import TrinoUserError
 import os
 
 
