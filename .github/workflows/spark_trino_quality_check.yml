@@ -21,4 +21,6 @@ jobs:
       - name: Create and upload CSV
         env:
           DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
+          TRINO_USERNAME: ${{ secrets.TRINO_USERNAME }}
+          TRINO_PASSWORD: ${{ secrets.TRINO_PASSWORD }}
         run: python scripts/spark_trino_quality_check.py

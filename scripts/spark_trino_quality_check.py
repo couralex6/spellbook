@@ -2,10 +2,10 @@ import json
 from pprint import pprint
 
 import requests
-# from databricks import sql
-# from trino import dbapi
-# from trino.auth import BasicAuthentication
-# from trino.exceptions import TrinoUserError
+
+from trino import dbapi
+from trino.auth import BasicAuthentication
+from trino.exceptions import TrinoUserError
 import os
 
 
@@ -70,25 +70,25 @@ def upload_csv(table_csv, target):
 #     return connection
 
 #
-# def trino_client():
-#     """
-#     Function that executes a query passed as a string against the trino server. We would like to use aws secrets
-#     manager to authenticate.
-#     """
-#     username = os.environ.get('TRINO_USERNAME')
-#     password = os.environ.get('TRINO_PASSWORD')
-#
-#     # Creating a connection to the trino server
-#     trino_host = os.environ.get('TRINO_URL')
-#     conn = dbapi.connect(
-#         host=trino_host,
-#         port=443,
-#         auth=BasicAuthentication(username, password),
-#         http_scheme="https",
-#         client_tags=["routingGroup=sandbox"],
-#     )
-#
-#     return conn
+def trino_client():
+    """
+    Function that executes a query passed as a string against the trino server. We would like to use aws secrets
+    manager to authenticate.
+    """
+    username = os.environ.get('TRINO_USERNAME')
+    password = os.environ.get('TRINO_PASSWORD')
+
+    # Creating a connection to the trino server
+    trino_host = os.environ.get('TRINO_URL')
+    conn = dbapi.connect(
+        host=trino_host,
+        port=443,
+        auth=BasicAuthentication(username, password),
+        http_scheme="https",
+        client_tags=["routingGroup=sandbox"],
+    )
+
+    return conn
 #
 #
 # def execute_query(connection, query):
@@ -106,11 +106,7 @@ if __name__ == "__main__":
     # databricks_conn = databricks_client()
     # trino_conn = databricks_client()
     #
-    # # get spark tables
-    # spark_tables = get_tables_from_manifest("manifest.json", [])
-    # # spark_tables = get_tables_from_manifest("/Users/couralex/Desktop/previous_manifest.json", [])
-    # # get trino tables
-    # # trino_tables = get_tables_from_manifest("s3://manifest-spellbook/manifest-trino.json", [])
+
     #
     # print(len(spark_tables))
     # count = 0
@@ -127,8 +123,8 @@ if __name__ == "__main__":
     # trino_conn.close()
 
     # spark_tables = get_tables_from_manifest("spark_manifest.json")
-    spark_tables = get_tables_from_manifest("/Users/couralex/Desktop/previous_manifest.json")
+    spark_tables = get_tables_from_manifest("spark_manifest.json")
     upload_csv(spark_tables, "spark")
 
-    trino_tables = get_tables_from_manifest("target/manifest.json")
+    trino_tables = get_tables_from_manifest("trino_manifest.json")
     upload_csv(trino_tables, "trino")
