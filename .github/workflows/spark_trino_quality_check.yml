@@ -1,0 +1,26 @@
+name: Spark - Trino Compatibility Check
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  spark_trino_quality_check:
+    runs-on: [ self-hosted, linux, spellbook-trino ]
+
+    steps:
+      - uses: actions/setup-python@v3
+      - name: Download spark manifest from s3
+        run: "aws s3 cp s3://manifest-spellbook/manifest.json spark_manifest.json"
+      - name: Download trino manifest from s3
+        run: "aws s3 cp s3://manifest-spellbook/manifest.json trino_manifest.json"
+      - name: Install requests
+        run: "pip3 install requests trino"
+
+      - name: Create and upload CSV
+        env:
+          DUNE_API_KEY: ${{ secrets.DUNE_API_KEY }}
+          TRINO_USERNAME: ${{ secrets.TRINO_USERNAME }}
+          TRINO_PASSWORD: ${{ secrets.TRINO_PASSWORD }}
+        run: python scripts/spark_trino_quality_check.py

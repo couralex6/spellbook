@@ -19,7 +19,7 @@ SELECT 'ethereum' AS blockchain
 , CAST(app.tokenId AS DECIMAL(38,0)) AS token_id
 , CAST(approved AS boolean) AS approved
 , app.evt_tx_hash AS tx_hash
---, et.from AS tx_from
+--, et."from" AS tx_from
 --, et.to AS tx_to
 , app.evt_index
 FROM {{ source('erc721_ethereum','evt_Approval') }} app
@@ -45,7 +45,7 @@ SELECT 'ethereum' AS blockchain
 , CAST(NULL AS DECIMAL(38,0)) AS token_id
 , CAST(approved AS boolean) AS approved
 , app.evt_tx_hash AS tx_hash
---, et.from AS tx_from
+--, et."from" AS tx_from
 --, et.to AS tx_to
 , app.evt_index
 FROM {{ source('erc721_ethereum','evt_ApprovalForAll') }} app
@@ -71,7 +71,7 @@ SELECT 'ethereum' AS blockchain
 , CAST(NULL AS DECIMAL(38,0)) AS token_id
 , CAST(approved AS boolean) AS approved
 , app.evt_tx_hash AS tx_hash
---, et.from AS tx_from
+--, et."from" AS tx_from
 --, et.to AS tx_to
 , app.evt_index
 FROM {{ source('erc1155_ethereum','evt_ApprovalForAll') }} app

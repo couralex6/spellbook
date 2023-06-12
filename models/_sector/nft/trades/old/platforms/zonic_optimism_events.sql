@@ -8,9 +8,9 @@
     unique_key = ['block_date', 'unique_trade_id']
     )
 }}
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000" %}  -- ETH
-{% set zonic_fee_address_address = "0xc353de8af2ee32da2eeae58220d3c8251ee1adcf" %}
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000 %}  -- ETH
+{% set zonic_fee_address_address = 0xc353de8af2ee32da2eeae58220d3c8251ee1adcf %}
 {% set c_native_symbol = "ETH" %}
 {% set min_block_number = 72260823 %}
 {% set project_start_date = '2023-02-04' %}

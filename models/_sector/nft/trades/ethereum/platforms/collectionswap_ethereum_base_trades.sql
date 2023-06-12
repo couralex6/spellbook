@@ -50,7 +50,7 @@ raw_trades as (
             {% if is_incremental() %}
             WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
             {% else %}
-            WHERE evt_block_time >= '{{project_start_date}}'
+            WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             union all
             select
@@ -73,7 +73,7 @@ raw_trades as (
             {% if is_incremental() %}
             WHERE evt_block_time >= date_trunc("day", now() - interval '1 week')
             {% else %}
-            WHERE evt_block_time >= '{{project_start_date}}'
+            WHERE evt_block_time >= TIMESTAMP '{{project_start_date}}'
             {% endif %}
             )
     )

@@ -143,7 +143,7 @@ with all_superrare_sales as (
             , '{{ var("ETH_ERC20_ADDRESS") }}'
             , index
     from {{ source('ethereum','logs') }}
-    where contract_address = lower('0x8c9f364bf7a56ed058fc63ef81c6cf09c833e656')
+    where contract_address = 0x8c9f364bf7a56ed058fc63ef81c6cf09c833e656
         and topic1 = lower('0xea6d16c6bfcad11577aef5cc6728231c9f069ac78393828f8ca96847405902a9')
         {% if is_incremental() %}
         and block_time >= date_trunc("day", now() - interval '1 week')
@@ -165,7 +165,7 @@ with all_superrare_sales as (
             , '{{ var("ETH_ERC20_ADDRESS") }}'
             , index
     from {{ source('ethereum','logs') }}
-    where contract_address =  lower('0x65b49f7aee40347f5a90b714be4ef086f3fe5e2c')
+    where contract_address =  0x65b49f7aee40347f5a90b714be4ef086f3fe5e2c
         and topic1 in (lower('0x2a9d06eec42acd217a17785dbec90b8b4f01a93ecd8c127edd36bfccf239f8b6')
                         , lower('0x5764dbcef91eb6f946584f4ea671217c686fa7e858ce4f9f42d08422b86556a9')
                       )
@@ -211,7 +211,7 @@ SELECT
 from all_superrare_sales a
 left join {{ source('erc721_ethereum','evt_transfer') }} minter on minter.contract_address = a.contract_address
     and minter.tokenId = a.nft_token_id
-    and minter.from = '0x0000000000000000000000000000000000000000'
+    and minter."from" = 0x0000000000000000000000000000000000000000
     {% if is_incremental() %}
     and minter.evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
@@ -220,7 +220,7 @@ left join {{ source('erc721_ethereum','evt_transfer') }} minter on minter.contra
 
 left join {{ source('erc20_ethereum','evt_transfer') }} minter_superrare on minter_superrare.contract_address = a.contract_address
     and minter_superrare.value = a.nft_token_id
-    and minter_superrare.from = '0x0000000000000000000000000000000000000000'
+    and minter_superrare."from" = 0x0000000000000000000000000000000000000000
     {% if is_incremental() %}
     and minter_superrare.evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}

@@ -1,6 +1,6 @@
 {{ config( alias='native', tags=['static'])}}
 
-SELECT chain, symbol, price_symbol, LOWER(price_address) as price_address, decimals
+SELECT chain, symbol, price_symbol, price_address, decimals
 FROM (VALUES
          ('ethereum', 'ETH', 'WETH', 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2, 18)
          , ('optimism', 'ETH', 'WETH', 0x4200000000000000000000000000000000000006, 18)

@@ -31,7 +31,7 @@ WITH all_foundation_trades AS (
      {% if is_incremental() %} -- this filter will only be applied on an incremental run
      WHERE f.evt_block_time >= date_trunc("day", now() - interval '1 week')
      {% else %}
-     WHERE f.evt_block_time >= '{{project_start_date}}'
+     WHERE f.evt_block_time >= TIMESTAMP '{{project_start_date}}'
      {% endif %}
     UNION ALL
     SELECT
@@ -53,7 +53,7 @@ WITH all_foundation_trades AS (
      {% if is_incremental() %} -- this filter will only be applied on an incremental run
      WHERE f.evt_block_time >= date_trunc("day", now() - interval '1 week')
      {% else %}
-     WHERE f.evt_block_time >= '{{project_start_date}}'
+     WHERE f.evt_block_time >= TIMESTAMP '{{project_start_date}}'
      {% endif %}
     UNION ALL
     SELECT
@@ -75,7 +75,7 @@ WITH all_foundation_trades AS (
      {% if is_incremental() %} -- this filter will only be applied on an incremental run
      WHERE f.evt_block_time >= date_trunc("day", now() - interval '1 week')
      {% else %}
-     WHERE f.evt_block_time >= '{{project_start_date}}'
+     WHERE f.evt_block_time >= TIMESTAMP '{{project_start_date}}'
      {% endif %}
     UNION ALL
     SELECT
@@ -97,7 +97,7 @@ WITH all_foundation_trades AS (
      {% if is_incremental() %} -- this filter will only be applied on an incremental run
      WHERE f.evt_block_time >= date_trunc("day", now() - interval '1 week')
      {% else %}
-     WHERE f.evt_block_time >= '{{project_start_date}}'
+     WHERE f.evt_block_time >= TIMESTAMP '{{project_start_date}}'
      {% endif %}
     )
 

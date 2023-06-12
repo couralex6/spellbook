@@ -12,7 +12,7 @@
     )
 }}
 
-{% set eps_token_address = '0xa7f552078dcc247c2684336020c03648500c6d9f' %}
+{% set eps_token_address = 0xa7f552078dcc247c2684336020c03648500c6d9f %}
 
 WITH early_price AS (
     SELECT MIN(minute) AS minute

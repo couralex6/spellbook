@@ -24,7 +24,7 @@ with marketplace as (
         buyer,
         cast(pricePerItem as decimal(38, 0)) * cast(quantity as decimal(38, 0)) as amount_raw,
         case
-            when paymentToken is null then '0x539bde0d7dbd336b79148aa742883198bbf60342'
+            when paymentToken is null then 0x539bde0d7dbd336b79148aa742883198bbf60342
             else paymentToken
         end as currency_contract,
         nftAddress as nft_contract_address,

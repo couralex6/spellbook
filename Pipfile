@@ -22,6 +22,7 @@ boto3 = "1.26.108"
 trino = "0.322.0"
 dbt-trino = "1.4.2"
 sqlfluff = "*"
+databricks-sql-connector = "2.5.2"
 
 [requires]
 python_version = "3.10"

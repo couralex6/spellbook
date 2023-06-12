@@ -8,8 +8,8 @@
     )
 }}
 
-{% set c_native_token_address = "0x0000000000000000000000000000000000000000" %}
-{% set c_alternative_token_address = "0x0000000000000000000000000000000000001010" %}  -- MATIC
+{% set c_native_token_address = 0x0000000000000000000000000000000000000000 %}
+{% set c_alternative_token_address = 0x0000000000000000000000000000000000001010 %}  -- MATIC
 {% set c_native_symbol = "MATIC" %}
 {% set c_oneplanet_first_date = "2023-09-03" %}
 

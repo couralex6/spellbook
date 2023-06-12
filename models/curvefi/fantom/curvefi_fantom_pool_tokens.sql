@@ -22,8 +22,8 @@ base_pools as ( -- this gets the base pools deployed on curvefi
 
 base_pools_lp_tokens as ( -- the lp tokens aren't in the call or events for meta pools and we need them to get the token id (1) of meta pools 
         SELECT 
-            LOWER(pool) as pool,
-            LOWER(lp_token) as lp_token
+            pool,
+            lp_token
         FROM (
         VALUES 
         -- renbtc pool 
@@ -37,9 +37,9 @@ base_pools_lp_tokens as ( -- the lp tokens aren't in the call or events for meta
 
 hardcoded_underlying as ( -- harcoding the underlying tokens here as there's no event emitted that gives a list of the tokens 
         SELECT 
-            LOWER(pool) as pool,
+            pool,
             token_id, 
-            LOWER(token_address) as token_address
+            token_address
         FROM (
         VALUES 
         -- renBTC pool
@@ -71,9 +71,9 @@ base_pools_underlying_tokens_bought as ( -- because when you trade on ellipsis (
 
 base_pools_pool_tokens as ( -- these are the pool coins (different from underlying for geist pool because g tokens are some sort of wrapped version of the underlying tokens)
         SELECT 
-            LOWER(pool) as pool,
+            pool,
             token_id, 
-            LOWER(token_address) as token_address,
+            token_address,
             'pool_token' as token_type, 
             'Base Pool' as pool_type
         FROM (
@@ -127,9 +127,9 @@ plain_pools as ( -- getting plain pools data
 harcoded_plainpools as ( -- these pools have a null output_o in the deploy plain pool function and they actually have a few trades so manaully importing them (only one has multiple transactions rest are 0 transactions and pools have zero liquidity)
                         -- there are also some plain pools like tricrypto that aren't deployed by factory and don't show up here https://dune.com/queries/1933132 used this query to get the most active ones 
         SELECT 
-            LOWER(pool) as pool,
+            pool,
             token_id, 
-            LOWER(token_address) as token_address,
+            token_address,
             'pool_token' as token_type 
         FROM (
         VALUES 
@@ -296,9 +296,9 @@ meta_pools_underlying_tokens_sold as ( -- getting the underlying tokens sold for
 
 hardcoded_pools as ( -- some pools are not decoded via factory and don't show in the plain pool or meta pool event so their details have to be entered manually https://dune.com/queries/1933132 used this query to get the most active ones, had to manually submit them for decoding to as they're not picked up by the factory
     SELECT 
-        LOWER(pool) as pool,
+        pool,
         token_id, 
-        LOWER(token_address) as token_address,
+        token_address,
         token_type, 
         pool_type 
     FROM (

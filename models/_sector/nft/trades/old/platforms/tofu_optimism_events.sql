@@ -10,7 +10,7 @@
 }}
 {% set eth_address = 0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000 %}
 {% set project_start_date = '2021-12-23' %}     -- select min(evt_block_time) from tofu_nft_optimism.MarketNG_evt_EvInventoryUpdate
-{% set tofu_fee_address_address = "0xd3cca77cd6dc2794f431ae435323dbe6f9bd82c3" %}
+{% set tofu_fee_address_address = 0xd3cca77cd6dc2794f431ae435323dbe6f9bd82c3 %}
 
 
 with tff_raw as (

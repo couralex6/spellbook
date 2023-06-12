@@ -12,8 +12,8 @@
   )
 }}
 
-{% set aave_mock_address = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' %}
-{% set wavax_address = '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7' %}
+{% set aave_mock_address = 0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee %}
+{% set wavax_address = 0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7 %}
 
 
 WITH flashloans AS (

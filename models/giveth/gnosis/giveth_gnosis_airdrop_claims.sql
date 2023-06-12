@@ -12,7 +12,7 @@
     )
 }}
 
-{% set giv_token_address = '0x4f4f9b8d5b4d0dc10506e5551b0513b61fd59e75' %}
+{% set giv_token_address = 0x4f4f9b8d5b4d0dc10506e5551b0513b61fd59e75 %}
 
 WITH early_price AS (
     SELECT MIN(minute) AS minute

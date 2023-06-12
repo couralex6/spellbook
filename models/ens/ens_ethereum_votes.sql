@@ -16,7 +16,7 @@
 {% set blockchain = 'ethereum' %}
 {% set project = 'ens' %}
 {% set dao_name = 'DAO: ENS' %}
-{% set dao_address = 0x323a76393544d5ecca80cd6ef2a560c6a395b7e3 %}
+{% set dao_address = "0x323a76393544d5ecca80cd6ef2a560c6a395b7e3" %}
 
 WITH cte_sum_votes as 
 (SELECT sum(weight/1e18) as sum_votes, 
@@ -32,7 +32,7 @@ SELECT
     date_trunc('DAY', vc.evt_block_time) AS block_date,
     vc.evt_tx_hash as tx_hash,
     '{{dao_name}}' as dao_name,
-    '{{dao_address}}' as dao_address,
+    from_hex('{{dao_address}}') as dao_address,
     vc.proposalId as proposal_id,
     vc.weight/1e18 as votes,
     (weight/1e18) * (100) / (csv.sum_votes) as votes_share,
