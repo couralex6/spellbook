@@ -8,7 +8,7 @@
         ROW('dune.data_explorer.abstraction.type', '{{ spell_type }}'), -- 'project' or 'sector'
         ROW('dune.data_explorer.abstraction.name', '{{ spell_name }}'), -- 'aave' or 'uniswap'
         ROW('dune.data_explorer.contributors','{{ contributors }}')   -- e.g., ["soispoke","jeff_dude"]
-        )
+        ])
 {%- else -%}
 {%- endif -%}
 {%- endmacro -%}

@@ -37,8 +37,8 @@ base_pools as ( -- this gets the base pools deployed on ellipsis
         UNION ALL -- manually importanting base pools that weren't created by the factory (no events emitted for them)
 
         SELECT 
-            LOWER(pool) as pool, 
-            LOWER(lp_token) as lp_token 
+            pool,
+            lp_token
         FROM (
         VALUES 
         -- valtusd_val3eps
@@ -50,9 +50,9 @@ base_pools as ( -- this gets the base pools deployed on ellipsis
 
 hardcoded_underlying as ( -- harcoding the underlying tokens here as there's no event emitted that gives a list of the tokens 
         SELECT 
-            LOWER(pool) as pool, 
+            pool,
             token_id, 
-            LOWER(token_address) as token_address
+            token_address
         FROM (
         VALUES 
         -- val3EPS 
@@ -96,9 +96,9 @@ base_pools_underlying_tokens_bought as ( -- because when you trade on ellipsis (
 
 base_pools_pool_tokens as ( -- these are the pool coins (different from underlying for val3ps & valbtc-renbtc because they're pools of pool tokens)
         SELECT 
-            LOWER(pool) as pool, 
+            pool,
             token_id, 
-            LOWER(token_address) as token_address, 
+            token_address,
             'pool_token' as token_type, 
             'Base Pool' as pool_type
         FROM (

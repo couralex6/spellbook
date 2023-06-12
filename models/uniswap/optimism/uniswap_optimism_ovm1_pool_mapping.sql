@@ -11,11 +11,10 @@
   )
 }}
 with ovm1_legacy_pools_raw as (
-  SELECT *
+  SELECT ROW(oldAddress, newAddress, token0, token1, fee) as row
   FROM UNNEST (
-    CAST (
-      JSON
-        '[
+    CAST(
+      JSON_PARSE('[
           {
             "oldAddress": 0x2e9c575206288f2219409289035facac0b670c2f,
             "newAddress": 0x03af20bdaaffb4cc0a521796a223f7d85e2aac31,
@@ -745,14 +744,14 @@ with ovm1_legacy_pools_raw as (
             "fee": 10000
           }
         ]'
-      AS ARRAY(ROW(oldAddress VARCHAR, newAddress VARCHAR, token0 VARCHAR, token1 VARCHAR, fee INT))
+        AS ARRAY<JSON>
     )
   )
 )
 select
-   CAST(oldAddress AS VARBINARY) AS oldAddress
-  ,CAST(newAddress AS VARBINARY) AS newAddress
-  ,CAST(token0 AS VARBINARY) AS token0
-  ,CAST(token1 AS VARBINARY) AS token1
+   oldAddress
+  ,newAddress
+  ,token0
+  ,token1
   ,fee
 from ovm1_legacy_pools_raw
