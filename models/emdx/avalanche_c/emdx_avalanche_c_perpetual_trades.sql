@@ -110,7 +110,7 @@ SELECT 'avalanche_c'                    as blockchain,
        pe.trader,
        pe.volume_raw,
        pe.tx_hash,
-       txns.to                          as tx_to,
+       txns."to"                          as tx_to,
        txns."from"                        as tx_from,
        pe.evt_index
 FROM 

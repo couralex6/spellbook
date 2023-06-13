@@ -57,7 +57,7 @@ select
 	, s.contract_address as project_contract_address
 	, s.evt_tx_hash as tx_hash
     , tx."from" as tx_from
-    , tx.to as tx_to
+    , tx."to" as tx_to
 	, '' AS trace_address
 	, s.evt_index as evt_index
 from 

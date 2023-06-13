@@ -244,7 +244,7 @@ with source_avalanche_c_transactions as (
                                                             else a.token_contract_address
                                                         end
     and p.minute = date_trunc('minute', a.block_time)
-  left join ref_nft_aggregators agg on agg.contract_address = t.to                                     
+  left join ref_nft_aggregators agg on agg.contract_address = t."to"
 )
 ,iv_columns as (
   -- Rename column to align other *.trades tables

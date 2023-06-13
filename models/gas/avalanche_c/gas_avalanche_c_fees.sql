@@ -16,7 +16,7 @@ SELECT
      block_time,
      txns.hash AS tx_hash,
      txns."from" AS tx_sender,
-     txns.to AS tx_receiver,
+     txns."to" AS tx_receiver,
      'AVAX' as native_token_symbol,
      value/1e18 AS tx_amount_native,
      value/1e18 * p.price AS tx_amount_usd,

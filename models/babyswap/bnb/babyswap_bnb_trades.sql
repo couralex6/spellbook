@@ -65,7 +65,7 @@ SELECT 'bnb'                                                             AS bloc
        babyswap_dex.project_contract_address,
        babyswap_dex.tx_hash,
        tx."from"                                                           AS tx_from,
-       tx.to                                                             AS tx_to,
+       tx."to"                                                             AS tx_to,
        babyswap_dex.trace_address,
        babyswap_dex.evt_index
 FROM babyswap_dex

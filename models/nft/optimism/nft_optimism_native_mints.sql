@@ -45,16 +45,16 @@ select
     , 'Mint' as trade_category
     , 'Mint' as evt_type
     , nft_mints."from" as seller
-    , nft_mints.to as buyer
+    , nft_mints."to" as buyer
     , case when tr.tx_hash is not null then 'ETH' else pu_erc20s.symbol end as currency_symbol
     , case when tr.tx_hash is not null then from_hex('{{eth_address}}') else erc20s.contract_address end as currency_contract
     , nft_mints.contract_address as nft_contract_address
-    , etxs.to as project_contract_address
+    , etxs."to" as project_contract_address
     , agg.name as aggregator_name
     , agg.contract_address as aggregator_address
     , nft_mints.tx_hash as tx_hash
     , etxs."from" as tx_from
-    , etxs.to as tx_to
+    , etxs."to" as tx_to
     , cast(0 as double) as platform_fee_amount_raw
     , cast(0 as double) as platform_fee_amount
     , cast(0 as double) as platform_fee_amount_usd

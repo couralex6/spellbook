@@ -66,7 +66,7 @@ SELECT
     nomiswap_dex.project_contract_address,
     nomiswap_dex.tx_hash,
     tx."from"                                                           AS tx_from,
-    tx.to                                                             AS tx_to,
+    tx."to"                                                             AS tx_to,
     nomiswap_dex.trace_address,
     nomiswap_dex.evt_index
 FROM nomiswap_dex

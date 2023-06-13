@@ -16,7 +16,7 @@
 
 WITH apeswap_dex AS (
     SELECT  t.evt_block_time AS block_time,
-            t.to AS taker,
+            t."to" AS taker,
             t.sender AS maker,
             CASE WHEN CAST(t.amount0Out AS DOUBLE) = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw,
             CASE WHEN CAST(t.amount0In AS DOUBLE) = 0 THEN t.amount1In ELSE t.amount0In END AS token_sold_amount_raw,
@@ -65,7 +65,7 @@ SELECT 'bnb'                                                            AS block
        apeswap_dex.project_contract_address,
        apeswap_dex.tx_hash,
        tx."from"                                                          AS tx_from,
-       tx.to                                                            AS tx_to,
+       tx."to"                                                            AS tx_to,
        apeswap_dex.trace_address,
        apeswap_dex.evt_index
 FROM apeswap_dex

@@ -87,7 +87,7 @@ AND tr.evt_block_time >= date_trunc('day', now() - interval '7' day)
      -- ,tr."from"
       --,tr.to
        ,tr.tokenId as token_id
-       ,tr.to as buyer
+       ,tr."to" as buyer
        ,CASE WHEN tr."from"= 0xdc2f08364ebc6cebe0b487fc47823b1e83ce8550 --- claim contract address
              THEN CONCAT('0x',substr(l1.topic3, 27, 40))
              WHEN tr."from"= 0xe22c90e7816db4344f33c651c7b0a01fcd51a327 -- buy function contract address (explicitly stated)
@@ -229,7 +229,7 @@ SELECT 'bnb' as blockchain
        , agg.contract_address as aggregator_address
         ,ae.tx_hash
         ,btx."from" as tx_from
-        ,btx.to as tx_to
+        ,btx."to" as tx_to
 
 
         ,CAST (0.1 *(ae.amount_raw -(ae.royalty_fee_percentage/100 * ae.amount_raw)) AS DOUBLE) as platform_fee_amount_raw
@@ -273,7 +273,7 @@ ON erc721.evt_block_time = ae.block_time
 AND erc721.evt_tx_hash = ae.tx_hash
 AND erc721.contract_address = ae.nft_contract_address
 AND erc721.tokenId = ae.token_id
-AND erc721.to = ae.buyer
+AND erc721."to" = ae.buyer
 {% if not is_incremental() %}
 AND erc721.evt_block_time >= TIMESTAMP '{{project_start_date}}'
 {% endif %}

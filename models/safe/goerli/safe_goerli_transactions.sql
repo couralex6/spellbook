@@ -42,7 +42,7 @@ from {{ source('goerli', 'traces') }} tr
 join {{ ref('safe_goerli_safes') }} s
     on s.address = tr."from"
 join {{ ref('safe_goerli_singletons') }} ss
-    on tr.to = ss.address
+    on tr."to" = ss.address
 where substring(tr.input, 0, 10) in (
         '0x6a761202', -- execTransaction
         '0x468721a7', -- execTransactionFromModule

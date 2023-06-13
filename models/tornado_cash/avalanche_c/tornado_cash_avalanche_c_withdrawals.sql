@@ -24,7 +24,7 @@ SELECT tc.evt_block_time AS block_time
 , tc.nullifierHash AS nullifier
 , tc.fee/POWER(10, 18) AS fee
 , tc.relayer
-, tc.to AS recipient
+, tc."to" AS recipient
 , tc.contract_address AS contract_address
 , CASE WHEN tc.contract_address=0x330bdfade01ee9bf63c209ee33102dd334618e0a THEN 10
         WHEN tc.contract_address=0x1e34a77868e19a6647b1f2f47b51ed72dede95dd THEN 100

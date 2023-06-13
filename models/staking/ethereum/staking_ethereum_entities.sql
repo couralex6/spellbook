@@ -129,7 +129,7 @@ FROM
                 , et.block_time
             FROM {{ source('ethereum', 'traces') }} et
             INNER JOIN {{ source('ethereum', 'traces') }} et2 ON et2."from"=et."from"
-                AND et2.to IN (SELECT address FROM {{ ref('addresses_ethereum_cex') }} WHERE cex_name = 'Coinbase')
+                AND et2."to" IN (SELECT address FROM {{ ref('addresses_ethereum_cex') }} WHERE cex_name = 'Coinbase')
                 {% if not is_incremental() %}
                 AND et2.block_time >= '2020-10-14'
                 {% endif %}
@@ -204,7 +204,7 @@ FROM
             AND traces.block_time >= date_trunc('day', now() - interval '7' day)
             {% endif %}
         INNER JOIN contracts c ON c.address=txs.to
-        WHERE txs.to IN (SELECT address FROM contracts)
+        WHERE txs."to" IN (SELECT address FROM contracts)
             {% if not is_incremental() %}
             AND txs.block_time >= '2020-10-14'
             {% endif %}

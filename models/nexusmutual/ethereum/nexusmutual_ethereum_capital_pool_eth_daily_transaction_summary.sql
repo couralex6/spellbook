@@ -33,7 +33,7 @@ WITH
       AND block_time >= date_trunc("day", now() - interval '1 week')
 {% endif %}
       AND (
-        t.to IN (
+        t."to" IN (
           0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8,
           0xcafeada4d15bbc7592113d5d5af631b5dcd53dcb,
           0xcafea35ce5a2fc4ced4464da4349f81a122fd12b,
@@ -54,15 +54,15 @@ WITH
       )
       AND NOT (
         (
-          t.to = 0xcafea35ce5a2fc4ced4464da4349f81a122fd12b
+          t."to" = 0xcafea35ce5a2fc4ced4464da4349f81a122fd12b
           AND t."from" = 0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8
         )
         OR (
-          t.to = 0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8
+          t."to" = 0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8
           AND t."from" = 0xcafeada4d15bbc7592113d5d5af631b5dcd53dcb
         )
         OR (
-          t.to = 0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8
+          t."to" = 0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8
           AND t."from" = 0xfd61352232157815cf7b71045557192bf0ce1884
         )
       )
@@ -71,7 +71,7 @@ SELECT DISTINCT
   day,
   SUM(
     CASE
-      WHEN t.to IN (
+      WHEN t."to" IN (
         0xcafea7934490ef8b9d2572eaefeb9d48162ea5d8,
         0xcafeada4d15bbc7592113d5d5af631b5dcd53dcb,
         0xcafea35ce5a2fc4ced4464da4349f81a122fd12b,

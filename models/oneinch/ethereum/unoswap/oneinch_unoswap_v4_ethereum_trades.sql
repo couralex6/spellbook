@@ -73,7 +73,7 @@ WITH unoswap AS
         src.amount AS token_sold_amount_raw,
         CAST(NULL as double) AS amount_usd,
         CASE
-            WHEN ll.to = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+            WHEN ll."to" = 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
                 AND SUBSTRING(src.pools[ARRAY_SIZE(src.pools) - 1], 1, 4) IN ('0xc0', '0x40') --spark uses 0-based array index, subtract 1 from size output
             THEN '{{burn_address}}'
             ELSE ll.to
@@ -88,7 +88,7 @@ WITH unoswap AS
         src.call_trace_address AS trace_address,
         CAST(-1 as integer) AS evt_index,
         tx."from" AS tx_from,
-        tx.to AS tx_to
+        tx."to" AS tx_to
     FROM
         unoswap as src
     INNER JOIN {{ source('ethereum', 'transactions') }} as tx

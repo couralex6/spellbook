@@ -27,7 +27,7 @@ SELECT 'ethereum' AS blockchain
 , t.evt_block_number AS block_number
 , 'Ampleforth' AS project
 , 'Ampleforth Forth Airdrop' AS airdrop_identifier
-, t.to AS recipient
+, t."to" AS recipient
 , t.contract_address
 , t.evt_tx_hash AS tx_hash
 , CAST(t.value AS DECIMAL(38,0)) AS amount_raw

@@ -38,9 +38,9 @@ oraclev2_txns as (
     FROM (
     SELECT 
         o.evt_block_time as period,
-        case when t.to in  (select address from addresses where name = 'Aragon') then t.value else 0 end AS treasury_revenue,
-        case when t.to in  (select address from addresses where name = 'NO') then t.value else 0 end AS operators_revenue,
-        case when t.to in  (select address from addresses where name = 'InsuranceFund') then t.value else 0 end as insurance_revenue,
+        case when t."to" in  (select address from addresses where name = 'Aragon') then t.value else 0 end AS treasury_revenue,
+        case when t."to" in  (select address from addresses where name = 'NO') then t.value else 0 end AS operators_revenue,
+        case when t."to" in  (select address from addresses where name = 'InsuranceFund') then t.value else 0 end as insurance_revenue,
         o.evt_tx_hash
     FROM {{source('lido_ethereum','AccountingOracle_evt_ProcessingStarted')}} o
     left join {{source('lido_ethereum','steth_evt_Transfer')}} t on o.evt_tx_hash = t.evt_tx_hash 

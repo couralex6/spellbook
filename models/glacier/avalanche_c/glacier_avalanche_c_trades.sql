@@ -17,7 +17,7 @@
 with dexs as (
     -- glacier_exchange
     SELECT t.evt_block_time                                             as block_time,
-           t.to                                                         as taker,
+           t."to"                                                         as taker,
            0x                                                           as maker,
            case when amount0Out = 0 then amount1Out else amount0Out end as token_bought_amount_raw,
            case when amount0In = 0 then amount1In else amount0In end    as token_sold_amount_raw,
@@ -63,7 +63,7 @@ select 'avalanche_c'                                             as blockchain,
        dexs.project_contract_address,
        dexs.tx_hash,
        tx."from"                                                   AS tx_from,
-       tx.to                                                     AS tx_to,
+       tx."to"                                                     AS tx_to,
        dexs.trace_address,
        dexs.evt_index
 from dexs

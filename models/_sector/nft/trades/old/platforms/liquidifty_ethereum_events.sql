@@ -173,7 +173,7 @@ select
     buys.tx_hash,
     buys.block_number,
     transactions."from" as tx_from,
-    transactions.to as tx_to,
+    transactions."to" as tx_to,
     cast(null as decimal(38)) as platform_fee_amount_raw,
     cast(null as double) as platform_fee_amount,
     cast(null as double) as platform_fee_amount_usd,

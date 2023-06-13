@@ -197,7 +197,7 @@ SELECT DISTINCT
     dexs.project_contract_address,
     dexs.tx_hash,
     tx."from" as tx_from,
-    tx.to as tx_to,
+    tx."to" as tx_to,
     dexs.trace_address,
     dexs.evt_index,
     dexs.pool_type

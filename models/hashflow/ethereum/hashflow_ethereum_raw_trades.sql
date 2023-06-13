@@ -148,7 +148,7 @@ legacy_router_w_integration as (
         t.tx_hash,
         t.error is null as fill_status,
         substring(t.input, 1, 4) as method_id,
-        t.to as router_contract,
+        t."to" as router_contract,
         substring(t.input, 17, 20) as pool,
         tx."from" as trader, -- adjusted to use tx sender due to integration, was substring(t.input, 49, 20) as trader,
         maker_token,
@@ -175,7 +175,7 @@ legacy_router_w_integration as (
             case when substring(input, 113, 20) = 0x0000000000000000000000000000000000000000
                 then 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 else substring(input, 113, 20) end
     where -- cast(trace_address as string) = '{}'  --top level call -- removed this because of 1inch integration
-        t.to in (0xa18607ca4a3804cc3cd5730eafefcc47a7641643)
+        t."to" in (0xa18607ca4a3804cc3cd5730eafefcc47a7641643)
         and substring(input, 1, 4) in ('0xba93c39c') -- swap
         and t.block_number <= 13803909 -- block of last trade of this legacy router
 
@@ -188,7 +188,7 @@ legacy_router_w_integration as (
         t.tx_hash,
         t.error is null as fill_status,
         'tradeSingleHop' as method_id,
-        t.to as router_contract,
+        t."to" as router_contract,
         substring(t.input, 49, 20) as pool, --mm
         tx."from" as trader,
         maker_token,
@@ -214,7 +214,7 @@ legacy_router_w_integration as (
         and mp.contract_address =
             case when substring(input, 209, 20) = 0x0000000000000000000000000000000000000000
                 then 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2 else substring(input, 209, 20) end
-    where t.to in (0x6ad3dac99c9a4a480748c566ce7b3503506e3d71)
+    where t."to" in (0x6ad3dac99c9a4a480748c566ce7b3503506e3d71)
         and substring(input, 1, 4) in ('0xf0910b2b') -- trade single hop
         AND t.block_number <= 13974528 -- block of last trade of this legacy router
 ),
@@ -328,7 +328,7 @@ new_pool as (
         tx.hash as tx_hash,
         true as fill_status, -- without call we are only logging successful fills
         null as method_id, -- without call we don't have function call info
-        tx.to as router_contract, -- taking top level contract called in tx as router, not necessarily HF contract
+        tx."to" as router_contract, -- taking top level contract called in tx as router, not necessarily HF contract
         l.pool as pool,
         tx."from" as trader,
         l."quoteToken" as maker_token,

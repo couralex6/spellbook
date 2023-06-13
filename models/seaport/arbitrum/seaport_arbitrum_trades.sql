@@ -216,7 +216,7 @@ with source_arbitrum_transactions as (
   select a.*
           ,n.name AS nft_token_name
           ,t."from" as tx_from
-          ,t.to as tx_to
+          ,t."to" as tx_to
           ,right(t.data,8) as right_hash
           ,case when a.token_contract_address = '{{c_native_token_address}}' then '{{c_native_symbol}}'
                 else e.symbol
@@ -244,7 +244,7 @@ with source_arbitrum_transactions as (
                                                             else a.token_contract_address
                                                         end
     and p.minute = date_trunc('minute', a.block_time)
-  left join ref_nft_aggregators agg on agg.contract_address = t.to                                     
+  left join ref_nft_aggregators agg on agg.contract_address = t."to"
 )
 ,iv_columns as (
   -- Rename column to align other *.trades tables

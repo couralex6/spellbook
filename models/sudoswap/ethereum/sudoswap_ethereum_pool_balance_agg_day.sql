@@ -25,11 +25,11 @@ WITH
     SELECT
       date_trunc('day', et.evt_block_time) AS day,
       pool_address,
-      SUM(CASE WHEN et.to = p.pool_address THEN 1 ELSE -1 END) AS nft_balance_change
+      SUM(CASE WHEN et."to" = p.pool_address THEN 1 ELSE -1 END) AS nft_balance_change
     FROM
       {{ source('erc721_ethereum','evt_transfer') }} et
       INNER JOIN pools p ON p.nft_contract_address = et.contract_address
-      AND (et.to = p.pool_address OR et."from" = p.pool_address)
+      AND (et."to" = p.pool_address OR et."from" = p.pool_address)
     {% if not is_incremental() %}
     WHERE et.evt_block_time >= TIMESTAMP '{{project_start_date}}'
     {% endif %}

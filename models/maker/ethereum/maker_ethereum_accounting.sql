@@ -882,7 +882,7 @@ WITH dao_wallet AS (
     FROM {{ source('erc20_ethereum', 'evt_transfer') }} evt
     JOIN treasury_erc20s t
         ON evt.contract_address = t.contract_address
-    WHERE evt.to = 0xbe8e3e3618f7474f8cb1d074a26affef007e98fb
+    WHERE evt."to" = 0xbe8e3e3618f7474f8cb1d074a26affef007e98fb
         -- {% if is_incremental() %}
         -- AND evt.evt_block_time >= date_trunc('day', now() - interval '7' day)
         -- {% endif %}

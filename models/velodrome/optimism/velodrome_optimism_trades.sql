@@ -20,7 +20,7 @@ WITH dexs AS
     SELECT
         t.evt_block_time AS block_time
         ,t.evt_block_number
-        ,t.to AS taker
+        ,t."to" AS taker
         ,0x as maker
         -- logic from ethereum/dex/trades/insert_uniswap_v2
 	    ,CASE WHEN amount0Out = UINT256 '0' THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw -- when amount0 is negative it means trader_a is buying token0 from the pool
@@ -68,7 +68,7 @@ SELECT
     ,dexs.project_contract_address
     ,dexs.tx_hash
     ,tx."from" AS tx_from
-    ,tx.to AS tx_to
+    ,tx."to" AS tx_to
     ,dexs.trace_address
     ,dexs.evt_index
 FROM dexs

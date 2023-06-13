@@ -316,7 +316,7 @@ SELECT 'ethereum' AS blockchain,
     d.project_contract_address,
     d.tx_hash,
     tx."from" AS tx_from,
-    tx.to AS tx_to,
+    tx."to" AS tx_to,
     d.trace_address,
     d.evt_index
 FROM dexs d

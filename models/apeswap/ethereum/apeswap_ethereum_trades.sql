@@ -18,7 +18,7 @@ with dexs as (
     -- apeswap
     select
         t.evt_block_time as block_time,
-        t.to as taker,
+        t."to" as taker,
         0x as maker,
         case when CAST(t.amount0Out AS DOUBLE) = 0 then t.amount1Out else t.amount0Out end as token_bought_amount_raw,
         case when CAST(t.amount0In AS DOUBLE) = 0 then t.amount1In else t.amount0In end as token_sold_amount_raw,
@@ -67,7 +67,7 @@ select 'ethereum'                                                as blockchain,
        dexs.project_contract_address,
        dexs.tx_hash,
        tx."from"                                                   AS tx_from,
-       tx.to                                                     AS tx_to,
+       tx."to"                                                     AS tx_to,
        dexs.trace_address,
        dexs.evt_index
 from dexs

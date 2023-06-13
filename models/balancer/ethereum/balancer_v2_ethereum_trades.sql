@@ -73,7 +73,7 @@ select
     project_contract_address,
     evt_tx_hash as tx_hash,
     tx."from" as tx_from,
-    tx.to as tx_to,
+    tx."to" as tx_to,
     evt_index,
     '' AS trace_address
 from v2 trades
