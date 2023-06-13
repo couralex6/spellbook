@@ -14,12 +14,12 @@ with dexs as (
     -- Sushiswap
     SELECT t.evt_block_time                                             as block_time,
            t.to                                                         as taker,
-           ''                                                           as maker,
-           case when amount0Out = 0 then amount1Out else amount0Out end as token_bought_amount_raw,
-           case when amount0In = 0 then amount1In else amount0In end    as token_sold_amount_raw,
+           0x                                                           as maker,
+           case when amount0Out = UINT256 '0' then amount1Out else amount0Out end as token_bought_amount_raw,
+           case when amount0In = UINT256 '0' then amount1In else amount0In end    as token_sold_amount_raw,
            cast(NULL as double)                                         as amount_usd,
-           case when amount0Out = 0 then f.token1 else f.token0 end     as token_bought_address,
-           case when amount0In = 0 then f.token1 else f.token0 end      as token_sold_address,
+           case when amount0Out = UINT256 '0' then f.token1 else f.token0 end     as token_bought_address,
+           case when amount0In = UINT256 '0' then f.token1 else f.token0 end      as token_sold_address,
            t.contract_address                                           as project_contract_address,
            t.evt_tx_hash                                                as tx_hash,
            ''                                                           as trace_address,
@@ -31,7 +31,7 @@ with dexs as (
     {% if is_incremental() %}
     WHERE t.evt_block_time >= date_trunc("day", now() - interval '1 week')
     {% else %}
-    WHERE t.evt_block_time >= '{{ project_start_date }}'
+    WHERE t.evt_block_time >= TIMESTAMP '{{ project_start_date }}'
     {% endif %}
 )
 select
@@ -57,7 +57,7 @@ select
     ) AS amount_usd,
     dexs.token_bought_address,
     dexs.token_sold_address,
-    coalesce(dexs.taker, tx.from) AS taker,
+    coalesce(dexs.taker, tx."from") AS taker,
     dexs.maker,
     dexs.project_contract_address,
     dexs.tx_hash,

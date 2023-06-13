@@ -23,7 +23,7 @@ WITH dexs AS(
     SELECT
         evt_block_time                AS block_time,
         user                          AS taker,
-        ''                            AS maker,
+        0x                            AS maker,
         cast(get_json_object(quoteInfo,'$.toAmount') as double) as token_bought_amount_raw,
         cast(get_json_object(quoteInfo,'$.fromAmount') as double) as token_sold_amount_raw,
         cast(NULL as double)          AS amount_usd,

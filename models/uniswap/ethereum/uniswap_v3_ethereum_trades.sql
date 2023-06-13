@@ -28,6 +28,7 @@ WITH dexs AS
         ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN f.token0 ELSE f.token1 END AS token_bought_address
         ,CASE WHEN CAST(amount0 AS DOUBLE) < 0 THEN f.token1 ELSE f.token0 END AS token_sold_address
         ,t.contract_address as project_contract_address
+        ,f.fee
         ,t.evt_tx_hash AS tx_hash
         ,'' AS trace_address
         ,t.evt_index

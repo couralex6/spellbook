@@ -46,12 +46,12 @@ WITH dexs AS
     SELECT
         t.evt_block_time AS block_time
         ,t.buyer AS taker
-        ,'' AS maker
+        ,0x as maker
         ,tokens_bought AS token_bought_amount_raw
         ,tokens_sold AS token_sold_amount_raw
-        ,CAST(NULL AS DOUBLE) AS amount_usd
-        ,CASE WHEN bought_id = 0 THEN f.tokenA ELSE f.tokenB END AS token_bought_address
-        ,CASE WHEN sold_id = 0 THEN f.tokenA ELSE f.tokenB END AS token_sold_address
+        ,CAST(NULL AS UINT256) AS amount_usd
+        ,CASE WHEN bought_id = UINT256 '0' THEN f.tokenA ELSE f.tokenB END AS token_bought_address
+        ,CASE WHEN sold_id = UINT256 '0' THEN f.tokenA ELSE f.tokenB END AS token_sold_address
         ,t.contract_address AS project_contract_address
         ,t.evt_tx_hash AS tx_hash
         ,'' AS trace_address
@@ -61,10 +61,10 @@ WITH dexs AS
     INNER JOIN {{ source('arbswap_arbitrum', 'ArbswapStableSwapFactory_evt_NewStableSwapPair') }} f
         ON f.swapContract = t.contract_address
     {% if is_incremental() %}
-    WHERE t.evt_block_time >= date_trunc("day", now() - interval '1 week')
+    WHERE t.evt_block_time >= date_trunc("day", now() - interval '7' day)
     {% endif %}
     {% if not is_incremental() %}
-    WHERE t.evt_block_time >= '{{ project_start_date }}'
+    WHERE t.evt_block_time >= TIMESTAMP '{{ project_start_date }}'
     {% endif %}
     
 )
@@ -82,8 +82,8 @@ SELECT
     end as token_pair
     ,dexs.token_bought_amount_raw / power(10, erc20a.decimals) AS token_bought_amount
     ,dexs.token_sold_amount_raw / power(10, erc20b.decimals) AS token_sold_amount
-    ,CAST(dexs.token_bought_amount_raw AS DOUBLE) AS token_bought_amount_raw
-    ,CAST(dexs.token_sold_amount_raw AS DOUBLE) AS token_sold_amount_raw
+    ,CAST(dexs.token_bought_amount_raw AS UINT256) AS token_bought_amount_raw
+    ,CAST(dexs.token_sold_amount_raw AS UINT256) AS token_sold_amount_raw
     ,coalesce(
         dexs.amount_usd
         ,(dexs.token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price

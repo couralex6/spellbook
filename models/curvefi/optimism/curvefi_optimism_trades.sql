@@ -129,7 +129,7 @@ SELECT
             t.evt_block_time AS block_time,
             t.evt_block_number AS block_number,
             t.buyer AS taker,
-            '' AS maker,
+            0x as maker,
             -- when amount0 is negative it means taker is buying token0 from the pool
             tokens_bought AS token_bought_amount_raw,
             tokens_sold AS token_sold_amount_raw,
