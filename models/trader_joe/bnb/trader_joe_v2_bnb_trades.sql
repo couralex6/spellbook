@@ -20,7 +20,7 @@ WITH dexs AS
     SELECT
         t.evt_block_time AS block_time
         ,t.recipient AS taker
-        ,'' AS maker
+        ,0x as maker
         ,amountOut AS token_bought_amount_raw
         ,amountIn AS token_sold_amount_raw
         ,cast(NULL as double)  AS amount_usd
@@ -62,7 +62,7 @@ SELECT
     ) AS amount_usd
     ,dexs.token_bought_address
     ,dexs.token_sold_address
-    ,coalesce(dexs.taker, tx.from) AS taker -- subqueries rely on this COALESCE to avoid redundant joins with the transactions table
+    ,coalesce(dexs.taker, tx."from") AS taker -- subqueries rely on this COALESCE to avoid redundant joins with the transactions table
     ,dexs.maker
     ,dexs.project_contract_address
     ,dexs.tx_hash

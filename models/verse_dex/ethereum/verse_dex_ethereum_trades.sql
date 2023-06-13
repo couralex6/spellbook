@@ -19,7 +19,7 @@ with dexs as (
     SELECT
         t.evt_block_time as block_time,
         t.to as taker,
-        '' as maker,
+        0x as maker,
         case when amount0Out  = 0 then amount1Out else amount0Out end as token_bought_amount_raw,
         case when amount0In = 0 then amount1In else amount0In end as token_sold_amount_raw,
         cast(null as double) as amount_usd,

@@ -21,12 +21,12 @@ WITH dexs AS
     -- Quickswap v2
     SELECT t.evt_block_time                                                            AS block_time
          , t.to                                                                        AS taker
-         , ''                                                                          AS maker
-         , CASE WHEN amount0Out = 0 THEN amount1Out ELSE amount0Out END                AS token_bought_amount_raw
-         , CASE WHEN amount0In = 0 OR amount1Out = 0 THEN amount1In ELSE amount0In END AS token_sold_amount_raw
+         , 0x                                                                          AS maker
+         , CASE WHEN amount0Out = UINT256 '0' THEN amount1Out ELSE amount0Out END                AS token_bought_amount_raw
+         , CASE WHEN amount0In = UINT256 '0' OR amount1Out = UINT256 '0' THEN amount1In ELSE amount0In END AS token_sold_amount_raw
          , CAST(NULL AS DOUBLE)                                                        AS amount_usd
-         , CASE WHEN amount0Out = 0 THEN f.token1 ELSE f.token0 END                    AS token_bought_address
-         , CASE WHEN amount0In = 0 OR amount1Out = 0 THEN f.token1 ELSE f.token0 END   AS token_sold_address
+         , CASE WHEN amount0Out = UINT256 '0' THEN f.token1 ELSE f.token0 END                    AS token_bought_address
+         , CASE WHEN amount0In = UINT256 '0' OR amount1Out = UINT256 '0' THEN f.token1 ELSE f.token0 END   AS token_sold_address
          , t.contract_address                                                          AS project_contract_address
          , t.evt_tx_hash                                                               AS tx_hash
          , ''                                                                          AS trace_address
@@ -62,7 +62,7 @@ SELECT
     ) AS amount_usd
     ,dexs.token_bought_address
     ,dexs.token_sold_address
-    ,coalesce(dexs.taker, tx.from) AS taker -- subqueries rely on this COALESCE to avoid redundant joins with the transactions table
+    ,coalesce(dexs.taker, tx."from") AS taker -- subqueries rely on this COALESCE to avoid redundant joins with the transactions table
     ,dexs.maker
     ,dexs.project_contract_address
     ,dexs.tx_hash
