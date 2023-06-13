@@ -11,7 +11,7 @@ WITH identified_stakers AS (
     , 'infrastructure' AS category
     , 'hildobby' AS contributor
     , 'query' AS source
-    , timestamp('2023-01-18') AS created_at
+    , timestamp '2023-01-18'  AS created_at
     , NOW() AS updated_at
     , 'eth_stakers' AS model_name
     , 'identifier' as label_type
@@ -25,7 +25,7 @@ WITH identified_stakers AS (
     , 'infrastructure' AS category
     , 'hildobby' AS contributor
     , 'query' AS source
-    , timestamp('2023-01-18') AS created_at
+    , timestamp '2023-01-18'  AS created_at
     , NOW() AS updated_at
     , 'eth_stakers' AS model_name
     , 'identifier' as label_type
