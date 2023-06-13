@@ -89,7 +89,7 @@ WITH
     , swaps_with_calldata as (
         select s.*
         , tr."from" as call_from
-        , CASE WHEN called_from_router = true THEN tr."from" ELSE tr."to" END as project_contract_address -- either the router or the pool if called directly
+        , CASE WHEN called_from_router = true THEN tr."from" ELSE tr.to END as project_contract_address -- either the router or the pool if called directly
         from swaps s
         inner join {{ source('ethereum', 'traces') }} tr
         ON tr.success and s.call_block_number = tr.block_number and s.call_tx_hash = tr.tx_hash and s.call_trace_address = tr.trace_address
@@ -175,14 +175,14 @@ WITH
                 CASE WHEN sb.trade_category = 'Buy' -- caller buys, AMM sells
                 THEN (
                     CASE WHEN tr."from" = sb.call_from THEN value -- amount of ETH payed
-                    WHEN (tr."to" = sb.call_from AND sb.call_from != sb.asset_recip) THEN -value --refunds unless the caller is also the asset recipient, no way to discriminate there.
+                    WHEN (tr.to = sb.call_from AND sb.call_from != sb.asset_recip) THEN -value --refunds unless the caller is also the asset recipient, no way to discriminate there.
                     ELSE 0 END)
                 ELSE ( -- caller sells, AMM buys
                     CASE WHEN tr."from" = sb.pair_address THEN value -- all ETH leaving the pool, nothing should be coming in on a sell.
                     ELSE 0 END)
                 END ) as trade_price -- what the buyer paid (incl all fees)
             , SUM(
-                CASE WHEN (tr."to" = sb.protocolfee_recipient) THEN value
+                CASE WHEN (tr.to = sb.protocolfee_recipient) THEN value
                 ELSE 0 END
                  ) as protocol_fee_amount -- what the buyer paid
             , ARRAY_AGG(distinct CASE WHEN substring(input,1,10)='0x42842e0e' THEN bytea2numeric_v3(substring(input,139,64)) END)

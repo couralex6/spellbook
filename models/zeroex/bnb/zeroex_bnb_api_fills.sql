@@ -65,7 +65,7 @@ WITH zeroex_tx AS (
                 '0x' || substring(INPUT, 491, 40) AS taker,
                     tx_index AS evt_index
         FROM {{ source('bnb', 'traces') }} tr
-        WHERE tr."to" IN (
+        WHERE tr.to IN (
                 -- exchange contract
                 0x61935cbdd02287b511119ddb11aeb42f1593b7ef,
                 -- forwarder addresses
@@ -413,7 +413,7 @@ SELECT distinct
              ELSE COALESCE((all_tx.maker_token_amount_raw / pow(10, ms.decimals)) * mp.price, (all_tx.taker_token_amount_raw / pow(10, ts.decimals)) * tp.price)
              END AS volume_usd,
         tx."from" AS tx_from,
-        tx."to" AS tx_to,
+        tx.to AS tx_to,
         'bnb' AS blockchain
 FROM all_tx
 INNER JOIN {{ source('bnb', 'transactions')}} tx ON all_tx.tx_hash = tx.hash

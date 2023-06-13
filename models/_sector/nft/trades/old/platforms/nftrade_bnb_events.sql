@@ -119,7 +119,7 @@ source_inventory_enriched as (
         agg.contract_address as aggregator_address,
         src.evt_tx_hash as tx_hash,
         btx."from" as tx_from,
-        btx."to" as tx_to,
+        btx.to as tx_to,
         CAST(src.protocol_fees_raw AS DOUBLE) as platform_fee_amount_raw,
         CAST(src.protocol_fees AS DOUBLE) as platform_fee_amount,
         CAST(src.protocol_fees * p.price AS DOUBLE) as platform_fee_amount_usd,
@@ -167,7 +167,7 @@ source_inventory_enriched as (
         AND erc721.evt_tx_hash = src.evt_tx_hash
         AND erc721.contract_address = src.nft_contract_address
         AND erc721.tokenId = src.token_id
-        AND erc721."to" = src.buyer
+        AND erc721.to = src.buyer
         {% if not is_incremental() %}
         AND erc721.evt_block_time >= TIMESTAMP '{{project_start_date}}'
         {% endif %}

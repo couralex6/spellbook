@@ -128,7 +128,7 @@ SELECT
     dexs.project_contract_address,
     dexs.tx_hash,
     tx."from" as tx_from,
-    tx."to" AS tx_to,
+    tx.to AS tx_to,
     '' AS trace_address,
     dexs.evt_index
 FROM enriched_evt_all dexs

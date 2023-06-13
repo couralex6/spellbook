@@ -29,7 +29,7 @@ SELECT 'optimism' AS blockchain
 , t.evt_block_number AS block_number
 , 'Velodrome' AS project
 , 'Velodrome Airdrop' AS airdrop_identifier
-, t."to" AS recipient
+, t.to AS recipient
 , t.contract_address
 , t.evt_tx_hash AS tx_hash
 , CAST(t.amount AS DECIMAL(38,0)) AS amount_raw

@@ -103,7 +103,7 @@ select
     ,agg.contract_address as aggregator_address
     ,tfe.evt_tx_hash as tx_hash
     ,tx."from" as tx_from
-    ,tx."to" as tx_to
+    ,tx.to as tx_to
     ,cast(tfe.price * tff.fee_rate as double) as platform_fee_amount_raw
     ,cast(tfe.price * tff.fee_rate / power(10, pu.decimals) as double) as platform_fee_amount
     ,cast(pu.price * tfe.price * tff.fee_rate / power(10, pu.decimals) as double) as platform_fee_amount_usd

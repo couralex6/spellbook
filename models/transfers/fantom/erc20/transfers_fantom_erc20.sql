@@ -17,7 +17,7 @@ with
             'send'as transfer_type,
             evt_tx_hash,
             evt_index,
-            et."to" as wallet_address,
+            et.to as wallet_address,
             contract_address as token_address,
             evt_block_time,
             value as amount_raw

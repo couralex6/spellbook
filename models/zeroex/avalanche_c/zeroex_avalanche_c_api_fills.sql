@@ -29,7 +29,7 @@ WITH zeroex_tx AS (
                                         FOR 40)
                             END) AS affiliate_address
         FROM {{ source('avalanche_c', 'traces') }} tr
-        WHERE tr."to" IN (
+        WHERE tr.to IN (
                 -- exchange contract
                 0x61935cbdd02287b511119ddb11aeb42f1593b7ef, 
                 -- forwarder addresses
@@ -309,7 +309,7 @@ SELECT
              ELSE COALESCE((all_tx.maker_token_amount_raw / pow(10, mp.decimals)) * mp.price, (all_tx.taker_token_amount_raw / pow(10, tp.decimals)) * tp.price)
              END AS volume_usd, 
         tx."from" AS tx_from,
-        tx."to" AS tx_to,
+        tx.to AS tx_to,
         'avalanche_c' AS blockchain
 FROM all_tx
 INNER JOIN {{ source('avalanche_c', 'transactions')}} tx

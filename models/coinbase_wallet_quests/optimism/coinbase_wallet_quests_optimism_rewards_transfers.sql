@@ -19,7 +19,7 @@ WITH distributions AS (
 SELECT qa.distributor_address
      , qa.quest_name
      , qa.rewards_token
-     , r."to"               AS quester_address
+     , r.to               AS quester_address
      , r.evt_tx_hash      AS tx_hash
      , r.evt_index
      , r.evt_block_time   AS block_time

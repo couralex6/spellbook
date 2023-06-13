@@ -61,7 +61,7 @@ SELECT
     sushiswap_dex.project_contract_address,
     sushiswap_dex.tx_hash,
     tx."from"                                                            AS tx_from,
-    tx."to"                                                              AS tx_to,
+    tx.to                                                              AS tx_to,
     sushiswap_dex.trace_address,
     sushiswap_dex.evt_index
 FROM sushiswap_dex

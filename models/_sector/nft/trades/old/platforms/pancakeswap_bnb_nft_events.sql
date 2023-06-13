@@ -64,7 +64,7 @@ WITH events AS (
         events.tx_hash,
         events.block_number,
         bt."from" AS tx_from,
-        bt."to" AS tx_to,
+        bt.to AS tx_to,
         CAST(amount_raw * platform_fee_percentage AS DOUBLE) AS platform_fee_amount_raw,
         (amount_raw * platform_fee_percentage)/POWER(10, bnb_bep20_tokens.decimals) AS platform_fee_amount,
         (amount_raw * platform_fee_percentage)/POWER(10, bnb_bep20_tokens.decimals)*prices.price AS platform_fee_amount_usd,

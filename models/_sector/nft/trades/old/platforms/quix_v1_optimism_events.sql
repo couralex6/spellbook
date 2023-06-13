@@ -43,7 +43,7 @@ with events_raw as (
       on er.tx_hash = tr.tx_hash
       and er.block_number = tr.tx_block_number
       and tr.value_decimal > 0
-      and tr."to" not in (
+      and tr.to not in (
         lower('{{quix_fee_address_address}}') --qx platform fee address
         ,er.seller
         ,er.project_contract_address
@@ -70,7 +70,7 @@ with events_raw as (
       on er.tx_hash = erc20.evt_tx_hash
       and er.block_number = erc20.evt_block_number
       and erc20.value is not null
-      and erc20."to" not in (
+      and erc20.to not in (
         lower('{{quix_fee_address_address}}') --qx platform fee address
         ,er.seller
         ,er.project_contract_address
@@ -123,7 +123,7 @@ with events_raw as (
         ,coalesce(erct2.evt_index,1) as evt_index
         ,er.block_number
         ,tx."from" as tx_from
-        ,tx."to" as tx_to
+        ,tx.to as tx_to
         ,ROUND((2.5*(er.amount_raw)/100),7) as platform_fee_amount_raw
         ,ROUND((2.5*((er.amount_raw / power(10,t1.decimals)))/100),7) AS platform_fee_amount
         ,ROUND((2.5*((er.amount_raw / power(10,t1.decimals)* p1.price))/100),7) AS platform_fee_amount_usd
@@ -132,7 +132,7 @@ with events_raw as (
         ,tr.value / power(10, t1.decimals) as royalty_fee_amount
         ,tr.value / power(10, t1.decimals) * p1.price as royalty_fee_amount_usd
         ,(tr.value / er.amount_raw * 100) as royalty_fee_percentage
-        ,case when tr.value is not null then tr."to" end as royalty_fee_receive_address
+        ,case when tr.value is not null then tr.to end as royalty_fee_receive_address
         ,case when tr.value is not null
             then case when (erc20.contract_address = 0x0000000000000000000000000000000000000000 or erc20.contract_address is null) 
                 then 'ETH' else t1.symbol end

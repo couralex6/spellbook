@@ -143,7 +143,7 @@ SELECT alet.blockchain
 , alet.tx_hash
 , alet.block_number
 , at."from" AS tx_from
-, at."to" AS tx_to
+, at.to AS tx_to
 , CAST(0 AS DOUBLE) AS platform_fee_amount_raw
 , CAST(0 AS DOUBLE) AS platform_fee_amount
 , CAST(0 AS DOUBLE) AS platform_fee_amount_usd

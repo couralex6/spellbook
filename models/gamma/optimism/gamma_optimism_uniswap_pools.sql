@@ -56,7 +56,7 @@ SELECT distinct
         -- only pull new contract creations
         AND ct.block_time >= TIMESTAMP '{{project_start_date}}'
     INNER JOIN {{ source('optimism', 'transactions') }} t 
-        ON t."to" = mm.contract_address
+        ON t.to = mm.contract_address
         AND t.block_time >= TIMESTAMP '{{project_start_date}}'
         AND t.block_time >= ct.block_time
         AND t.block_time < ct.block_time + interval '1 month'

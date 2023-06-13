@@ -19,7 +19,7 @@ WITH dexs AS
     -- Integral
     SELECT
         t.evt_block_time AS block_time,
-        t."to" AS taker,
+        t.to AS taker,
         t.sender AS maker,
         CASE WHEN amount0Out = 0 THEN amount1Out ELSE amount0Out END AS token_bought_amount_raw,
         CASE WHEN amount0In = 0 OR amount1Out = 0 THEN amount1In ELSE amount0In END AS token_sold_amount_raw,
@@ -65,7 +65,7 @@ SELECT
     dexs.project_contract_address,
     dexs.tx_hash,
     tx."from" AS tx_from,
-    tx."to" AS tx_to,
+    tx.to AS tx_to,
     dexs.trace_address,
     dexs.evt_index
 FROM dexs

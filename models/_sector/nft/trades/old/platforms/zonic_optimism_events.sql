@@ -94,7 +94,7 @@ with source_optimism_transactions as (
       and er.block_number = tr.tx_block_number
       and tr.value_decimal > 0
       and tr."from" in (er.project_contract_address, er.buyer) -- only include transfer from zonic or buyer to royalty fee address
-      and tr."to" not in (
+      and tr.to not in (
         lower('{{zonic_fee_address_address}}') --platform fee address
         ,er.seller
         ,er.project_contract_address
@@ -124,7 +124,7 @@ with source_optimism_transactions as (
       and er.block_number = erc20.evt_block_number
       and erc20.value is not null
       and erc20."from" in (er.project_contract_address, er.buyer) -- only include transfer from zonic to royalty fee address
-      and erc20."to" not in (
+      and erc20.to not in (
         lower('{{zonic_fee_address_address}}') --platform fee address
         ,er.seller
         ,er.project_contract_address
@@ -187,7 +187,7 @@ select
     ,er.evt_index as evt_index
     ,er.block_number
     ,tx."from" as tx_from
-    ,tx."to" as tx_to
+    ,tx.to as tx_to
     ,er.platform_fee_amount_raw
     ,er.platform_fee_amount_raw / power(10, t1.decimals) as platform_fee_amount
     ,er.platform_fee_amount_raw / power(10, t1.decimals) * p1.price as platform_fee_amount_usd
@@ -196,7 +196,7 @@ select
     ,er.royalty_fee_amount_raw / power(10, t1.decimals) as royalty_fee_amount
     ,er.royalty_fee_amount_raw / power(10, t1.decimals) * p1.price as royalty_fee_amount_usd
     ,er.royalty_fee_amount_raw / er.amount_raw * 100 as royalty_fee_percentage
-    ,case when tr.value is not null then tr."to" end as royalty_fee_receive_address
+    ,case when tr.value is not null then tr.to end as royalty_fee_receive_address
     ,t1.symbol as royalty_fee_currency_symbol
     ,concat(er.block_number,'-',er.tx_hash,'-',er.evt_index,'-', er.sale_id) as unique_trade_id
 from events_raw as er

@@ -20,7 +20,7 @@ SELECT 'fantom' AS blockchain
 , CAST(approved AS boolean) AS approved
 , app.evt_tx_hash AS tx_hash
 --, et."from" AS tx_from
---, et."to" AS tx_to
+--, et.to AS tx_to
 , app.evt_index
 FROM {{ source('erc721_fantom','evt_Approval') }} app
 /*INNER JOIN {{ source('fantom', 'transactions') }} et ON et.block_number=app.evt_block_number
@@ -46,7 +46,7 @@ SELECT 'fantom' AS blockchain
 , CAST(approved AS boolean) AS approved
 , app.evt_tx_hash AS tx_hash
 --, et."from" AS tx_from
---, et."to" AS tx_to
+--, et.to AS tx_to
 , app.evt_index
 FROM {{ source('erc721_fantom','evt_ApprovalForAll') }} app
 /*INNER JOIN {{ source('fantom', 'transactions') }} et ON et.block_number=app.evt_block_number
@@ -72,7 +72,7 @@ SELECT 'fantom' AS blockchain
 , CAST(approved AS boolean) AS approved
 , app.evt_tx_hash AS tx_hash
 --, et."from" AS tx_from
---, et."to" AS tx_to
+--, et.to AS tx_to
 , app.evt_index
 FROM {{ source('erc1155_fantom','evt_ApprovalForAll') }} app
 /*INNER JOIN {{ source('fantom', 'transactions') }} et ON et.block_number=app.evt_block_number

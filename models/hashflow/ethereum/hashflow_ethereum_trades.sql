@@ -61,7 +61,7 @@ select
     hashflow_trades.router_contract as project_contract_address,
     hashflow_trades.tx_hash,
     tx."from" as tx_from,
-    tx."to" as tx_to,
+    tx.to as tx_to,
     '' AS trace_address,
     case when hashflow_trades.composite_index <> -1 then hashflow_trades.composite_index end as evt_index
 from hashflow_trades

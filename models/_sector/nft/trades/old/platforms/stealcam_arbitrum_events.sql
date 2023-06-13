@@ -36,7 +36,7 @@ SELECT 'arbitrum' AS blockchain
 , 'Buy' AS trade_category
 , CASE WHEN sc.value=0 THEN 'Mint' ELSE 'Trade' END AS evt_type
 , sc."from" AS seller
-, sc."to" AS buyer
+, sc.to AS buyer
 , sc.contract_address AS nft_contract_address
 , 'Stealcam' AS collection
 , sc.id AS token_id
@@ -52,7 +52,7 @@ SELECT 'arbitrum' AS blockchain
 , CAST(NULL AS string) AS aggregator_address
 , sc.evt_tx_hash AS tx_hash
 , at."from" AS tx_from
-, at."to" AS tx_to
+, at.to AS tx_to
 , CAST(0.1*surplus_value AS DECIMAL(38,0)) AS platform_fee_amount_raw
 , CAST(0.1*surplus_value/POWER(10, 18) AS double) AS platform_fee_amount
 , CAST(pu.price*0.1*surplus_value/POWER(10, 18) AS double) AS platform_fee_amount_usd

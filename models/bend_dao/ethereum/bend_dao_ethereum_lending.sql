@@ -85,7 +85,7 @@ SELECT
     ae.contract_address as project_contract_address, 
     ae.evt_tx_hash as tx_hash, 
     et."from" as tx_from,
-    et."to" as tx_to,
+    et.to as tx_to,
     ae.evt_index
 FROM 
 all_events ae 

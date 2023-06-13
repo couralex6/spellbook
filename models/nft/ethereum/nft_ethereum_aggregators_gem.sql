@@ -13,7 +13,7 @@ select
     ,'Gem' as name
 from vasa_contracts c
 left join {{ source('ethereum','transactions') }} t
-on t.block_time >= CAST('2021-10-12' AS TIMESTAMP) and t."to" = c.contract_address
+on t.block_time >= CAST('2021-10-12' AS TIMESTAMP) and t.to = c.contract_address
 left join {{ ref('nft_ethereum_transfers') }} nt
 on t.block_number = nt.block_number and t.hash = nt.tx_hash
 group by 1,2

@@ -153,7 +153,7 @@ SELECT
     offers.project_contract_address, 
     offers.tx_hash,
     txn."from" AS tx_from,
-    txn."to" AS tx_to
+    txn.to AS tx_to
 FROM offers
 
 -- get the transaction data for the offer
