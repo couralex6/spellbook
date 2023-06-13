@@ -22,7 +22,6 @@
  , ref('labels_flashloans_ethereum')
 ] %}
 
-
 SELECT *
 FROM (
     {% for infrastructure_model in infrastructure_models %}
