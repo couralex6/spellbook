@@ -7,7 +7,7 @@ SELECT distinct
     'infrastructure' AS category,
     'soispoke' AS contributor,
     'query' AS source,
-    timestamp('2022-10-11') as created_at,
+    timestamp '2022-10-11'  as created_at,
     now() as updated_at,
     'validators_ethereum' as model_name,
     'identifier' as label_type

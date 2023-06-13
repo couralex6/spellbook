@@ -10,7 +10,7 @@
 
 WITH creation AS (
     SELECT distinct 'ethereum'           AS blockchain
-                  , ct.`from`            AS address
+                  , ct."from"            AS address
                   , 'Contract Deployer'  AS name
                   , 'infrastructure'     AS category
                   , 'hildobby'           AS contributor
@@ -23,5 +23,6 @@ WITH creation AS (
 )
 SELECT *
 FROM creation
-LEFT ANTI JOIN {{ source('ethereum', 'creation_traces') }} anti_table
-ON creation.address = anti_table.address
+LEFT JOIN {{ source('ethereum', 'creation_traces') }} anti_table
+    ON creation.address = anti_table.address
+WHERE anti_table.address is NULL
