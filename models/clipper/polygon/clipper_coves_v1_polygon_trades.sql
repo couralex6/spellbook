@@ -16,7 +16,7 @@ WITH event_data as (
         evt_block_time AS block_time,
         evt_block_number as block_number,
         recipient as taker,
-        '' AS maker,
+        0x as maker,
         CAST(inAmount AS DECIMAL(38,0)) AS token_sold_amount_raw,
         CAST(outAmount AS DECIMAL(38,0)) AS token_bought_amount_raw,
         inAsset as token_sold_address,

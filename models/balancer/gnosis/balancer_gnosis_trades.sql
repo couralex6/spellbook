@@ -63,8 +63,8 @@ select
     end as token_pair,
     token_bought_amount_raw / power(10, erc20a.decimals) as token_bought_amount,
     token_sold_amount_raw / power(10, erc20b.decimals) as token_sold_amount,
-    CAST(token_bought_amount_raw AS DOUBLE) as token_bought_amount_raw,
-    CAST(token_sold_amount_raw AS DOUBLE) as token_sold_amount_raw,
+    token_bought_amount_raw,
+    token_sold_amount_raw,
     coalesce(
         (token_bought_amount_raw / power(10, p_bought.decimals)) * p_bought.price,
         (token_sold_amount_raw / power(10, p_sold.decimals)) * p_sold.price
@@ -72,7 +72,7 @@ select
     token_bought_address,
     token_sold_address,
     tx."from" as taker,
-    cast(null as varchar(5)) as maker,
+    0x as maker,
     project_contract_address,
     evt_tx_hash as tx_hash,
     tx."from" as tx_from,

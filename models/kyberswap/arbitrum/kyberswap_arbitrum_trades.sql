@@ -20,7 +20,7 @@ kyberswap_dex AS (
     SELECT
         t.evt_block_time                                                    AS block_time
         ,t."to"                                                             AS taker
-        ,''                                                                 AS maker
+        ,0x                                                                 AS maker
         ,CASE WHEN t.amount0Out = 0 THEN t.amount1Out ELSE t.amount0Out END AS token_bought_amount_raw
         ,CASE WHEN t.amount0In = 0 THEN t.amount1In ELSE t.amount0In END    AS token_sold_amount_raw
         ,cast(NULL as double)                                               AS amount_usd
@@ -93,7 +93,7 @@ SELECT 'arbitrum'                                                         AS blo
     )                                                                     AS amount_usd
      , kyberswap_dex.token_bought_address
      , kyberswap_dex.token_sold_address
-     , coalesce(kyberswap_dex.taker, tx.from)                             AS taker
+     , coalesce(kyberswap_dex.taker, tx."from")                             AS taker
      , kyberswap_dex.maker
      , kyberswap_dex.project_contract_address
      , kyberswap_dex.tx_hash

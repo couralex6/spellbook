@@ -39,9 +39,9 @@ WITH dexs AS
     INNER JOIN {{ source('uniswap_v2_ethereum', 'Factory_evt_PairCreated') }} f
         ON f.pair = t.contract_address
     WHERE t.contract_address NOT IN (
-        from_hex({{weth_ubomb_wash_trading_pair}}),
-        from_hex({{weth_weth_wash_trading_pair}}),
-        from_hex({{feg_eth_wash_trading_pair}}) )
+        {{weth_ubomb_wash_trading_pair}},
+        {{weth_weth_wash_trading_pair}},
+        {{feg_eth_wash_trading_pair}})
     {% if is_incremental() %}
     AND t.evt_block_time >= date_trunc('day', now() - interval '7' day)
     {% endif %}

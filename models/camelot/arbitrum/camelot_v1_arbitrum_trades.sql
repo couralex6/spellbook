@@ -15,23 +15,23 @@
 WITH dexs AS (
   SELECT
     swap.evt_block_time AS block_time,
-    swap.`to` AS taker,
+    swap."to" AS taker,
     swap.sender AS maker,
     CASE
-      WHEN swap.amount0Out=0 THEN swap.amount1Out
+      WHEN swap.amount0Out = UINT256 '0' THEN swap.amount1Out
       ELSE swap.amount0Out
     END AS token_bought_amount_raw,
     CASE
-      WHEN swap.amount0In=0 THEN swap.amount1In
+      WHEN swap.amount0In = UINT256 '0' THEN swap.amount1In
       ELSE swap.amount0In
     END AS token_sold_amount_raw,
     CAST(NULL AS double) AS amount_usd,
     CASE
-      WHEN swap.amount0Out=0 THEN pairs.token1
+      WHEN swap.amount0Out = UINT256 '0' THEN pairs.token1
       ELSE pairs.token0
     END AS token_bought_address,
     CASE
-      WHEN swap.amount0In=0 THEN pairs.token1
+      WHEN swap.amount0In = UINT256 '0' THEN pairs.token1
       ELSE pairs.token0
     END AS token_sold_address,
     swap.contract_address AS project_contract_address,
@@ -63,8 +63,8 @@ SELECT
   END AS token_pair,
   dexs.token_bought_amount_raw / POWER(10, erc20a.decimals) AS token_bought_amount,
   dexs.token_sold_amount_raw / POWER(10, erc20b.decimals) AS token_sold_amount,
-  CAST(dexs.token_bought_amount_raw AS DECIMAL(38,0)) AS token_bought_amount_raw,
-  CAST(dexs.token_sold_amount_raw AS DECIMAL(38,0)) AS token_sold_amount_raw,
+  dexs.token_bought_amount_raw AS token_bought_amount_raw,
+  dexs.token_sold_amount_raw AS token_sold_amount_raw,
   COALESCE(
     dexs.amount_usd,
     (dexs.token_bought_amount_raw / POWER(10, p_bought.decimals)) * p_bought.price,
@@ -72,7 +72,7 @@ SELECT
   ) AS amount_usd,
   dexs.token_bought_address,
   dexs.token_sold_address,
-  COALESCE(dexs.taker, tx.from) AS taker,
+  COALESCE(dexs.taker, tx."from") AS taker,
   dexs.maker,
   dexs.project_contract_address,
   dexs.tx_hash,
@@ -115,4 +115,4 @@ LEFT JOIN {{ source('prices', 'usd') }} p_sold
     {% if is_incremental() %}
     AND p_sold.minute >= DATE_TRUNC('DAY', NOW() - interval '1 WEEK')
     {% endif %}
-;
+
