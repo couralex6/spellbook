@@ -1,5 +1,5 @@
 {% macro expose_spells(blockchains, spell_type, spell_name, contributors) %}
-{%- if target.name == 'prod' or True -%} -- TODO: Only enable this in prod before launching
+{%- if target.name == 'prod' -%} -- TODO: Only enable this in prod before launching
         ALTER {{"view" if model.config.materialized == "view" else "table"}} {{ this }}
         SET PROPERTIES extra_properties = map_from_entries(ARRAY[
         ROW('dune.public', 'true'),
