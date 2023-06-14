@@ -10,9 +10,9 @@ import os
 
 
 def get_tables_from_manifest(manifest_path):
-    '''
+    """
     returns a csv of tables from a manifest file. We filter out
-    '''
+    """
     table_csv_str = "schema, table, materialized, created_at, partition_by\n"
     with open(manifest_path, "r") as f:
         print(f"Loading manifest file at {manifest_path} ...")
@@ -34,11 +34,11 @@ def get_tables_from_manifest(manifest_path):
 
 
 def upload_csv(table_csv, target):
-    '''
+    """
     Upload CSV string to dune.
 
     target = name of table to upload csv to
-    '''
+    """
 
     print(f"Writing {target} to Dune.com ...")
     url = 'https://api.dev.dune.com/api/v1/table/upload/csv'
@@ -68,7 +68,7 @@ def upload_csv(table_csv, target):
 #
 #     return connection
 
-#
+
 def trino_client():
     """
     Function that executes a query passed as a string against the trino server. We would like to use aws secrets
@@ -88,31 +88,30 @@ def trino_client():
     )
 
     return conn
-#
-#
+
+
 def execute_query(connection, query):
-    '''
+    """
     Execute query and return results.
-    '''
+    """
     cursor = connection.cursor()
     cursor.execute(query)
     response = cursor.fetchall()
     cursor.close()
     return response
 
+
 def generate_information_schema(rows):
-    '''
+    """
     Generate information schema from rows returned from query.
-    '''
+    """
     information_schema_csv = "table_catalog, table_schema, table_name, table_type\n"
     for row in rows:
         information_schema_csv += f'{row[0]},{row[1]},{row[2]},{row[3]}\n'
     upload_csv(information_schema_csv, "trino_spells_information_schema")
 
 
-
 if __name__ == "__main__":
-
     # get all tables and schemas from hive.INFORMATION_SCHEMA.tables (trino only)
     trino_conn = trino_client()
     print("Fetching information schema from trino...")
@@ -121,10 +120,9 @@ if __name__ == "__main__":
     generate_information_schema(result)
     trino_conn.close()
 
+    # get all models compile into manifest (trino and spark)
+    spark_tables = get_tables_from_manifest("spark_manifest.json")
+    upload_csv(spark_tables, "spark_spellbook_status")
 
-    #get all models compile into manifest (trino and spark)
-    # spark_tables = get_tables_from_manifest("spark_manifest.json")
-    # upload_csv(spark_tables, "spark_spellbook_status")
-    #
-    # trino_tables = get_tables_from_manifest("trino_manifest.json")
-    # upload_csv(trino_tables, "trino_spellbook_status")
+    trino_tables = get_tables_from_manifest("trino_manifest.json")
+    upload_csv(trino_tables, "trino_spellbook_status")
